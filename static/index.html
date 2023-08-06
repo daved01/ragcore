@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ask questions about Fluent Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            /* Dark mode background color */
+            color: #f0f0f0;
+            /* Dark mode text color */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #inputField {
+            width: 600px;
+            padding: 10px;
+            font-size: 18px;
+            border-width: 1px;
+            margin-bottom: 20px;
+            border-radius: 50px;
+            /* Rounded corners */
+            background-color: #1a1a1a;
+            /* Dark mode input background color */
+            color: #f0f0f0;
+            /* Dark mode input text color */
+        }
+
+        #submitButton {
+            padding: 8px 20px;
+            /* Adjusted height and width */
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            /* Rounded corners */
+            background-color: #555;
+            /* Dark mode button background color */
+            color: #f0f0f0;
+            /* Dark mode button text color */
+            border: none;
+            cursor: pointer;
+        }
+
+        #resultArea {
+            width: 800px;
+            height: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+            font-size: 16px;
+            background-color: #1a1a1a;
+            /* Dark mode result area background color */
+            color: #f0f0f0;
+            /* Dark mode result area text color */
+            border-radius: 10px;
+            text-align: left;
+            /* Rounded corners */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ask questions about Fluent Python</h1>
+    <input type="text" id="inputField" placeholder="">
+    <button id="submitButton">Search</button>
+    <div id="resultArea"></div>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const submitButton = document.getElementById('submitButton');
+        const resultArea = document.getElementById('resultArea');
+
+        function displayResult(result) {
+            resultArea.textContent = result;
+        }
+
+        function processText() {
+            const userInput = inputField.value.trim();
+            if (userInput !== '') {
+                fetch('/question/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_input: userInput })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        displayResult(data.result);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                inputField.value = userInput;
+            }
+        }
+
+        submitButton.addEventListener('click', processText);
+
+        inputField.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                processText();
+            }
+        });
+    </script>
+</body>
+
+</html>
