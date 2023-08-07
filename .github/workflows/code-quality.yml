@@ -11,29 +11,19 @@ jobs:
       with:
         python-version: 3.11
 
-    - name: Upgrade pip
-      run: pip install --upgrade pip
-
-    - name: Install Black
-      run: pip install black==23.7.0
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements_dev.txt
 
     - name: Run black code formatter
       run: find docucite -name "*.py" -exec black {} +
 
-    - name: Install mypy
-      run: pip install mypy==1.4.1
-
     - name: Run mypy on source folder
       run:  mypy docucite/ --ignore-missing-imports
 
-    - name: Install pylint
-      run: pip install pylint==2.17.5
-
     - name: Run pylint
       run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')
-
-    - name: Install Pytest
-      run: pip install pytest==7.4.0
 
     - name: Run tests
       run: pytest

@@ -1,2 +1,8 @@
-langchain==0.0.238
+aiofiles==23.1.0
+chromadb==0.4.5
+fastapi==0.99.1
+Jinja2==3.1.2
+langchain==0.0.256
 openai==0.27.8
+tiktoken==0.4.0
+uvicorn==0.23.2

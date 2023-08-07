@@ -1,6 +1,6 @@
 """Main entry point for the CLI tool."""
 
-from querytool.chains import ChainApp
+from docucite.chains import ChainApp
 
 CHUNK_OVERLAP = 1500
 CHUNK_SIZE = 150
