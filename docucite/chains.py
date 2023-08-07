@@ -103,10 +103,10 @@ class ChainApp:
     def build_prompt_template(self) -> PromptTemplate:
         """Builds a prompt."""
         template = """
-        Use the following pieces of context to answer the question at the end. 
-        If you don't know the answer, just say that you don't know, don't try to make up an answer. 
-        Mention the page on which the topic in the answer is mentioned if a page is available, 
-        otherwise do not mention a page. 
+        Use the following pieces of context to answer the question at the end.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        Mention the page on which the topic in the answer is mentioned if a page is available,
+        otherwise do not mention a page.
         Ask if the user has further question regarding the topic.
         {context}
         Question: {question}
