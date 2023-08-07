@@ -39,7 +39,8 @@ def run() -> None:
         response = chain_app.query(prompt, user_input)
         print("\n---------------------")
         print(response["result"], end="\n")
-        print(f"Source: {response[-1].get("metadata")}")
+        print(response["metadata"])
+        # print(f"Source: {response[-1].get("metadata")}")
 
 
 def setup(title: str, load_documents=False) -> ChainApp:
