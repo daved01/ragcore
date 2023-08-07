@@ -1,0 +1,39 @@
+name: Code quality checks
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Code quality checks
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Upgrade pip
+      run: pip install --upgrade pip
+
+    - name: Install Black
+      run: pip install black==23.7.0
+
+    - name: Run black code formatter
+      run: find docucite -name "*.py" -exec black {} +
+
+    - name: Install mypy
+      run: pip install mypy==1.4.1
+
+    - name: Run mypy on source folder
+      run:  mypy docucite/ --ignore-missing-imports
+
+    - name: Install pylint
+      run: pip install pylint==2.17.5
+
+    - name: Run pylint
+      run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')
+
+    - name: Install Pytest
+      run: pip install pytest==7.4.0
+
+    - name: Run tests
+      run: pytest
