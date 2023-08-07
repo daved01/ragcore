@@ -77,7 +77,7 @@ class ChainApp:
     # TODO: How does this work?
     def store(self, dry_run=False) -> None:
         """Stores embeddings in the vector database."""
-        embedding = OpenAIEmbeddings()
+        embedding = OpenAIEmbeddings()  # type: ignore
         if not self.docs:
             raise ValueError("Docs not assigned.")
         self.vectordb = Chroma.from_documents(
@@ -94,7 +94,7 @@ class ChainApp:
 
     def load_embeddings(self) -> None:
         """Load embeddings from database"""
-        embedding = OpenAIEmbeddings()
+        embedding = OpenAIEmbeddings()  # type: ignore
         self.vectordb = Chroma(
             persist_directory=self.persist_directory, embedding_function=embedding
         )
