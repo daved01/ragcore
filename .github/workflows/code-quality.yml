@@ -2,8 +2,6 @@ name: Code quality checks
 on: [pull_request]
 
 jobs:
-
-
   build:
     runs-on: ubuntu-latest
     name: Code quality checks
