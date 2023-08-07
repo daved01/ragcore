@@ -1,4 +1,4 @@
-from querytool.chains import ChainApp
+from docucite.chains import ChainApp
 
 
 class MockPyPDFLoader:
