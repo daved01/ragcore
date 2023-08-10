@@ -104,16 +104,16 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# Mac stuff
+# Mac OS stuff
 .DS_Store
 
 # VSCode
 .vscode/
 
-# Development folders
+# Development folders and files
 course/
 dev/
-prototype.ipynb
+dev-*
 
 # Data folder
 data/

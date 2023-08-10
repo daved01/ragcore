@@ -33,5 +33,11 @@ def process(user_input: UserInputData):
     print(f"Sending POST request with content: {user_input.user_input}")
     prompt = chain_app.build_prompt_template()
     result = chain_app.query(prompt, user_input.user_input)
-    print(f"Response: {result}")
-    return {"result": result}
+    # metadata = result["source_documents"][0].metadata
+    metadata = result.get("metadata")
+    body = result["result"]
+    pages = set([metadata[i]["page"] for i in range(len(metadata))])
+    body += "\n\n"
+    body += ", ".join([f"[p. {page}]" for page in pages])
+    print(f"Response: {body}")
+    return {"result": body}

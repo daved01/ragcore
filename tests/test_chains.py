@@ -1,11 +1,6 @@
 from docucite.chains import ChainApp
 
 
-class MockPyPDFLoader:
-    def load_and_split(self):
-        pass
-
-
 class TestChains:
     def test_load_pdf(self):
         chain_app = ChainApp()
