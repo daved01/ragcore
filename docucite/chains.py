@@ -3,7 +3,6 @@
 import logging
 from logging import Logger
 import os
-import openai
 from typing import Any
 
 from langchain.document_loaders import PyPDFLoader
@@ -54,7 +53,7 @@ class ChainApp:
         self.pages = loader.load_and_split()
 
         # Add document title
-        for i in range(len(self.pages)):
+        for i, _ in enumerate(self.pages):
             self.pages[i].metadata["title"] = document_title
         self.logger.info(
             f"Added title `{document_title}` to metadata of {len(self.pages)} pages."
@@ -67,7 +66,7 @@ class ChainApp:
     def split_document(self, chunk_size, chunk_overlap) -> None:
         """Splits a document."""
         self.logger.info(
-            f"Splitting documents using chunk_size {chunk_size} and chunk_overlap {chunk_overlap} ..."
+            f"Splitting documents with chunk_size {chunk_size} and chunk_overlap {chunk_overlap}..."
         )
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
