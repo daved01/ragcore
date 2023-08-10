@@ -1,5 +1,7 @@
 """Business logic to handle document parsing and retrieval."""
 
+from __future__ import annotations
+
 import logging
 from logging import Logger
 import os
@@ -11,7 +13,7 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 
 
 class ChainApp:
@@ -22,7 +24,7 @@ class ChainApp:
     ):
         self.openai_api_key: str = os.environ["OPENAI_API_KEY"]
         self.persist_directory: str = persist_directory
-        self.llm = ChatOpenAI(model_name=llm_name, temperature=0)
+        self.llm = OpenAI(model_name=llm_name, temperature=0)
         self.vectordb: Chroma = None
         self.pages: list = []  # TODO: Check type
         self.docs: list = []
@@ -138,3 +140,32 @@ class ChainApp:
         result["metadata"] = metadata
         self.logger.info(f"Metadata: {metadata}")
         return result
+
+    def get_docs_similarity_search(self, question: str, k: int):
+        """Returns a set of documents using similarity search."""
+        return self.vectordb.similarity_search(query=question, k=k)
+
+    def document_to_str(self, doc: list["Document"]) -> str:
+        """Extracts the content from a list of documents into a line-separated string."""
+        docs = []
+        for i in range(len(doc)):
+            docs.append(doc[i].page_content)
+        return "\n".join(docs)
+
+    # TODO: How does the template add the metadata?
+    def create_prompt(self, question: str, context: str) -> str:
+        """Creates a prompt from the question given a set of source documents."""
+
+        template = f"""Use the following pieces of context, provided in the tripple backticks, to answer the question at the end.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        If you have the information available from the metadata of the context under the field "page", cite your answers with page numbers in square brackets after each sentence or paragraph.
+        Context: ```{context}```
+        Question: {question}
+        Helpful Answer:"""
+        return template
+
+    def make_llm_request(self, prompt: str) -> str:
+        """Queries the llm with the prompt and returns the answer."""
+        res = self.llm.predict(prompt)
+        # TODO: Processing of response
+        return res

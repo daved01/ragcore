@@ -26,7 +26,7 @@ def run() -> None:
     print("Event loop started. Type 'quit' to exit.")
 
     while True:
-        user_input = input("Enter your question: ")
+        user_input = input("Enter your question (`quit` to exit): ")
 
         # Check for exit condition
         if user_input.lower() == "quit":
@@ -34,12 +34,19 @@ def run() -> None:
             break
 
         # Query model
-        context = ""
-        prompt = chain_app.build_prompt_template()
-        response = chain_app.query(prompt, user_input)
+        context = chain_app.get_docs_similarity_search(question=user_input, k=8)
+        context_str = chain_app.document_to_str(context)
+        prompt = chain_app.create_prompt(user_input, context_str)
+        result = chain_app.make_llm_request(prompt)
         print("\n---------------------")
-        print(response["result"], end="\n")
-        print(response["metadata"])
+        print(result)
+
+        # context = ""
+        # prompt = chain_app.build_prompt_template()
+        # response = chain_app.query(prompt, user_input)
+        # print("\n---------------------")
+        # print(response["result"], end="\n")
+        # print(response["metadata"])
         # print(f"Source: {response[-1].get("metadata")}")
 
 

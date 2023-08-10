@@ -1,6 +1,6 @@
 # Document Query Tool
 
-Run the server with `uvicorn app:app --reload`.
+Run the server with `uvicorn fastapi_app:app --reload`.
 
 ## Ideas
 
