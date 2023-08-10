@@ -4,6 +4,7 @@ import logging
 from logging import Logger
 import os
 import openai
+from typing import Any
 
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -20,12 +21,12 @@ class ChainApp:
     def __init__(
         self, llm_name="gpt-3.5-turbo", persist_directory="data/chroma_1500_150"
     ):
-        self.openai_api_key = openai.api_key = os.environ["OPENAI_API_KEY"]
-        self.persist_directory = persist_directory
+        self.openai_api_key: str = os.environ["OPENAI_API_KEY"]
+        self.persist_directory: str = persist_directory
         self.llm = ChatOpenAI(model_name=llm_name, temperature=0)
-        self.vectordb = None
-        self.pages = []  # TODO: Check type
-        self.docs = []
+        self.vectordb: Chroma = None
+        self.pages: list = []  # TODO: Check type
+        self.docs: list = []
         self.logger = self.get_logger()
         self.logger.info(
             f"Initialized app. Using persisted store {self.persist_directory.split('/')[1]}"
@@ -65,21 +66,25 @@ class ChainApp:
     # TODO: Optimize
     def split_document(self, chunk_size, chunk_overlap) -> None:
         """Splits a document."""
-        self.logger.info("Splitting documents ...")
+        self.logger.info(
+            f"Splitting documents using chunk_size {chunk_size} and chunk_overlap {chunk_overlap} ..."
+        )
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
         )
         if not self.pages:
             raise ValueError("Pages not defined. Please call `load_pdf` first.")
         self.docs = splitter.split_documents(self.pages)
-        self.logger.info(f"Created {len(self.docs)} documents.")
+        self.logger.info(
+            f"Created {len(self.docs)} documents from {len(self.pages)} pages."
+        )
 
     # TODO: How does this work?
     def store(self, dry_run=False) -> None:
         """Stores embeddings in the vector database."""
-        embedding = OpenAIEmbeddings()  # type: ignore
         if not self.docs:
             raise ValueError("Docs not assigned.")
+        embedding = OpenAIEmbeddings()  # type: ignore
         self.vectordb = Chroma.from_documents(
             documents=self.docs,
             embedding=embedding,
@@ -105,16 +110,20 @@ class ChainApp:
         template = """
         Use the following pieces of context to answer the question at the end.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        Format the output as a json under the key "body".
         Mention the page on which the topic in the answer is mentioned if a page is available,
         otherwise do not mention a page.
-        Ask if the user has further question regarding the topic.
+        Ask if the user has further questions regarding the topic.
         {context}
         Question: {question}
         Helpful Answer:"""
         return PromptTemplate.from_template(template)
 
-    def query(self, prompt: str, question: str) -> str:
+    def query(self, prompt: str, question: str) -> dict[str, Any]:
         """Queries the tool and returns the answer."""
+        print("prompt")
+        print(prompt)
+
         qa_chain = RetrievalQA.from_chain_type(
             self.llm,
             retriever=self.vectordb.as_retriever(),
@@ -123,6 +132,10 @@ class ChainApp:
         )
 
         result = qa_chain({"query": question})
-        self.logger.info(f"Metadata: {qa_chain.metadata}")
-        # return result
-        return result["result"]
+        metadata = [
+            result["source_documents"][i].metadata
+            for i in range(len(result["source_documents"]))
+        ]
+        result["metadata"] = metadata
+        self.logger.info(f"Metadata: {metadata}")
+        return result
