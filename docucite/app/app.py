@@ -53,8 +53,9 @@ class DocuCiteApp(AbstractApp):
             upload_service.load_document(
                 path="data/Python summary.pdf", document_title=title
             )
-            upload_service.split_document(1500, 150)
-            database_service.create_database(upload_service.documents)
+            upload_service.split_document(200, 50)
+            database_service.create_database()
+            database_service.add_documents(upload_service.documents)
         else:
             database_service.load_database()
             print(

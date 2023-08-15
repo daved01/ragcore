@@ -51,10 +51,11 @@ class DocumentUploadService(DocumentService):
         for i, _ in enumerate(self.pages):
             self.pages[i].metadata["title"] = document_title
         self.logger.info(
-            f"Added title `{document_title}` to metadata of {len(self.pages)} pages."
-        )
-        self.logger.info(
             f"Loaded pdf file from path `{path}`. Loaded {len(self.pages)} pages."
+        )
+
+        self.logger.info(
+            f"Added title `{document_title}` to metadata of {len(self.pages)} pages."
         )
 
     def split_document(self, chunk_size, chunk_overlap) -> None:
