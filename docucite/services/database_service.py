@@ -5,7 +5,7 @@ from logging import Logger
 import os
 
 from docucite.constants import AppConstants
-from docucite.errors import DatabaseError
+from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
 from docucite.model import VectorDatabase
 from docucite.services.document_service import DocumentService
 
@@ -66,7 +66,11 @@ class DatabaseService:
         )
 
     def add_documents(self, documents: list[Document]) -> None:
-        """Adds documents to existing database."""
+        """
+        Adds documents to existing database.
+        Documents must have metadata, and the metadata must have a `title` specified.
+        Adding documents with the same title multiple times is not possible.
+        """
         # Check if database exists on disk. If not exit.
         if not self.vectordb:
             raise DatabaseError(
@@ -74,12 +78,17 @@ class DatabaseService:
                 "but this database does not exist."
             )
 
+        new_data = DocumentService.documents_to_texts(documents)
+        new_texts, new_metadatas = map(list, zip(*new_data))
+
+        # Check if we can add the new documents
+        self._validate_documents_metadata(texts=new_texts, metadatas=new_metadatas)
+        self._validate_documents_not_in_database(metadatas=new_metadatas)
+
         # Update database
         self.logger.info(
             f"Adding {len(documents)} documents to database at `{self.database_path}`."
         )
-        new_data = DocumentService.documents_to_texts(documents)
-        new_texts, new_metadatas = map(list, zip(*new_data))
 
         self.vectordb.add_texts(texts=new_texts, metadatas=new_metadatas)
 
@@ -87,6 +96,34 @@ class DatabaseService:
             f"Successfully added {len(documents)} documents to database. "
             f"Number of indexed documents is now: {len(self.vectordb.get().get('ids', -1))}",
         )
+
+    def _validate_documents_metadata(
+        self, texts: list[str], metadatas: list[str]
+    ) -> None:
+        if not metadatas or not len(texts) == len(metadatas):
+            raise MissingMetadataError(
+                "At least one document you are trying to add has missing metadata."
+            )
+
+        for metadata in metadatas:
+            if not metadata.get("title"):
+                raise InvalidMetadataError("Metadata does not have a title.")
+
+    # We want the documents in the database to be unique, which we enforce through the metadata
+    # field `title`. We assume that the metadata with which this method is called is valid.
+    def _validate_documents_not_in_database(
+        self, metadatas: list[dict[str, str]]
+    ) -> None:
+        existing_titles = set(
+            title.get("title").lower() for title in self.vectordb.get().get("metadatas")
+        )
+        new_titles = set(title.get("title").lower() for title in metadatas)
+
+        union = new_titles & existing_titles
+        if union:
+            raise DatabaseError(
+                f"Tried to add documents {union} to database, but they already exist."
+            )
 
     def _create_base_dir(self) -> None:
         """Helper to make sure database base dir exists."""

@@ -40,3 +40,27 @@ class DocuciteTestSetup:
             And, as we can see here, even a separate paragraph! Life is crazy.""",
             metadata={"page": 1, "title": "Greatest book"},
         )
+
+    @pytest.fixture
+    def mock_three_texts(self):
+        return ["A", "B", "C"]
+
+    @pytest.fixture
+    def mock_three_metadatas(self):
+        return [
+            {"page": 1, "title": "Best book"},
+            {"page": 2, "title": "Best book"},
+            {"page": 2, "title": "Best book"},
+        ]
+
+    @pytest.fixture
+    def mock_two_metadatas(self):
+        return [{"page": 1, "title": "Best book"}, {"page": 2, "title": "Best book"}]
+
+    @pytest.fixture
+    def mock_three_metadatas_one_missing_title(self):
+        return [
+            {"page": 1, "title": "Best book"},
+            {"page": 2, "title": "Best book"},
+            {"page": 2},
+        ]

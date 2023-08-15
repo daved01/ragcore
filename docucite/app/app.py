@@ -18,6 +18,7 @@ from docucite.app import AbstractApp
 from docucite.services.document_service import DocumentUploadService
 from docucite.services.database_service import DatabaseService
 from docucite.constants import AppConstants
+from docucite.errors import DatabaseError
 
 
 class DocuCiteApp(AbstractApp):
@@ -27,41 +28,30 @@ class DocuCiteApp(AbstractApp):
     def run(self) -> None:
         self.logger.info("Setting up session ...")
 
-        upload_documents = input(
+        user_input = input(
             "Enter (n/N) for new document, any key to load existing one. "
         )
-
-        title = None
-        upload_doc = False
 
         database_service: DatabaseService = DatabaseService(
             logger=self.logger,
             database_name="chroma_200_50",
         )
 
-        # TODO: Try to load database
-
-        # If exists: Load database
-        # If not exists: Create database
+        # Load database if exists or create it
+        try:
+            database_service.load_database()
+        except DatabaseError:
+            database_service.create_database()
 
         # Add documents
-
-        if upload_documents.lower() == "n":
-            upload_doc = True
+        if user_input.lower() == "n":
             title = input("Enter title of document: ")
             upload_service: DocumentUploadService = DocumentUploadService(self.logger)
             upload_service.load_document(
                 path="data/Python summary.pdf", document_title=title
             )
             upload_service.split_document(200, 50)
-            database_service.create_database()
             database_service.add_documents(upload_service.documents)
-        else:
-            database_service.load_database()
-            print(
-                database_service.vectordb.similarity_search("What about asyncio?", k=4)
-            )
-            return
 
         # Run app
         self._run_event_loop()

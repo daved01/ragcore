@@ -19,3 +19,11 @@ class UserConfigurationError(AppBaseError):
 
 class DatabaseError(AppBaseError):
     """Database error."""
+
+
+class MissingMetadataError(AppBaseError):
+    """Missing metadata error."""
+
+
+class InvalidMetadataError(AppBaseError):
+    """Invalid metadata error."""
