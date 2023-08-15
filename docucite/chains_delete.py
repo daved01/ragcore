@@ -106,45 +106,47 @@ class ChainApp:
         )
         self.logger.info(f"Loaded embeddings from path: {self.persist_directory}.")
 
-    def build_prompt_template(self) -> PromptTemplate:
-        """Builds a prompt."""
-        template = """
-        Use the following pieces of context to answer the question at the end.
-        If you don't know the answer, just say that you don't know, don't try to make up an answer.
-        Format the output as a json under the key "body".
-        Mention the page on which the topic in the answer is mentioned if a page is available,
-        otherwise do not mention a page.
-        Ask if the user has further questions regarding the topic.
-        {context}
-        Question: {question}
-        Helpful Answer:"""
-        return PromptTemplate.from_template(template)
+    # def build_prompt_template(self) -> PromptTemplate:
+    #     """Builds a prompt."""
+    #     template = """
+    #     Use the following pieces of context to answer the question at the end.
+    #     If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    #     Format the output as a json under the key "body".
+    #     Mention the page on which the topic in the answer is mentioned if a page is available,
+    #     otherwise do not mention a page.
+    #     Ask if the user has further questions regarding the topic.
+    #     {context}
+    #     Question: {question}
+    #     Helpful Answer:"""
+    #     return PromptTemplate.from_template(template)
 
-    def query(self, prompt: str, question: str) -> dict[str, Any]:
-        """Queries the tool and returns the answer."""
-        print("prompt")
-        print(prompt)
+    # def query(self, prompt: str, question: str) -> dict[str, Any]:
+    #     """Queries the tool and returns the answer."""
+    #     print("prompt")
+    #     print(prompt)
 
-        qa_chain = RetrievalQA.from_chain_type(
-            self.llm,
-            retriever=self.vectordb.as_retriever(),
-            return_source_documents=True,
-            chain_type_kwargs={"prompt": prompt},
-        )
+    #     qa_chain = RetrievalQA.from_chain_type(
+    #         self.llm,
+    #         retriever=self.vectordb.as_retriever(),
+    #         return_source_documents=True,
+    #         chain_type_kwargs={"prompt": prompt},
+    #     )
 
-        result = qa_chain({"query": question})
-        metadata = [
-            result["source_documents"][i].metadata
-            for i in range(len(result["source_documents"]))
-        ]
-        result["metadata"] = metadata
-        self.logger.info(f"Metadata: {metadata}")
-        return result
+    #     result = qa_chain({"query": question})
+    #     metadata = [
+    #         result["source_documents"][i].metadata
+    #         for i in range(len(result["source_documents"]))
+    #     ]
+    #     result["metadata"] = metadata
+    #     self.logger.info(f"Metadata: {metadata}")
+    #     return result
 
+    # Service
     def get_docs_similarity_search(self, question: str, k: int):
         """Returns a set of documents using similarity search."""
         return self.vectordb.similarity_search(query=question, k=k)
 
+    # Service
     def document_to_str(self, doc: list["Document"]) -> str:
         """Extracts the content from a list of documents into a line-separated string."""
         docs = []
@@ -152,7 +154,7 @@ class ChainApp:
             docs.append(doc[i].page_content)
         return "\n".join(docs)
 
-    # TODO: How does the template add the metadata?
+    # model / service for creation
     def create_prompt(self, question: str, context: str) -> str:
         """Creates a prompt from the question given a set of source documents."""
 
@@ -164,6 +166,7 @@ class ChainApp:
         Helpful Answer:"""
         return template
 
+    # app layer
     def make_llm_request(self, prompt: str) -> str:
         """Queries the llm with the prompt and returns the answer."""
         res = self.llm.predict(prompt)
