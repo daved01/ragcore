@@ -13,5 +13,5 @@ class VectorDataBaseModel:
     def _get_embedding(self):
         pass
 
-    def similarity_search(self) -> list[Document]:
+    def similarity_search(self):
         pass

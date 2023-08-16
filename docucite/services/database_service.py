@@ -1,5 +1,6 @@
 from logging import Logger
 import os
+from typing import Optional
 
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
@@ -24,12 +25,12 @@ class DatabaseService:
         database_name: str,
     ) -> None:
         self.logger: Logger = logger
-        self.database_path: str = (
+        self.database_path: Optional[str] = (
             AppConstants.DATABASE_BASE_DIR + "/" + database_name
             if database_name
             else None
         )
-        self.vectordb: VectorDataBaseModel = None
+        self.vectordb: Optional[VectorDataBaseModel] = None
         self.embedding: OpenAIEmbeddings = OpenAIEmbeddings()
 
     def create_database(self) -> None:

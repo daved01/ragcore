@@ -2,6 +2,7 @@ from logging import Logger
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
+from typing import Any
 
 from docucite.errors import UserConfigurationError
 
@@ -62,7 +63,9 @@ class DocumentService:
         )
 
     @staticmethod
-    def documents_to_texts(documents: list[Document]) -> list[tuple[str, str]]:
+    def documents_to_texts(
+        documents: list[Document],
+    ) -> list[tuple[str, dict[Any, Any]]]:
         """
         Converts a list of documents to a list of strings and metadata.
         Returns: List of tuples (text, metadata)
