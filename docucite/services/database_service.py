@@ -1,12 +1,13 @@
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema.document import Document
 from logging import Logger
 import os
 
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema.document import Document
+
 from docucite.constants import AppConstants
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
-from docucite.model import VectorDatabase
+from docucite.models.database_model import VectorDataBaseModel
 from docucite.services.document_service import DocumentService
 
 
@@ -28,7 +29,7 @@ class DatabaseService:
             if database_name
             else None
         )
-        self.vectordb: VectorDatabase = None
+        self.vectordb: VectorDataBaseModel = None
         self.embedding: OpenAIEmbeddings = OpenAIEmbeddings()
 
     def create_database(self) -> None:
@@ -36,6 +37,7 @@ class DatabaseService:
         Creates a new database if it does not already exist and saves it on disk
         in the path `AppConstants.DATABASE_BASE_DIR`.
         """
+
         if self._dir_exists(self.database_path):
             raise DatabaseError(
                 f"Cannot create database `{self.database_path}` because it already exists."
@@ -62,7 +64,8 @@ class DatabaseService:
             persist_directory=self.database_path, embedding_function=self.embedding
         )
         self.logger.info(
-            f"Successfully loaded database `{self.database_path}` with {len(self.vectordb.get().get('ids', -1))} indexed documents."
+            f"Successfully loaded database `{self.database_path}` with "
+            f"{len(self.vectordb.get().get('ids', -1))} indexed documents."
         )
 
     def add_documents(self, documents: list[Document]) -> None:
@@ -96,6 +99,16 @@ class DatabaseService:
             f"Successfully added {len(documents)} documents to database. "
             f"Number of indexed documents is now: {len(self.vectordb.get().get('ids', -1))}",
         )
+
+    def search(self, query: str) -> list[Document]:
+        """Returns a list of documents for a query."""
+        if not self.vectordb:
+            raise DatabaseError(
+                "Database does not exist. Please create it before running a search."
+            )
+
+        number_of_results = 5
+        return self.vectordb.similarity_search(query, k=number_of_results)
 
     def _validate_documents_metadata(
         self, texts: list[str], metadatas: list[str]

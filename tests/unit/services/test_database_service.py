@@ -1,12 +1,12 @@
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
 import os
 import pytest
+from langchain.vectorstores import Chroma
+from langchain.schema.document import Document
+from langchain.embeddings import OpenAIEmbeddings
 
 from docucite.constants import AppConstants
 from docucite.services.database_service import DatabaseService
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
-
 from tests import BaseTest
 from tests.unit.services import DocuciteTestSetup
 
@@ -30,8 +30,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         db_service.create_database()
 
         # Then
-        assert db_service.vectordb != None
-        assert type(db_service.vectordb.embeddings) == OpenAIEmbeddings
+        assert db_service.vectordb is not None
+        assert isinstance(db_service.vectordb.embeddings, OpenAIEmbeddings)
         makedirs_mock.assert_not_called()
 
     def test_create_database_base_folder_not_exists(self, mock_logger, mocker):
@@ -45,8 +45,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         db_service.create_database()
 
         # Then
-        assert db_service.vectordb != None
-        assert type(db_service.vectordb.embeddings) == OpenAIEmbeddings
+        assert db_service.vectordb is not None
+        assert isinstance(db_service.vectordb.embeddings, OpenAIEmbeddings)
         assert (
             makedirs_mock.call_count == 2
         )  # langchain Chroma dependency calls os.makedirs() too
@@ -74,6 +74,40 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         assert len(ids_first_docs) == 1
         assert len(ids_second_docs) == 3
         assert ids_first_docs[0] in ids_second_docs
+
+    def test_search(self, mock_logger, mocker, mock_documents):
+        class MockVectorDB:
+            def __init__(self):
+                pass
+
+            def similarity_search(self, query, k):
+                return mock_documents
+
+        mocker.patch("docucite.services.database_service.Chroma", MockVectorDB)
+        db_service = DatabaseService(logger=mock_logger, database_name=None)
+        db_service.vectordb = MockVectorDB()
+        res = db_service.search("What is a good question?")
+        assert len(res) == 2
+        assert isinstance(res[0], Document)
+
+    def test_search_database_empty(self, mock_logger, mocker):
+        class MockVectorDB:
+            def __init__(self):
+                pass
+
+            def similarity_search(self, query, k):
+                return []
+
+        mocker.patch("docucite.services.database_service.Chroma", MockVectorDB)
+        db_service = DatabaseService(logger=mock_logger, database_name=None)
+        db_service.vectordb = MockVectorDB()
+        res = db_service.search("What is a good question?")
+        assert len(res) == 0
+
+    def test_search_no_database(self, mock_logger):
+        db_service = DatabaseService(logger=mock_logger, database_name=None)
+        with pytest.raises(DatabaseError):
+            db_service.search("Why does this fail?")
 
     # All is good if no error is raised
     def test_validate_documents_metadata_pass(
@@ -142,13 +176,13 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
             db_service = DatabaseService(mock_logger, "database_does_not_exist")
             db_service.add_documents(mock_documents)
 
-    def test_create_base_dir(self, mock_logger, tmpdir):
+    def test_create_base_dir(self, mock_logger):
         db_service = DatabaseService(mock_logger, "")
         db_service._create_base_dir()
 
         assert os.path.exists(AppConstants.DATABASE_BASE_DIR)
 
-    def test_create_base_dir_exist(self, mock_logger, tmpdir, mocker):
+    def test_create_base_dir_exist(self, mock_logger, mocker):
         mocker.patch("os.path.exists", return_value=True)
         makedirs_spy = mocker.spy(os, "makedirs")
 

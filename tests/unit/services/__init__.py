@@ -5,6 +5,18 @@ from langchain.schema.document import Document
 
 class DocuciteTestSetup:
     @pytest.fixture
+    def mock_pages(self):
+        page1 = Document(
+            page_content="Hello, this is the first page.",
+            metadata={"source": "some_path/file.pdf", "page": 1},
+        )
+        page2 = Document(
+            page_content="This is the second page.",
+            metadata={"source": "some_path/file.pdf", "page": 2},
+        )
+        return [page1, page2]
+
+    @pytest.fixture
     def mock_documents(self):
         page1 = Document(
             page_content="""Very useful text. It also contains a new sentence.
@@ -13,7 +25,8 @@ class DocuciteTestSetup:
             metadata={"page": 1, "title": "Greatest book"},
         )
         page2 = Document(
-            page_content="""Another day, another sentence. We need them all for testing. Let's go!!!""",
+            page_content="""Another day, another sentence.
+                            We need them all for testing. Let's go!!!""",
             metadata={"page": 2, "title": "Greatest book"},
         )
         return [page1, page2]

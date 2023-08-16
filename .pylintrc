@@ -1,2 +1,2 @@
 [MESSAGES CONTROL]
-disable=logging-fstring-interpolation
+disable=logging-fstring-interpolation, missing-function-docstring, missing-module-docstring, missing-class-docstring

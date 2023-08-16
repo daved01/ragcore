@@ -11,9 +11,9 @@ class AbstractApp(metaclass=ABCMeta):
 
     def __init__(self, file_logging=False):
         self.file_logging = file_logging
-        self.logger = self._initialize_logger()
+        self.logger = self.initialize_logger()
 
-    def _initialize_logger(self) -> Logger:
+    def initialize_logger(self) -> Logger:
         """Creates and configures logger instance for console and file logging."""
         logger = logging.getLogger(__name__)
         logger.setLevel(LOG_LEVEL)
@@ -35,4 +35,3 @@ class AbstractApp(metaclass=ABCMeta):
     @abstractmethod
     def run(self):
         """Run the app"""
-        pass

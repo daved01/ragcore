@@ -10,8 +10,6 @@ class ErrorCodes(IntEnum):
 class AppBaseError(Exception):
     """Base class for app exceptions."""
 
-    pass
-
 
 class UserConfigurationError(AppBaseError):
     """User configuration error."""
@@ -27,3 +25,11 @@ class MissingMetadataError(AppBaseError):
 
 class InvalidMetadataError(AppBaseError):
     """Invalid metadata error."""
+
+
+class LLMError(AppBaseError):
+    """LLM error."""
+
+
+class PromptError(AppBaseError):
+    """Prompt error."""

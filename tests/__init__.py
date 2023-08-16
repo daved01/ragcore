@@ -1,8 +1,7 @@
-import logging
 import pytest
 
-from pytest import MonkeyPatch
 from unittest.mock import MagicMock
+from pytest import MonkeyPatch
 
 
 class BaseTest:

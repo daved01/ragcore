@@ -1,41 +1,60 @@
 import pytest
-from unittest.mock import patch
 
-from docucite.services.document_service import DocumentUploadService, DocumentService
+from docucite.services.document_service import DocumentService
 from docucite.errors import UserConfigurationError
 from tests import BaseTest
 from tests.unit.services import DocuciteTestSetup
 
 
 class TestDocumentService(BaseTest, DocuciteTestSetup):
-    def test_documents_to_texts(self, mock_logger, mock_documents):
-        document_service = DocumentService(logger=mock_logger)
+    def test_load_document(self, mock_logger, mock_pages, mocker):
+        class MockPyPDFLoader:
+            def __init__(self, file_path):
+                self.file_path = file_path
 
-        results = document_service.documents_to_texts(mock_documents)
-        new_texts, new_metadatas = map(list, zip(*results))
+            def load_and_split(self):
+                return mock_pages
 
-        assert len(new_texts) == len(new_metadatas)
-        assert new_texts[0] == mock_documents[0].page_content
-        assert new_texts[1] == mock_documents[1].page_content
-        assert new_metadatas[0] == mock_documents[0].metadata
-        assert new_metadatas[1] == mock_documents[1].metadata
+        mocker.patch("docucite.services.document_service.PyPDFLoader", MockPyPDFLoader)
 
+        document_service = DocumentService(mock_logger)
+        assert not document_service.pages
+        assert not document_service.documents
 
-class TestDocumentUploadService(BaseTest, DocuciteTestSetup):
-    def test_load_document(self):
-        raise NotImplementedError
+        document_service.load_document("some_path/file.pdf", "Greatest Book")
+
+        assert len(document_service.pages) == 2
+        assert document_service.pages[0] == mock_pages[0]
+        assert document_service.pages[1] == mock_pages[1]
+        assert "title" in document_service.pages[0].metadata
+        assert "title" in document_service.pages[1].metadata
+
+    def test_load_document_no_pages(self, mock_logger, mocker):
+        class MockPyPDFLoader:
+            def __init__(self, file_path):
+                self.file_path = file_path
+
+            def load_and_split(self):
+                return []
+
+        mocker.patch("docucite.services.document_service.PyPDFLoader", MockPyPDFLoader)
+
+        document_service = DocumentService(mock_logger)
+        assert not document_service.pages
+        assert not document_service.documents
+
+        document_service.load_document("some_path/file.pdf", "Greatest Book")
+
+        assert len(document_service.pages) == 0
 
     @pytest.mark.parametrize(
         "split, expected_num_docs",
-        [((1000, 200), 2), ((50, 10), 5), ((106, 10), 3), ((10, 4), 27), ((50, 0), 5)],
+        [((1000, 200), 2), ((50, 10), 6), ((106, 10), 3), ((10, 4), 28), ((50, 0), 6)],
     )
     def test_split_document(
-        self, mocker, mock_documents, expected_document, split, expected_num_docs
+        self, mock_logger, mock_documents, expected_document, split, expected_num_docs
     ):
-        mock_logger = mocker.patch("logging.getLogger")
-        mock_logger_instance = mock_logger.return_value
-        mock_logger_instance.info = mocker.MagicMock()
-        document_service = DocumentUploadService(mock_logger)
+        document_service = DocumentService(mock_logger)
 
         document_service.pages = list(mock_documents)
 
@@ -50,21 +69,19 @@ class TestDocumentUploadService(BaseTest, DocuciteTestSetup):
         document_service.split_document(split[0], split[1])
         assert len(document_service.documents) == expected_num_docs
 
-    def test_split_document_no_docs(self, mocker):
-        mock_logger = mocker.patch("logging.getLogger")
-        mock_logger_instance = mock_logger.return_value
-        mock_logger_instance.info = mocker.MagicMock()
-        document_service = DocumentUploadService(mock_logger)
+    def test_split_document_no_docs(self, mock_logger):
+        document_service = DocumentService(mock_logger)
         with pytest.raises(UserConfigurationError):
             document_service.split_document(10, 10)
 
+    def test_documents_to_texts(self, mock_logger, mock_documents):
+        document_service = DocumentService(logger=mock_logger)
 
-class TestDocumentRetrievalService:
-    def test_retrieve_documents(self):
-        raise NotImplementedError
+        results = document_service.documents_to_texts(mock_documents)
+        new_texts, new_metadatas = map(list, zip(*results))
 
-    def test_get_docs_similarity_search(self):
-        raise NotImplementedError
-
-    def test_document_to_str(self):
-        raise NotImplementedError
+        assert len(new_texts) == len(new_metadatas)
+        assert new_texts[0] == mock_documents[0].page_content
+        assert new_texts[1] == mock_documents[1].page_content
+        assert new_metadatas[0] == mock_documents[0].metadata
+        assert new_metadatas[1] == mock_documents[1].metadata
