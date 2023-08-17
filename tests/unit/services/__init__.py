@@ -1,6 +1,6 @@
 import pytest
 
-from langchain.schema.document import Document
+from docucite.models.document_model import Document
 
 
 class DocuciteTestSetup:
@@ -69,6 +69,10 @@ class DocuciteTestSetup:
     @pytest.fixture
     def mock_two_metadatas(self):
         return [{"page": 1, "title": "Best book"}, {"page": 2, "title": "Best book"}]
+
+    @pytest.fixture
+    def mock_two_metadatas_two(self):
+        return [{"page": 1, "title": "Good Book"}, {"page": 2, "title": "Good Book"}]
 
     @pytest.fixture
     def mock_three_metadatas_one_missing_title(self):

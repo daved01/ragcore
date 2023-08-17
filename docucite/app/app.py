@@ -14,12 +14,12 @@ Returns:
 - Confirmations
 """
 from typing import Optional
-from langchain.schema.document import Document
 
 from docucite.app import AbstractApp
+from docucite.errors import DatabaseError
+from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService
-from docucite.errors import DatabaseError
 from docucite.services.llm_service import LLMService
 
 

@@ -1,9 +1,9 @@
 from logging import Logger
+from typing import Any
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema.document import Document
-from typing import Any
 
+from docucite.models.document_model import Document
 from docucite.errors import UserConfigurationError
 
 

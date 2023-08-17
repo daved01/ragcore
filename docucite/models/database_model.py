@@ -1,17 +1,49 @@
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema.document import Document
+from typing import Optional
+
+from langchain.vectorstores import Chroma
+
+from docucite.models.embedding_model import Embedding
+from docucite.constants import AppConstants
+from docucite.models.document_model import Document
 
 
 class VectorDataBaseModel:
-    def __init__(self, persist_directory: str, embedding_function: OpenAIEmbeddings):
+    """Wrapper for vector database."""
+
+    def __init__(self, persist_directory: str, embedding_function: Embedding):
         self.persist_directory = persist_directory
-        self.embedding_function = embedding_function
+        self.embeddings = embedding_function
+        self.chroma = Chroma(
+            persist_directory=self.persist_directory,
+            embedding_function=self.embeddings,
+        )
 
-    def _init_chroma(self):
-        pass
+    def get(
+        self,
+        ids: Optional[int] = None,
+    ):
+        return self.chroma.get(ids=ids)
 
-    def _get_embedding(self):
-        pass
+    def add_texts(
+        self, texts: str, metadatas: Optional[list[dict]] = None
+    ) -> list[str]:
+        return self.chroma.add_texts(texts=texts, metadatas=metadatas)
 
-    def similarity_search(self):
-        pass
+    @staticmethod
+    def from_documents(
+        documents: list[Document],
+        embedding: Optional[Embedding] = None,
+        ids: Optional[list[str]] = None,
+        persist_directory: Optional[str] = None,
+    ) -> Chroma:
+        return Chroma.from_documents(
+            documents=documents,
+            embedding=embedding,
+            ids=ids,
+            persist_directory=persist_directory,
+        )
+
+    def similarity_search(
+        self, query: str, k: int = AppConstants.DATABASE_SEARCH_DEFAULT_K
+    ) -> list[Document]:
+        return self.chroma.similarity_search(query=query, k=k)

@@ -1,4 +1,4 @@
-from docucite.models.model import PromptGenerator
+from docucite.models.prompt_model import PromptGenerator
 
 
 class TestPromptGenerator:

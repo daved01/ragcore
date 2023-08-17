@@ -8,9 +8,9 @@ Contains:
 -
 """
 from logging import Logger
-from langchain.schema.document import Document
 
-from docucite.models.model import PromptGenerator
+from docucite.models.document_model import Document
+from docucite.models.prompt_model import PromptGenerator
 from docucite.models.llm_model import LLMModel
 from docucite.errors import LLMError, PromptError
 

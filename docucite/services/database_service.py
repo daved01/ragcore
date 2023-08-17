@@ -2,12 +2,10 @@ from logging import Logger
 import os
 from typing import Optional
 
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema.document import Document
-
 from docucite.constants import AppConstants
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
+from docucite.models.document_model import Document
+from docucite.models.embedding_model import Embedding
 from docucite.models.database_model import VectorDataBaseModel
 from docucite.services.document_service import DocumentService
 
@@ -31,7 +29,7 @@ class DatabaseService:
             else None
         )
         self.vectordb: Optional[VectorDataBaseModel] = None
-        self.embedding: OpenAIEmbeddings = OpenAIEmbeddings()
+        self.embedding: Embedding = Embedding()
 
     def create_database(self) -> None:
         """
@@ -47,7 +45,7 @@ class DatabaseService:
         if not self._dir_exists(AppConstants.DATABASE_BASE_DIR):
             self._create_base_dir()
 
-        self.vectordb = Chroma(
+        self.vectordb = VectorDataBaseModel(
             persist_directory=self.database_path, embedding_function=self.embedding
         )
 
@@ -61,7 +59,7 @@ class DatabaseService:
             )
         self.logger.info(f"Loading from database in path {self.database_path} ...")
 
-        self.vectordb = Chroma(
+        self.vectordb = VectorDataBaseModel(
             persist_directory=self.database_path, embedding_function=self.embedding
         )
         self.logger.info(

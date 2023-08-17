@@ -1,15 +1,3 @@
-"""
-Interaction with database and external API for the llm.
-Contains:
-- Prompt template
-- Prompt generation
-
-"""
-from dataclasses import dataclass
-
-from langchain.vectorstores import Chroma
-
-
 class PromptGenerator:
     def get_prompt(self, question: str, context_str: str) -> str:
         """Returns a prompt from the question given a set of source documents."""
@@ -22,10 +10,3 @@ class PromptGenerator:
         Context: ```{context_str}```
         Question: ```{question}```
         Helpful Answer:"""
-
-
-@dataclass
-class VectorDatabase:
-    """Class to encapsulate vector databases."""
-
-    database: Chroma
