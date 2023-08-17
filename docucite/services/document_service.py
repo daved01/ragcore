@@ -32,7 +32,7 @@ class DocumentService:
 
         self.pages = loader.load_and_split()
 
-        # TODO: Must add book page, not pdf page!
+        # TODO: Must add book page, not pdf page! # pylint: disable=fixme
         for i, _ in enumerate(self.pages):
             self.pages[i].metadata["title"] = document_title
 

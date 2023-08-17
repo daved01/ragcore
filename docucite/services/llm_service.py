@@ -54,6 +54,6 @@ class LLMService:
     def document_to_str(docs: list[Document]) -> str:
         """Extracts the content from a list of Documents into a line-separated string."""
         docs_text = []
-        for i, _ in enumerate(docs):
-            docs_text.append(docs[i].page_content)
+        for _, doc in enumerate(docs):
+            docs_text.append(doc.page_content)
         return "\n".join(docs_text)

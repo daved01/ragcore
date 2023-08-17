@@ -37,12 +37,20 @@ class DatabaseService:
         in the path `AppConstants.DATABASE_BASE_DIR`.
         """
 
-        if self._dir_exists(self.database_path):
+        if (
+            self.database_path
+            and os.path.exists(self.database_path)
+            and os.path.isdir(self.database_path)
+        ):
             raise DatabaseError(
                 f"Cannot create database `{self.database_path}` because it already exists."
             )
 
-        if not self._dir_exists(AppConstants.DATABASE_BASE_DIR):
+        if not (
+            AppConstants.DATABASE_BASE_DIR
+            and os.path.exists(AppConstants.DATABASE_BASE_DIR)
+            and os.path.isdir(AppConstants.DATABASE_BASE_DIR)
+        ):
             self._create_base_dir()
 
         self.vectordb = VectorDataBaseModel(
@@ -53,7 +61,11 @@ class DatabaseService:
 
     def load_database(self) -> None:
         """Loads an existing vector database into memory."""
-        if not self._dir_exists(self.database_path):
+        if not (
+            self.database_path
+            and os.path.exists(self.database_path)
+            and os.path.isdir(self.database_path)
+        ):
             raise DatabaseError(
                 f"Tried to load database `{self.database_path}`, but it does not exist."
             )
@@ -110,7 +122,7 @@ class DatabaseService:
         return self.vectordb.similarity_search(query, k=number_of_results)
 
     def _validate_documents_metadata(
-        self, texts: list[str], metadatas: list[str]
+        self, texts: list[str], metadatas: list[dict[str, str]]
     ) -> None:
         if not metadatas or not len(texts) == len(metadatas):
             raise MissingMetadataError(
@@ -126,6 +138,10 @@ class DatabaseService:
     def _validate_documents_not_in_database(
         self, metadatas: list[dict[str, str]]
     ) -> None:
+        if not self.vectordb:
+            raise DatabaseService(
+                "Tried to validate documents in database, but the database has not been initialized."
+            )
         existing_titles = set(
             title.get("title").lower() for title in self.vectordb.get().get("metadatas")
         )
@@ -144,7 +160,3 @@ class DatabaseService:
         )
         if not os.path.exists(AppConstants.DATABASE_BASE_DIR):
             os.makedirs(AppConstants.DATABASE_BASE_DIR)
-
-    @staticmethod
-    def _dir_exists(dir) -> bool:
-        return os.path.exists(dir) and os.path.isdir(dir) if dir else False

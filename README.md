@@ -28,6 +28,14 @@ Install dependencies with `pip install -r requirements_dev.txt`.
 
 All code in the main folder `docucite` must be tested and of high quality. The folder
 
+## Code quality
+
+Before submitting a PR, make sure the code in `docucite` is clean. We use the three tools:
+
+`pylint docucite/`
+`black docucite/`
+`mypy docucite/ --ignore-missing-imports --disable-error-code "annotation-unchecked""`
+
 ## Testing
 
 ## Ideas

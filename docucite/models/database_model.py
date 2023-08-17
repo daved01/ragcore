@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Protocol, Any
 
 from langchain.vectorstores import Chroma
 
@@ -7,10 +7,17 @@ from docucite.constants import AppConstants
 from docucite.models.document_model import Document
 
 
+class ChromaProtocol(Protocol):
+    def get(self, ids: Optional[str]) -> dict[str, Any]:
+        ...
+
+
 class VectorDataBaseModel:
     """Wrapper for vector database."""
 
-    def __init__(self, persist_directory: str, embedding_function: Embedding):
+    def __init__(
+        self, persist_directory: Optional[str], embedding_function: Optional[Embedding]
+    ):
         self.persist_directory = persist_directory
         self.embeddings = embedding_function
         self.chroma = Chroma(
@@ -20,8 +27,8 @@ class VectorDataBaseModel:
 
     def get(
         self,
-        ids: Optional[int] = None,
-    ):
+        ids: Optional[str] = None,
+    ) -> dict[str, Any]:
         return self.chroma.get(ids=ids)
 
     def add_texts(
