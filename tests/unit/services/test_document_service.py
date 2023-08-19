@@ -8,14 +8,14 @@ from tests.unit.services import DocuciteTestSetup
 
 class TestDocumentService(BaseTest, DocuciteTestSetup):
     def test_load_document(self, mock_logger, mock_pages, mocker):
-        class MockPyPDFLoader:
+        class MockPDFLoader:
             def __init__(self, file_path):
                 self.file_path = file_path
 
             def load_and_split(self):
                 return mock_pages
 
-        mocker.patch("docucite.services.document_service.PyPDFLoader", MockPyPDFLoader)
+        mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
 
         document_service = DocumentService(mock_logger)
         assert not document_service.pages
@@ -30,14 +30,14 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
         assert "title" in document_service.pages[1].metadata
 
     def test_load_document_no_pages(self, mock_logger, mocker):
-        class MockPyPDFLoader:
+        class MockPDFLoader:
             def __init__(self, file_path):
                 self.file_path = file_path
 
             def load_and_split(self):
                 return []
 
-        mocker.patch("docucite.services.document_service.PyPDFLoader", MockPyPDFLoader)
+        mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
 
         document_service = DocumentService(mock_logger)
         assert not document_service.pages

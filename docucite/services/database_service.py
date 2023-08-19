@@ -10,6 +10,9 @@ from docucite.models.database_model import VectorDataBaseModel
 from docucite.services.document_service import DocumentService
 
 
+Metadata = dict[str, str]
+
+
 class DatabaseService:
     """
     Creates a DatabaseService.
@@ -92,8 +95,11 @@ class DatabaseService:
                 "but this database does not exist."
             )
 
-        new_data = DocumentService.documents_to_texts(documents)
-        new_texts, new_metadatas = map(list, zip(*new_data))
+        new_datas: list[tuple[str, Metadata]] = DocumentService.documents_to_texts(
+            documents
+        )
+
+        new_texts, new_metadatas = self._extract_data(new_datas)
 
         # Check if we can add the new documents
         self._validate_documents_metadata(texts=new_texts, metadatas=new_metadatas)
@@ -118,11 +124,24 @@ class DatabaseService:
                 "Database does not exist. Please create it before running a search."
             )
 
-        number_of_results = 5
-        return self.vectordb.similarity_search(query, k=number_of_results)
+        return self.vectordb.similarity_search(
+            query, k=AppConstants.NUMBER_OF_SEARCH_RESULTS
+        )
+
+    # TODO: Test
+    def _extract_data(
+        self, datas: list[tuple[str, Metadata]]
+    ) -> tuple[list[str], list[Metadata]]:
+        new_texts = []
+        new_metadatas = []
+        for data in datas:
+            new_texts.append(data[0])
+            new_metadatas.append(data[1])
+
+        return new_texts, new_metadatas
 
     def _validate_documents_metadata(
-        self, texts: list[str], metadatas: list[dict[str, str]]
+        self, texts: list[str], metadatas: list[Metadata]
     ) -> None:
         if not metadatas or not len(texts) == len(metadatas):
             raise MissingMetadataError(
@@ -139,13 +158,18 @@ class DatabaseService:
         self, metadatas: list[dict[str, str]]
     ) -> None:
         if not self.vectordb:
-            raise DatabaseService(
+            raise DatabaseError(
                 "Tried to validate documents in database, but the database has not been initialized."
             )
-        existing_titles = set(
-            title.get("title").lower() for title in self.vectordb.get().get("metadatas")
+
+        vectordb_titles = self.vectordb.get().get("metadatas")
+
+        existing_titles = (
+            set(title.get("title").lower() for title in vectordb_titles)
+            if vectordb_titles
+            else set()
         )
-        new_titles = set(title.get("title").lower() for title in metadatas)
+        new_titles = set(title.get("title", "").lower() for title in metadatas)
 
         union = new_titles & existing_titles
         if union:

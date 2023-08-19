@@ -18,16 +18,23 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         with pytest.raises(DatabaseError):
             db_service = DatabaseService(mock_logger, "database_already_exists")
 
-            mocker.patch.object(db_service, "_dir_exists", return_value=True)
+            db_service.database_path = "path"
+            mocker.patch("os.path.exists", return_value=True)
+            mocker.patch("os.path.isdir", return_value=True)
 
             db_service.create_database()
 
     def test_create_database_base_folder_exists(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mock_embedding = mocker.patch(
+            "docucite.models.embedding_model.OpenAIEmbeddings"
+        )
 
         # If
         db_service = DatabaseService(logger=mock_logger, database_name=None)
-        mocker.patch.object(db_service, "_dir_exists", side_effect=[False, True])
+
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch("os.path.isdir", return_value=True)
+
         makedirs_mock = mocker.patch("os.makedirs", return_value=None)
 
         # When
@@ -39,11 +46,16 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_embedding.assert_called_once()
 
     def test_create_database_base_folder_not_exists(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mock_embedding = mocker.patch(
+            "docucite.models.embedding_model.OpenAIEmbeddings"
+        )
 
         # If
         db_service = DatabaseService(logger=mock_logger, database_name=None)
-        mocker.patch.object(db_service, "_dir_exists", side_effect=[False, False])
+
+        mocker.patch("os.path.exists", return_value=False)
+        mocker.patch("os.path.isdir", return_value=False)
+
         mocker.patch("os.path.exists", return_value=False)
         makedirs_mock = mocker.patch("os.makedirs", return_value=None)
 

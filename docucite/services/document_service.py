@@ -1,9 +1,9 @@
 from logging import Logger
 from typing import Any
-from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from docucite.models.document_model import Document
+from docucite.models.document_loader_model import PDFLoader
 from docucite.errors import UserConfigurationError
 
 
@@ -28,8 +28,8 @@ class DocumentService:
         - document_title: Title of document
         """
         self.logger.info("Loading documents into memory ...")
-        loader = PyPDFLoader(path)
 
+        loader = PDFLoader(path)
         self.pages = loader.load_and_split()
 
         # TODO: Must add book page, not pdf page! # pylint: disable=fixme
@@ -65,7 +65,7 @@ class DocumentService:
     @staticmethod
     def documents_to_texts(
         documents: list[Document],
-    ) -> list[tuple[str, dict[Any, Any]]]:
+    ) -> list[tuple[str, dict[str, str]]]:
         """
         Converts a list of documents to a list of strings and metadata.
         Returns: List of tuples (text, metadata)
