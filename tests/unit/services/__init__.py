@@ -1,6 +1,7 @@
 import pytest
 
 from docucite.models.document_model import Document
+from langchain.schema import Document as LangDocument
 
 
 class DocuciteTestSetup:
@@ -25,6 +26,21 @@ class DocuciteTestSetup:
             metadata={"page": 1, "title": "Greatest book"},
         )
         page2 = Document(
+            page_content="""Another day, another sentence.
+                            We need them all for testing. Let's go!!!""",
+            metadata={"page": 2, "title": "Greatest book"},
+        )
+        return [page1, page2]
+
+    @pytest.fixture
+    def mock_lang_documents(self):
+        page1 = LangDocument(
+            page_content="""Very useful text. It also contains a new sentence.
+
+            And, as we can see here, even a separate paragraph! Life is crazy.""",
+            metadata={"page": 1, "title": "Greatest book"},
+        )
+        page2 = LangDocument(
             page_content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
             metadata={"page": 2, "title": "Greatest book"},

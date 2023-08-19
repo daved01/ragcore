@@ -1,6 +1,7 @@
 from logging import Logger
 from typing import Any
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+from docucite.services.text_splitter_service import TextSplitterService
 
 from docucite.models.document_model import Document
 from docucite.models.document_loader_model import PDFLoader
@@ -53,7 +54,7 @@ class DocumentService:
             f"and chunk_overlap {chunk_overlap} ..."
         )
 
-        splitter = RecursiveCharacterTextSplitter(
+        splitter = TextSplitterService(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
         )
 

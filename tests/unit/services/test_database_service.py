@@ -4,7 +4,6 @@ import pytest
 from docucite.constants import AppConstants
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
 from docucite.models.document_model import Document
-from docucite.models.embedding_model import Embedding
 from docucite.models.database_model import VectorDataBaseModel
 from docucite.services.database_service import DatabaseService
 from tests import BaseTest
