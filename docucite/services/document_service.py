@@ -1,5 +1,4 @@
 from logging import Logger
-from typing import Any
 
 from docucite.services.text_splitter_service import TextSplitterService
 

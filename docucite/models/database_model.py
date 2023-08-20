@@ -48,14 +48,7 @@ class VectorDataBaseModel:
     ) -> list[Document]:
         lang_docs = self.chroma.similarity_search(query=query, k=k)
 
-        docs = []
-        for lang_doc in lang_docs:
-            doc_dto = DocumentDTO(
-                page_content=lang_doc.page_content, metadata=lang_doc.metadata
-            )
-            docs.append(doc_dto.to_docucite())
-
-        return docs
+        return DocumentDTO.to_docucite_list(lang_docs)
 
     @staticmethod
     def from_documents(

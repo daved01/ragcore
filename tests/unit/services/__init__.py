@@ -1,7 +1,7 @@
 import pytest
 
-from docucite.models.document_model import Document
 from langchain.schema import Document as LangDocument
+from docucite.models.document_model import Document
 
 
 class DocuciteTestSetup:

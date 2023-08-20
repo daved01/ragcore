@@ -30,7 +30,7 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
         llm_service = LLMService(mock_logger)
         question = ""
         with pytest.raises(PromptError):
-            prompt = llm_service.create_prompt(question, mock_documents)
+            llm_service.create_prompt(question, mock_documents)
 
     def test_make_llm_request(self, mock_logger, mocker):
         class MockChatOpenAI:

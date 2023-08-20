@@ -128,18 +128,6 @@ class DatabaseService:
             query, k=AppConstants.NUMBER_OF_SEARCH_RESULTS
         )
 
-    # TODO: Test
-    def _extract_data(
-        self, datas: list[tuple[str, Metadata]]
-    ) -> tuple[list[str], list[Metadata]]:
-        new_texts = []
-        new_metadatas = []
-        for data in datas:
-            new_texts.append(data[0])
-            new_metadatas.append(data[1])
-
-        return new_texts, new_metadatas
-
     def _validate_documents_metadata(
         self, texts: list[str], metadatas: list[Metadata]
     ) -> None:
@@ -159,7 +147,8 @@ class DatabaseService:
     ) -> None:
         if not self.vectordb:
             raise DatabaseError(
-                "Tried to validate documents in database, but the database has not been initialized."
+                "Tried to validate documents in database, "
+                "but the database has not been initialized."
             )
 
         vectordb_titles = self.vectordb.get().get("metadatas")
@@ -184,3 +173,15 @@ class DatabaseService:
         )
         if not os.path.exists(AppConstants.DATABASE_BASE_DIR):
             os.makedirs(AppConstants.DATABASE_BASE_DIR)
+
+    @staticmethod
+    def _extract_data(
+        datas: list[tuple[str, Metadata]]
+    ) -> tuple[list[str], list[Metadata]]:
+        new_texts = []
+        new_metadatas = []
+        for data in datas:
+            new_texts.append(data[0])
+            new_metadatas.append(data[1])
+
+        return new_texts, new_metadatas

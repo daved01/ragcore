@@ -12,7 +12,7 @@ from tests.unit.services import DocuciteTestSetup
 
 class TestDatabaseService(BaseTest, DocuciteTestSetup):
     def test_create_database_database_exists(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
 
         with pytest.raises(DatabaseError):
             db_service = DatabaseService(mock_logger, "database_already_exists")
@@ -70,7 +70,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_embedding.assert_called_once()
 
     def test_update_database(
-        self, mock_logger, mock_documents, mock_documents_best_book, mocker
+        self, mock_logger, mock_documents, mock_documents_best_book
     ):
         # Create database in memory with the mock_documents
         db_service = DatabaseService(logger=mock_logger, database_name=None)
@@ -132,7 +132,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_embedding.assert_called_once()
 
     def test_search_no_database(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
         db_service = DatabaseService(logger=mock_logger, database_name=None)
         with pytest.raises(DatabaseError):
             db_service.search("Why does this fail?")
@@ -151,7 +151,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
     def test_validate_documents_metadata_missing_metadata(
         self, mock_logger, mock_three_texts, mocker
     ):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
         with pytest.raises(MissingMetadataError):
             db_service = DatabaseService(logger=mock_logger, database_name=None)
             db_service._validate_documents_metadata(
@@ -161,7 +161,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
     def test_validate_documents_metadata_one_metadata_missing(
         self, mock_logger, mock_three_texts, mock_two_metadatas, mocker
     ):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
         with pytest.raises(MissingMetadataError):
             db_service = DatabaseService(logger=mock_logger, database_name=None)
             db_service._validate_documents_metadata(
@@ -175,7 +175,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_three_metadatas_one_missing_title,
         mocker,
     ):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
         with pytest.raises(InvalidMetadataError):
             db_service = DatabaseService(logger=mock_logger, database_name=None)
             db_service._validate_documents_metadata(
@@ -183,7 +183,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
             )
 
     def test_validate_documents_not_in_database_pass(
-        self, mock_logger, mock_documents, mock_two_metadatas_two, mocker
+        self, mock_logger, mock_documents, mock_two_metadatas_two
     ):
         # Create in memory database from mock_documents
         db_service = DatabaseService(logger=mock_logger, database_name=None)
@@ -195,9 +195,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         db_service._validate_documents_not_in_database(metadatas=mock_two_metadatas_two)
 
-    def test_validate_documents_not_in_database_fail(
-        self, mock_logger, mock_documents, mocker
-    ):
+    def test_validate_documents_not_in_database_fail(self, mock_logger, mock_documents):
         metadatas = [{"page": 6, "title": "Greatest book"}]
         with pytest.raises(DatabaseError):
             db_service = DatabaseService(logger=mock_logger, database_name=None)
@@ -210,7 +208,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
             db_service._validate_documents_not_in_database(metadatas=metadatas)
 
     def test_update_database_not_exist(self, mock_logger, mock_documents, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
+        mocker.patch("docucite.services.database_service.Embedding")
         with pytest.raises(DatabaseError):
             db_service = DatabaseService(mock_logger, "database_does_not_exist")
             db_service.add_documents(mock_documents)
@@ -233,3 +231,17 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         makedirs_spy.assert_not_called()
         mock_embedding.assert_called_once()
+
+    def test_extract_data(self, mock_logger):
+        datas = [
+            ("Text A", {"metadata": [{"page": 1}]}),
+            ("Text B", {"metadata": [{"page": 2}]}),
+            (None, {}),
+        ]
+
+        database_service = DatabaseService(mock_logger, database_name=None)
+        texts, metadatas = database_service._extract_data(datas=datas)
+
+        for i, data in enumerate(datas):
+            assert data[0] == texts[i]
+            assert data[1] == metadatas[i]

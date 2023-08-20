@@ -10,9 +10,7 @@ class TestTextSplitterService(BaseTest, DocuciteTestSetup):
         "split, expected_num_docs",
         [((1000, 200), 2), ((50, 10), 6), ((106, 10), 3), ((10, 4), 28), ((50, 0), 6)],
     )
-    def test_split_documents(
-        self, split, expected_num_docs, mock_documents, expected_document
-    ):
+    def test_split_documents(self, split, expected_num_docs, mock_documents):
         chunk_size, chunk_overlap = split[0], split[1]
         splitter_service = TextSplitterService(chunk_size, chunk_overlap)
         splits = splitter_service.split_documents(mock_documents)
