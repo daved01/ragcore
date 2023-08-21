@@ -1,0 +1,34 @@
+name: Code format and typing checks
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Code quality checks
+    env:
+      OPENAI_API_KEY: "verysecretkey" # Replace with secret if required
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements_dev.txt
+
+    - name: Run black code formatter
+      run: find docucite -name "*.py" -exec black {} +
+
+    - name: Run mypy on source folder
+      run:  mypy docucite/
+
+    - name: Run pylint
+      run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')
