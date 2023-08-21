@@ -31,13 +31,8 @@ async def read_root(request: Request):
 def process(user_input: UserInputData):
     # Process the user input using your console app logic
     print(f"Sending POST request with content: {user_input.user_input}")
-    prompt = chain_app.build_prompt_template()
-    result = chain_app.query(prompt, user_input.user_input)
-    # metadata = result["source_documents"][0].metadata
-    metadata = result.get("metadata")
-    body = result["result"]
-    pages = set([metadata[i]["page"] for i in range(len(metadata))])
-    body += "\n\n"
-    body += ", ".join([f"[p. {page}]" for page in pages])
-    print(f"Response: {body}")
-    return {"result": body}
+    context = chain_app.get_docs_similarity_search(question=user_input.user_input, k=8)
+    context_str = chain_app.document_to_str(context)
+    prompt = chain_app.create_prompt(user_input, context_str)
+    result = chain_app.make_llm_request(prompt)
+    return {"result": result}
