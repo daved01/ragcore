@@ -17,8 +17,6 @@ class VectorDataBaseModel:
         persist_directory: Optional[str],
         embedding_function: Optional[Embedding],
     ):
-        # self.persist_directory = persist_directory
-        # self.embeddings = embedding_function
         self.chroma = self._init_chroma(
             persist_directory=persist_directory, embedding=embedding_function
         )

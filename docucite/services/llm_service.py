@@ -9,6 +9,7 @@ Contains:
 """
 from logging import Logger
 
+from docucite.constants import AppConstants
 from docucite.models.document_model import Document
 from docucite.models.prompt_model import PromptGenerator
 from docucite.models.llm_model import LLMModel
@@ -17,7 +18,7 @@ from docucite.errors import LLMError, PromptError
 
 class LLMService:
     def __init__(
-        self, logger: Logger, llm_name="gpt-3.5-turbo", llm_temperature=0
+        self, logger: Logger, llm_name=AppConstants.LLM_MODEL, llm_temperature=0
     ) -> None:
         self.logger = logger
         self.llm_name = llm_name
