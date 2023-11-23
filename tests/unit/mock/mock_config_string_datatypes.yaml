@@ -1,0 +1,6 @@
+# Mock config. Instead of integers string values are used.
+
+database_name: "my_database"
+document: "some_document.txt"
+chunk_size: "100"
+chunk_overlap: "10"

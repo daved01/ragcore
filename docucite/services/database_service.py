@@ -27,9 +27,7 @@ class DatabaseService:
     ) -> None:
         self.logger: Logger = logger
         self.database_path: Optional[str] = (
-            AppConstants.DATABASE_BASE_DIR + "/" + database_name
-            if database_name
-            else None
+            AppConstants.DATABASE_BASE_DIR + database_name if database_name else None
         )
         self.vectordb: Optional[VectorDataBaseModel] = None
         self.embedding: Embedding = Embedding()

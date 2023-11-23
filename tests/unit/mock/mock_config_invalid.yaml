@@ -1,0 +1,5 @@
+# Mock config. Keys are named incorrectly, and document key is missing entirely.
+
+non_existing_key: "my_database"
+chunk_size_wrong: "100"
+chunk_overlap_wrong: "10"

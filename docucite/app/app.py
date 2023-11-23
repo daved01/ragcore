@@ -13,9 +13,11 @@ Returns:
 - result
 - Confirmations
 """
-from typing import Optional
+from typing import Optional, Any
+import yaml
 
 from docucite.app import AbstractApp
+from docucite.constants import AppConstants, ConfigurationConstants
 from docucite.errors import DatabaseError
 from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
@@ -29,6 +31,7 @@ class DocuCiteApp(AbstractApp):
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
+        self.configuration: dict[str, str] = self._get_config()
 
     def run(self) -> None:
         self.logger.info("Setting up session ...")
@@ -39,7 +42,11 @@ class DocuCiteApp(AbstractApp):
 
         self.database_service = DatabaseService(
             logger=self.logger,
-            database_name="chroma_200_50",
+            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
         )
 
         # Load database if exists or create it
@@ -53,9 +60,14 @@ class DocuCiteApp(AbstractApp):
             title = input("Enter title of document: ")
             self.document_service = DocumentService(self.logger)
             self.document_service.load_document(
-                path="data/Python summary.pdf", document_title=title
+                path=AppConstants.DOCUMENT_BASE_PATH
+                + self.configuration[ConfigurationConstants.KEY_DOCUMENT],
+                document_title=title,
             )
-            self.document_service.split_document(200, 50)
+            self.document_service.split_document(
+                self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE],
+                self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP],
+            )
             self.database_service.add_documents(self.document_service.documents)
 
         # Initialize LLMService here, only when rest is available
@@ -89,3 +101,38 @@ class DocuCiteApp(AbstractApp):
             print(f"\n{response}\n")
             print("--" * 32)
             print("")
+
+    # TODO: Add tests, fix types
+    def _get_config(self) -> dict[str, Any]:
+        """
+        Gets the configuration from the configuration.yaml file in the root.
+        If the file is not present, a default configuration is used instead.
+        """
+        with open(
+            ConfigurationConstants.CONFIG_FILE_PATH, "r", encoding="utf-8"
+        ) as filehandler:
+            config = yaml.load(filehandler, yaml.FullLoader)
+        database_name = config.get(
+            ConfigurationConstants.KEY_DATABASE_NAME,
+            ConfigurationConstants.DEFAULT_DATABASE_NAME,
+        )
+        document = config.get(ConfigurationConstants.KEY_DOCUMENT)
+        chunk_size = config.get(
+            ConfigurationConstants.KEY_CHUNK_SIZE,
+            ConfigurationConstants.DEFAULT_CHUNK_SIZE,
+        )
+        chunk_overlap = config.get(
+            ConfigurationConstants.KEY_CHUNK_OVERLAP,
+            ConfigurationConstants.DEFAULT_CHUNK_OVERLAP,
+        )
+
+        self.logger.info(
+            f"Loaded configuration `{config}` from file `{ConfigurationConstants.CONFIG_FILE_PATH}`."
+        )
+
+        return {
+            ConfigurationConstants.KEY_DATABASE_NAME: database_name,
+            ConfigurationConstants.KEY_DOCUMENT: document,
+            ConfigurationConstants.KEY_CHUNK_SIZE: int(chunk_size),
+            ConfigurationConstants.KEY_CHUNK_OVERLAP: int(chunk_overlap),
+        }
