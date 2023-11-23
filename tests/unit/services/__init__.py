@@ -1,6 +1,6 @@
 import pytest
-
 from langchain.schema import Document as LangDocument
+
 from docucite.models.document_model import Document
 
 
@@ -58,7 +58,6 @@ class DocuciteTestSetup:
             also available now.""",
             metadata={"page": 1, "title": "Best book"},
         )
-
         return [page3]
 
     @pytest.fixture

@@ -1,12 +1,3 @@
-"""
-Core business layer
-Contains:
-- Document uploading
-- Loading the database
-- Construct a prompt from the question and the template
-- Process the answer
--
-"""
 from logging import Logger
 
 from docucite.constants import AppConstants

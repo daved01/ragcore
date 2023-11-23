@@ -1,0 +1,6 @@
+# Configuration of app parameters
+
+database_name: "chroma"
+document: "Python summary.pdf"
+chunk_size: 150
+chunk_overlap: 50

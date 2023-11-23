@@ -27,9 +27,7 @@ class DatabaseService:
     ) -> None:
         self.logger: Logger = logger
         self.database_path: Optional[str] = (
-            AppConstants.DATABASE_BASE_DIR + "/" + database_name
-            if database_name
-            else None
+            AppConstants.DATABASE_BASE_DIR + database_name if database_name else None
         )
         self.vectordb: Optional[VectorDataBaseModel] = None
         self.embedding: Embedding = Embedding()
@@ -84,7 +82,7 @@ class DatabaseService:
 
     def add_documents(self, documents: list[Document]) -> None:
         """
-        Adds documents to existing database.
+        Adds documents to an existing database.
         Documents must have metadata, and the metadata must have a `title` specified.
         Adding documents with the same title multiple times is not possible.
         """

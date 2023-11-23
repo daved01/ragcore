@@ -1,7 +1,6 @@
 from logging import Logger
 
 from docucite.services.text_splitter_service import TextSplitterService
-
 from docucite.models.document_model import Document
 from docucite.models.document_loader_model import PDFLoader
 from docucite.errors import UserConfigurationError
@@ -10,7 +9,7 @@ from docucite.errors import UserConfigurationError
 class DocumentService:
     """
     Document service base class for handling documents.
-    Handles uploading, splitting of documents.
+    Handles uploading, and splitting of documents.
 
     Pages: pages from the source document
     Documents: split pages from the source document

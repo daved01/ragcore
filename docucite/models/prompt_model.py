@@ -1,6 +1,9 @@
 class PromptGenerator:
     def get_prompt(self, question: str, context_str: str) -> str:
-        """Returns a prompt from the question given a set of source documents."""
+        """
+        Constructs a prompt based on the user input `question` and a set of context documents `context_str`.
+        Typically, this context is retrieved from a vector database.
+        """
 
         return f"""Use the following pieces of context, provided in the tripple backticks,
         to answer the question at the end.

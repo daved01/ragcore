@@ -1,5 +1,4 @@
 from docucite.dto.document_dto import DocumentDTO
-
 from tests.unit.services import DocuciteTestSetup
 
 

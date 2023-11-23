@@ -1,0 +1,6 @@
+# Mock config. Valid file with correct key names and correct value datatypes.
+
+database_name: "my_database"
+document: "some_document.txt"
+chunk_size: 100
+chunk_overlap: 10
