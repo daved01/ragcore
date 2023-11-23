@@ -13,7 +13,7 @@ Returns:
 - result
 - Confirmations
 """
-from typing import Optional, TypedDict
+from typing import Optional, Any
 import yaml
 
 from docucite.app import AbstractApp
@@ -25,20 +25,13 @@ from docucite.services.database_service import DatabaseService
 from docucite.services.llm_service import LLMService
 
 
-class Configuration(TypedDict):
-    ConfigurationConstants.KEY_DATABASE_NAME: str
-    ConfigurationConstants.KEY_DOCUMENT: str
-    ConfigurationConstants.KEY_CHUNK_SIZE: int
-    ConfigurationConstants.KEY_CHUNK_OVERLAP: int
-
-
 class DocuCiteApp(AbstractApp):
     def __init__(self, file_logging=False):
         super().__init__(file_logging)
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
-        self.configuration: Configuration = self._get_config()
+        self.configuration: dict[str, Any] = self._get_config()
 
     def run(self) -> None:
         self.logger.info("Setting up session ...")
@@ -109,7 +102,7 @@ class DocuCiteApp(AbstractApp):
             print("--" * 32)
             print("")
 
-    def _get_config(self) -> Configuration:
+    def _get_config(self) -> dict[str, str | int]:
         """
         Gets the configuration from the configuration.yaml file in the root.
         If the file is not present or incomplete, a default configuration is used instead,

@@ -87,7 +87,7 @@ Before submitting a PR, make sure the code in `docucite` is clean. We use the th
 
 `pylint docucite/`
 `black docucite/`
-`mypy docucite/ --ignore-missing-imports --disable-error-code "annotation-unchecked""`
+`mypy docucite/`
 
 ## Contributing
 
