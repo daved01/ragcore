@@ -1,5 +1,6 @@
-# Mock config. Keys are named incorrectly, and document key is missing entirely.
+# Mock config. All keys except the document key are named incorrectly.
 
 non_existing_key: "my_database"
+document: "my_document.pdf"
 chunk_size_wrong: "100"
 chunk_overlap_wrong: "10"

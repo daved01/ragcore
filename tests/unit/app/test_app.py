@@ -1,5 +1,8 @@
+import pytest
+
 from docucite.app.app import DocuCiteApp
 from docucite.constants import ConfigurationConstants
+from docucite.errors import UserConfigurationError
 from tests import BaseTest
 
 
@@ -52,6 +55,15 @@ class TestDocuCiteApp(BaseTest):
         config = app._get_config()
 
         assert config[ConfigurationConstants.KEY_DATABASE_NAME] == "chroma"
-        assert config[ConfigurationConstants.KEY_DOCUMENT] == None
+        assert config[ConfigurationConstants.KEY_DOCUMENT] == "my_document.pdf"
         assert config[ConfigurationConstants.KEY_CHUNK_SIZE] == 200
         assert config[ConfigurationConstants.KEY_CHUNK_OVERLAP] == 50
+
+    def test_get_config_missing_document_key(self, mocker):
+        mocker.patch(
+            "docucite.constants.ConfigurationConstants.CONFIG_FILE_PATH",
+            "tests/unit/mock/mock_config_missing_doc_key.yaml",
+        )
+
+        with pytest.raises(UserConfigurationError):
+            app = DocuCiteApp()

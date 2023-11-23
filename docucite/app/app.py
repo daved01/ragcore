@@ -13,16 +13,23 @@ Returns:
 - result
 - Confirmations
 """
-from typing import Optional, Any
+from typing import Optional, TypedDict
 import yaml
 
 from docucite.app import AbstractApp
 from docucite.constants import AppConstants, ConfigurationConstants
-from docucite.errors import DatabaseError
+from docucite.errors import DatabaseError, UserConfigurationError
 from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService
 from docucite.services.llm_service import LLMService
+
+
+class Configuration(TypedDict):
+    ConfigurationConstants.KEY_DATABASE_NAME: str
+    ConfigurationConstants.KEY_DOCUMENT: str
+    ConfigurationConstants.KEY_CHUNK_SIZE: int
+    ConfigurationConstants.KEY_CHUNK_OVERLAP: int
 
 
 class DocuCiteApp(AbstractApp):
@@ -31,7 +38,7 @@ class DocuCiteApp(AbstractApp):
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
-        self.configuration: dict[str, str] = self._get_config()
+        self.configuration: Configuration = self._get_config()
 
     def run(self) -> None:
         self.logger.info("Setting up session ...")
@@ -102,11 +109,11 @@ class DocuCiteApp(AbstractApp):
             print("--" * 32)
             print("")
 
-    # TODO: Add tests, fix types
-    def _get_config(self) -> dict[str, Any]:
+    def _get_config(self) -> Configuration:
         """
         Gets the configuration from the configuration.yaml file in the root.
-        If the file is not present, a default configuration is used instead.
+        If the file is not present or incomplete, a default configuration is used instead,
+        with the exception of a document name which must be provided.
         """
         with open(
             ConfigurationConstants.CONFIG_FILE_PATH, "r", encoding="utf-8"
@@ -116,7 +123,15 @@ class DocuCiteApp(AbstractApp):
             ConfigurationConstants.KEY_DATABASE_NAME,
             ConfigurationConstants.DEFAULT_DATABASE_NAME,
         )
+
         document = config.get(ConfigurationConstants.KEY_DOCUMENT)
+
+        if not document:
+            raise UserConfigurationError(
+                f"A document to load must be provided in the configuration "
+                f"file under the key `{ConfigurationConstants.KEY_DOCUMENT}`.",
+            )
+
         chunk_size = config.get(
             ConfigurationConstants.KEY_CHUNK_SIZE,
             ConfigurationConstants.DEFAULT_CHUNK_SIZE,
@@ -127,7 +142,7 @@ class DocuCiteApp(AbstractApp):
         )
 
         self.logger.info(
-            f"Loaded configuration `{config}` from file `{ConfigurationConstants.CONFIG_FILE_PATH}`."
+            f"Loaded config `{config}` from file `{ConfigurationConstants.CONFIG_FILE_PATH}`."
         )
 
         return {
