@@ -1,5 +1,4 @@
 from typing import Optional, Any
-
 from langchain.vectorstores import Chroma
 
 from docucite.models.embedding_model import Embedding

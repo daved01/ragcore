@@ -14,7 +14,7 @@ class AbstractApp(metaclass=ABCMeta):
         self.logger = self.initialize_logger()
 
     def initialize_logger(self) -> Logger:
-        """Creates and configures logger instance for console and file logging."""
+        """Creates and configures a logger instance for console and file logging."""
         logger = logging.getLogger(__name__)
         logger.setLevel(LOG_LEVEL)
         console_handler = logging.StreamHandler()

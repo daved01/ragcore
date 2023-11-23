@@ -82,7 +82,7 @@ class DatabaseService:
 
     def add_documents(self, documents: list[Document]) -> None:
         """
-        Adds documents to existing database.
+        Adds documents to an existing database.
         Documents must have metadata, and the metadata must have a `title` specified.
         Adding documents with the same title multiple times is not possible.
         """

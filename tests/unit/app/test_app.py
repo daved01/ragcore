@@ -66,4 +66,4 @@ class TestDocuCiteApp(BaseTest):
         )
 
         with pytest.raises(UserConfigurationError):
-            app = DocuCiteApp()
+            _ = DocuCiteApp()

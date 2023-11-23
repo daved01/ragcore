@@ -1,5 +1,3 @@
-"""Errors for the app docucite"""
-
 from enum import IntEnum
 
 

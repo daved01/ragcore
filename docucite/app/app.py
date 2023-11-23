@@ -1,18 +1,3 @@
-"""
-Entry point for requests coming from the front-end.
-Handles: routing, authentication, request validation, error handling
-Communicates with the service layer.
-
-Accepts:
-- question
-- Command to upload new document
-- Command to delete database
-- Settings
-
-Returns:
-- result
-- Confirmations
-"""
 from typing import Optional, Any
 import yaml
 
@@ -78,7 +63,7 @@ class DocuCiteApp(AbstractApp):
         self._run_event_loop()
 
     def _run_event_loop(self):
-        """Main event loop for app"""
+        """Main event loop for CLI app"""
         print("\nEvent loop started. Type 'quit' to exit.\n")
         while True:
             question = input("Enter your question (`quit` to exit): ")

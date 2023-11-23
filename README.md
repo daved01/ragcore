@@ -20,6 +20,8 @@ To run the command line option, run `python -m docucite.cli`.
 
 ## Quick start
 
+Python 3.10
+
 To install, just run `pip install -r requirements.txt`. If you want to develop, also run `pip install -r requirements_dev.txt`. Supported Python versions: >= 3.8
 
 Then, if you just want to quickly add a pdf file and start searching it, add it to the path `data`, and add the name of the file in the `configuration.yaml` file. Then just run the cli application and follow the instructions to create a new database. Once that is done, you can start typing in a question in the CLI, or open the web interface.
