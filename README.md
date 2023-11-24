@@ -1,18 +1,8 @@
-+ Add cool logo
-
-+ Add header links for:
-My website
-+ Badges for testing, license
+# Docucite
 
 [![Unit Tests](https://github.com/daved01/docucite/workflows/code-check-main.yml/badge.svg)](https://github.com/daved01/docucite/workflows/code-check-main.yml)
 ![GitHub](https://img.shields.io/github/license/daved01/docucite)
 [![GitHub Actions](https://github.com/daved01/docucite/workflows/code-check-main/badge.svg)](https://github.com/daved01/docucite/actions)
-
-# Docucite
-
-+ What it can do
-+ Why you want it
-+ Overview of features
 
 Docucite is built to help you to start getting insights from your documents through natural language in less than one minute and to simplify customization as a base for your custom applications.
 
@@ -52,6 +42,13 @@ The second field `document` is the name of the document you want to load into th
 The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is processed before it is added into the database. These two parameters are very important as they determine the performance of your application. Chunk size is the length of the chunks into which the document is split. For example, a chunk size of 87 would add this whole sentence if it were the first one. (TODO: verify). But it is likely that the information you are interested in is spread over multiple sentences. Consequently, you want to also consider what comes before and after. This is exactly what `chunk_overlap` does. It determines how many characters of the previous document is repeated in the next one. For more information about this topic see for example: TODO: Add source.
 
 In general, a larger chunk size allows for more context at the expense of processing time. A larger overlap
+
+# How it works
+
+The following image shows the components.
+
+TODO: Add image
+[!image]
 
 # Development
 
@@ -114,7 +111,11 @@ The UI is defined in `static/index.html`. It uses the fast api endpoints which y
 Contributions in the form of pull requests are highly welcome. To keep the codebase maintainable, please follow a few guidelines regarding code and commit messages. In short:
 
 + Add tests for new code
+
 + Pass quality checks
+
++ Keep pull requests small
+
 + Use Conventional Commits
 
 ## Code quality
@@ -127,7 +128,7 @@ black docucite/
 mypy docucite/
 ```
 
-New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well.
+New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well. And keep pull requests small by changing only relevant code, as this simplifies reviews and simplifies debugging if something goes wrong in the future.
 
 ## Conventional Commits
 
