@@ -4,39 +4,39 @@
 My website
 + Badges for testing, license
 
-# Document Question Tool
+[![Unit Tests](https://github.com/daved01/docucite/workflows/code-check-main.yml/badge.svg)](https://github.com/daved01/docucite/workflows/code-check-main.yml)
+![GitHub](https://img.shields.io/github/license/daved01/docucite)
+[![GitHub Actions](https://github.com/daved01/docucite/workflows/code-check-main/badge.svg)](https://github.com/daved01/docucite/actions)
 
-# Features
+# Docucite
 
-This is a tool to chat with data out of box, which let's you start querying your data in less than two minutes. It uses langchain, OpenAI, and Chroma. With this configuration you can get it running within less than a minute. Want to use a different LLM or Vector database? Adding these components is made easy, so you can quickly iterate with for example different LLMs, and build an application to your requirements on top.
++ What it can do
++ Why you want it
++ Overview of features
 
-Supports openAI
+Docucite is built to help you to start getting insights from your documents through natural language in less than one minute and to simplify customization as a base for your custom applications.
 
-Extensions are easy. Add a different model say Azure, integrate it into your application with minimal modifications, add it to your app with the simple api.
+It uses Langchain, OpenAI, and Chroma. Want to use a different LLM or Vector database? Adding these components is made easy, so you can quickly iterate with for example different LLMs, and build an application to your requirements on top.
 
-There is a command line option and a UI option. To use the latter, run `uvicorn fastapi_app:app --reload`.
+Worried about privacy? By using a local database, only relevant text extracts are exposed to the languge model (TODO: What about the embedding?). Furthermore, adding a different language model is made easy, so you can for example use a hosted LLM.
 
-To run the command line option, run `python -m docucite.cli`.
+# Quick start
 
-## Quick start
+Before installation, make sure you have at least Python 3.10 installed. Additionally, for the default configuration you need an OpenAI [API key](https://platform.openai.com/api-keys) in your environment variables with the name `OPENAI_API_KEY`.
 
-Python 3.10
+## Installation
 
-To install, just run `pip install -r requirements.txt`. If you want to develop, also run `pip install -r requirements_dev.txt`. Supported Python versions: >= 3.8
+To install, just run `pip install -r requirements.txt`. Make sure you have at least Python 3.10 installed.
 
-Then, if you just want to quickly add a pdf file and start searching it, add it to the path `data`, and add the name of the file in the `configuration.yaml` file. Then just run the cli application and follow the instructions to create a new database. Once that is done, you can start typing in a question in the CLI, or open the web interface.
+## Usage
+
+If you want to quickly add a pdf file and start searching it, add it to the path `data`, and add the name of the file in the `configuration.yaml` file. Then, just run the cli application with `python -m docucute.cli` and follow the instructions to create a new database. Once that is done, you can start typing in a question in the CLI, or open the web interface with `uvicorn fastapi_app:app --reload`.
 
 To learn more about how the app works and how you can customize it, read on.
 
-## Getting started
+## Advanced configuration
 
-### Configuration
-
-To use the app with the default OpenAI models, you need an OpenAI API key in the environment variables `OPENAI_API_KEY`.
-
-Overall, for the configuration of the app two files are important. The file to configure the app from a user's perspective is the `configuration.yaml` file in the root of the project. It is explained in detail below. A second file is the `constants.py` file, which contains constants that are used throughout the code. For example, the base path for the data is defined here, as well as the names of the keys of the configuration file.
-
-Configuration of the app is done with `configuration.yaml` file in the root. The file looks like this:
+The app has a default configuration so you can start quickly. You can adjust the configuration to your needs with the `configuration.yaml` file in the root. The file looks like this:
 
 ```
 database_name: "chroma"
@@ -53,56 +53,102 @@ The `chunk_size` and `chunk_overlap` are two parameters which determine how the 
 
 In general, a larger chunk size allows for more context at the expense of processing time. A larger overlap
 
-### Using the cli interface
+# Development
 
-Once you have set an OpenAI key, you can use the app with the cli interface by running `python -m docucute.cli`.
+First, set up a development environment by installing the development dependencies with `pip install -r requirements_dev.txt`.
 
-### Using the web app interface
+## App structure
 
-## Development
-
-### App structure
-
-The app is structured into the layers `api`, `app`, `services`, and `model`.
-
-The structure is
+The project is structured as follows
 
 ```
-├── docs
+├── data
+    └── <your-document>
+    └── ...
+    └── database
+        └── <your-database>
 ├── docucite
-├── notes
+    └── app
+    └── dto
+    └── models
+    └── services
+    └── constants.py
+    └── ...
 ├── static
+    └── index.html
 ├── tests
-    └──
-
+    └── unit
+        └── ...
+├── configuration.yaml
+├── ...
 ```
 
-## Development
+The app in the source folder `docucite` is structured into the layers `app`, `dto`, `models`, and `services`.
 
-Install dependencies with `pip install -r requirements_dev.txt`.
+## How to: customization
 
-All code in the main folder `docucite` must be tested and of high quality.
+This section shows how to customize and extend the app.
+
+### Changing defaults
+
+In the previous section it was shown how to configure the app with the configuration file. If anything is missing, defaults are used (with the exception of the document name). These defaults, along with other constants, are defined in the file `constants.py`. Here you can for example change the base path for the database, or point to a different configuration file.
+
+### Add a large language model
+
+To add a new LLM, subclass the `LLModel` in `models/llm_model.py` and return the model in the `_get_llm()` method. Then, this model is used by the `LLMService` in `services/llm_service.py`.
+
+### Add embedding
+
+To create a vector out of the input data so that it can be stored in the vector database, the OpenAI embedding is used by default in the `DatabaseService`. To change the embedding, subclass the `EmbeddingModel` in `models/embedding_model.py`.
+
+### Add new database
+
+To add a new database, subclass the `VectorDataBaseModel` and use it in the `DatabaseService`.
+
+### Add custom UI
+
+The UI is defined in `static/index.html`. It uses the fast api endpoints which you can use to add a different frontend.
+
+# Contributing
+
+Contributions in the form of pull requests are highly welcome. To keep the codebase maintainable, please follow a few guidelines regarding code and commit messages. In short:
+
++ Add tests for new code
++ Pass quality checks
++ Use Conventional Commits
 
 ## Code quality
 
-Before submitting a PR, make sure the code in `docucite` is clean. We use the three tools:
+Before opening a PR, please make sure that your code in `docucite` passes all quality checks. You can check your code before opening a PR with the commands
 
-`pylint docucite/`
-`black docucite/`
-`mypy docucite/`
+```
+pylint docucite/
+black docucite/
+mypy docucite/
+```
 
-## Contributing
+New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well.
 
-Quality checks
+## Conventional Commits
 
-Clean code
+Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) with the following commit elements:
 
-All features must come with at least unit tests
+**feat:** A "feature" type commit indicates the introduction of a new feature or enhancement to the project.
 
-## License
+**fix:** A "fix" type commit indicates the correction of a bug or issue in the codebase.
 
-Comes with a ??? license. You are free to use and modify the code in your applications
+**chore:** A "chore" commit is used for routine maintenance or housekeeping tasks, such as dependency updates, build system modifications, or other non-functional changes.
 
-## Support
+**docs:** A "documentation" commit is used when you make changes or additions to documentation, such as README files or inline code comments.
 
-If you like this work, I'd appreciate your support here. Every contribution counts
+**build:** A "build" commit is used when you make changes related to the build system, configuration, or build tooling.
+
+Commits in PRs will be squashed into one commit. By using conventional commits and squashing a `Changelog` file is unecessary.
+
+# License
+
+The project comes with a MIT license. You are free to use and modify the code in your applications.
+
+# Support
+
+If you like this work and you find it helpful, I would appreciate your support [here](https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS). Your contribution enables me to continue to work on this project.
