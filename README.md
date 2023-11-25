@@ -52,19 +52,19 @@ For more information about text splitting see for example [here](https://www.pin
 
 The system consists of a few basic components.
 
-![image](/docs/placeholder.png)
+![image](/docs/architecture.png)
 
 **Adding documents**
 
 To add a document, the document is split into overlapping chunks first. Then, these chunks are vectorized using the embedding, before these vectors, along with the contents, are added to the database.
 
-![image](/docs/placeholder.png)
+![image](/docs/adding_documents.png)
 
 **Querying documents**
 
 A new query triggers the creation of a vector through embedding. This vector is used to calculate a similarity score with vectors in the database, identifying related documents that are subsequently retrieved. Using these documents and the initial query, a prompt is constructed and forwarded to the Language Model (LLM) to generate an answer, which is then returned to the user.
 
-![image](/docs/placeholder.png)
+![image](/docs/querying.png)
 
 ## Development
 
