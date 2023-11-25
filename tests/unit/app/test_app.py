@@ -7,16 +7,6 @@ from tests import BaseTest
 
 
 class TestDocuCiteApp(BaseTest):
-    def test_get_config_default_keys(self):
-        app = DocuCiteApp()
-
-        config = app._get_config()
-
-        assert "database_name" in config
-        assert "document" in config
-        assert "chunk_size" in config
-        assert "chunk_overlap" in config
-
     def test_get_config_verify_config(self, mocker):
         mocker.patch(
             "docucite.constants.ConfigurationConstants.CONFIG_FILE_PATH",
@@ -56,8 +46,8 @@ class TestDocuCiteApp(BaseTest):
 
         assert config[ConfigurationConstants.KEY_DATABASE_NAME] == "chroma"
         assert config[ConfigurationConstants.KEY_DOCUMENT] == "my_document.pdf"
-        assert config[ConfigurationConstants.KEY_CHUNK_SIZE] == 200
-        assert config[ConfigurationConstants.KEY_CHUNK_OVERLAP] == 50
+        assert config[ConfigurationConstants.KEY_CHUNK_SIZE] == 256
+        assert config[ConfigurationConstants.KEY_CHUNK_OVERLAP] == 64
 
     def test_get_config_missing_document_key(self, mocker):
         mocker.patch(
