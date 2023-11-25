@@ -2,5 +2,5 @@
 
 non_existing_key: "my_database"
 document: "my_document.pdf"
-chunk_size_wrong: "100"
-chunk_overlap_wrong: "10"
+chunk_size_wrong: "1028"
+chunk_overlap_wrong: "512"
