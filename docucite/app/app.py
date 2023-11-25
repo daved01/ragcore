@@ -28,6 +28,9 @@ class DocuCiteApp(AbstractApp):
         # Create database or load existing one
         self.init_database_service()
 
+        if not self.database_service:
+            return
+
         # Add documents
         if user_input.lower() == "n":
             title = input("Enter title of document: ")
@@ -50,8 +53,7 @@ class DocuCiteApp(AbstractApp):
         # Run app
         self._run_event_loop()
 
-    # TODO: Add tests
-    def init_database_service(self):
+    def init_database_service(self) -> None:
         """
         Creates a database or loads an existing one.
         The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
