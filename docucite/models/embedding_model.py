@@ -1,11 +1,13 @@
 from typing import Optional
 from langchain.embeddings import OpenAIEmbeddings
 
+from docucite.constants import AppConstants
+
 
 class Embedding:
     """Wrapper for embeddings."""
 
-    def __init__(self, model: str = "text-embedding-ada-002"):
+    def __init__(self, model: str = AppConstants.OPENAI_EMBEDDING):
         self.model = model
         self.openai_embedding = OpenAIEmbeddings(model=model, client=None)
 

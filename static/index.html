@@ -71,7 +71,8 @@
 </head>
 
 <body>
-    <h1>Ask questions about Fluent Python</h1>
+    <h1>Docucite</h1>
+    <h3>What do you want to know about your documents?</h3>
     <input type="text" id="inputField" placeholder="">
     <button id="submitButton">Search</button>
     <div id="resultArea"></div>
@@ -88,7 +89,7 @@
         function processText() {
             const userInput = inputField.value.trim();
             if (userInput !== '') {
-                fetch('/question/', {
+                fetch('/api/question', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
