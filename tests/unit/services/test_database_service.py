@@ -183,7 +183,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
                 texts=mock_three_texts, metadatas=mock_three_metadatas_one_missing_title
             )
 
-    # @pytest.mark.skip(reason="OpenAI embedding not mocked yet")
+    @pytest.mark.skip(reason="OpenAI embedding not mocked yet")
     def test_validate_documents_not_in_database_pass(
         self, mock_logger, mock_documents, mock_two_metadatas_two
     ):
