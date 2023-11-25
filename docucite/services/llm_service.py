@@ -9,7 +9,7 @@ from docucite.errors import LLMError, PromptError
 
 class LLMService:
     def __init__(
-        self, logger: Logger, llm_name=AppConstants.LLM_MODEL, llm_temperature=0
+        self, logger: Logger, llm_name=AppConstants.OPENAI_LLM_MODEL, llm_temperature=0
     ) -> None:
         self.logger = logger
         self.llm_name = llm_name

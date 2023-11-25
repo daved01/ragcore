@@ -25,20 +25,8 @@ class DocuCiteApp(AbstractApp):
             "Enter (n/N) for new document, any key to load existing one. "
         )
 
-        self.database_service = DatabaseService(
-            logger=self.logger,
-            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
-            + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
-            + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
-        )
-
-        # Load database if exists or create it
-        try:
-            self.database_service.load_database()
-        except DatabaseError:
-            self.database_service.create_database()
+        # Create database or load existing one
+        self._init_database_service()
 
         # Add documents
         if user_input.lower() == "n":
@@ -55,7 +43,7 @@ class DocuCiteApp(AbstractApp):
             )
             self.database_service.add_documents(self.document_service.documents)
 
-        # Initialize LLMService here, only when rest is available
+        # Initialize LLMService
         self.llm_service = LLMService(self.logger)
         self.llm_service.initialize_llm()
 
@@ -64,7 +52,7 @@ class DocuCiteApp(AbstractApp):
 
     def _run_event_loop(self):
         """Main event loop for CLI app"""
-        print("\nEvent loop started. Type 'quit' to exit.\n")
+        print("\nEvent loop started. Type `quit` to exit.\n")
         while True:
             question = input("Enter your question (`quit` to exit): ")
 
@@ -73,19 +61,39 @@ class DocuCiteApp(AbstractApp):
                 print("Exiting ...")
                 break
 
+            # Get relevant chunks from database
             contexts: list[Document] = self.database_service.search(query=question)
 
             # Construct prompt from template and context
             prompt: str = self.llm_service.create_prompt(question, contexts)
 
             # Query llm with prompt
-            response: str = self.llm_service.make_llm_request(prompt)  # Query llm
+            response: str = self.llm_service.make_llm_request(prompt)
 
             # Show response
-            print("--" * 32)
-            print(f"\n{response}\n")
-            print("--" * 32)
-            print("")
+            separator_line = "--" * 64
+            print(f"\n{separator_line}\n{response}\n{separator_line}\n")
+
+    # TODO: Add tests
+    def _init_database_service(self):
+        """
+        Creates a database or loads an existing one.
+        The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
+        """
+        self.database_service = DatabaseService(
+            logger=self.logger,
+            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
+        )
+
+        # Load database if exists or create it
+        try:
+            self.database_service.load_database()
+        except DatabaseError:
+            self.database_service.create_database()
 
     def _get_config(self) -> dict[str, str | int]:
         """

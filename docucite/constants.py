@@ -3,7 +3,8 @@ class AppConstants:
     DATABASE_SEARCH_DEFAULT_K = 3
     DOCUMENT_BASE_PATH = "data/"
     NUMBER_OF_SEARCH_RESULTS = 5
-    LLM_MODEL = "gpt-3.5-turbo"
+    OPENAI_EMBEDDING = "text-embedding-ada-002"
+    OPENAI_LLM_MODEL = "gpt-3.5-turbo"
 
 
 class ConfigurationConstants:
