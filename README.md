@@ -4,9 +4,9 @@
 ![GitHub](https://img.shields.io/github/license/daved01/docucite)
 [![GitHub Actions](https://github.com/daved01/docucite/workflows/code-check-main/badge.svg)](https://github.com/daved01/docucite/actions)
 
-Docucite is designed to help you to start getting insights from your documents through natural language in less than one minute and to simplify customization as a base for your custom applications.
+Docucite is designed to help you to start getting insights from your documents through natural language within minutes and to simplify customization as a base for your custom applications.
 
-Leveraging Langchain, OpenAI, and Chroma, Docucite allows seamless integration of alternative Large Language Models (LLM) or Vector databases. This flexibility enables rapid iteration, empowering you to experiment with various LLMs and construct applications tailored to your specific needs.
+Leveraging Langchain, OpenAI, and Chroma, Docucite allows seamless integration of alternative Large Language Models (LLM) or Vector databases. This flexibility enables rapid iteration, empowering you to experiment with various LLMs and construct applications tailored to your specific needs using the CLI or API interfaces.
 
 ## Quick start
 
@@ -18,17 +18,17 @@ To install, just run `pip install -r requirements.txt`. Make sure you have at le
 
 ### Usage
 
-To quickly add a PDF file for searching, place it in the data directory and specify the filename in the `configuration.yaml` file. Run the CLI application with `python -m docucute.cli` and follow the prompts to generate a new database. Once completed, you can enter questions in the CLI or launch the web interface using `uvicorn fastapi_app:app --reload`.
+To quickly add a PDF file for querying, place it in the `data` directory (create it or run the CLI tool) and specify the filename in the `configuration.yaml` file. Run the CLI application with `python -m docucute.cli` and follow the prompts to generate a new database. Once completed, you can enter questions in the CLI or launch the web interface using `uvicorn docucite.api:fastapi --reload`.
 
-For a deeper understanding of the app's functionality and customization options, see the following sections.
+Explore the subsequent sections for an in-depth comprehension of the app's features and customization possibilities.
 
 ### Advanced configuration
 
-The app has a default configuration so you can start quickly. You can adjust the configuration to your needs with the `configuration.yaml` file in the root. The file looks like this:
+The app has a default configuration so you can start quickly. You can adjust the configuration to your needs with the `configuration.yaml` file in the root. The file looks like this by default:
 
-```
+```bash
 database_name: "chroma"
-document: "Python summary.pdf"
+document: ""
 chunk_size: 256
 chunk_overlap: 64
 ```
@@ -37,9 +37,9 @@ The field `database_name` is the name of the vector database. The database will 
 
 The second field `document` is the name of the document you want to load into the database. The document is expected in the base path `data`. Currently supported document types are: `pdf`.
 
-The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is broken down before it is added to the database. These two parameters are very important as they determine the performance of your application by impacting the relevance of the documents we retrieve given an input.
+The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is broken down before it is added to the database. These two parameters are very important as they determine the performance of your application by impacting the relevance of the documents that are retrieved given an input.
 
-The chunk size is the number of tokens of the chunks into which the document is split. Choosing a good value depends mainly on your documents and the embedding model you use. In general, you want a chunk to contain relevant information and to make sense by itself while keeping it short for reasons of performance and LLM cost (multiple chunks are send to the LLM to generate the answer).
+The chunk size represents the number of tokens in each document chunk. Optimal selection depends on your documents and the chosen embedding model. Strive for a chunk size that produces chunks that in isolation a human would understand, while minimizing the length to keep cost for LLM request in check (multiple relevant chunks are send to the LLM, see below).
 
 Chunk overlap is how much overlap there is between adjacent chunks. Overlap is useful to not miss any information that is potentially on the edge of a chunk or spread over multiple chunks. The trade-off is some redudancy in the database and increased computation.
 
@@ -47,19 +47,19 @@ For more information about text splitting see for example [here](https://www.pin
 
 ## How it works
 
-The following image shows the components.
+The system consists of a few basic components.
 
 ![image](/docs/placeholder.png)
 
 **Adding documents**
 
-To add a document, the document is split into overlapping chunks first. Then, these chunks are vectorized using the embedding, before these vectors along with the content is added to the database.
+To add a document, the document is split into overlapping chunks first. Then, these chunks are vectorized using the embedding, before these vectors, along with the contents, are added to the database.
 
 ![image](/docs/placeholder.png)
 
 **Querying documents**
 
-A new query is sent to the embedding to create the vector. With this vector a simlarity score is cacluated with vectors in the database to find related documents which are then returned. With these documents and the original query, a prompt is constructed and sent to the LLM to generate the answer which is then returned to the user.
+A new query triggers the creation of a vector through embedding. This vector is used to calculate a similarity score with vectors in the database, identifying related documents that are subsequently retrieved. Using these documents and the initial query, a prompt is constructed and forwarded to the Language Model (LLM) to generate an answer, which is then returned to the user.
 
 ![image](/docs/placeholder.png)
 
@@ -82,7 +82,11 @@ The project is structured as follows
     └── dto
     └── models
     └── services
+    └── api.py
+    └── cli.py
     └── constants.py
+    └── ...
+├── docs
     └── ...
 ├── static
     └── index.html
@@ -97,7 +101,7 @@ The app in the source folder `docucite` is structured into the layers `app`, `dt
 
 ### Changing defaults
 
-In the previous section it was shown how to configure the app with the configuration file. If anything is missing, defaults are used (with the exception of the document name). These defaults, along with other constants, are defined in the file `constants.py`. Here you can for example change the base path for the database, or point to a different configuration file.
+In the previous section, we covered configuring the app using the configuration file. Any missing configurations default to default values (excluding the document name). These defaults, alongside other constants, are specified in the `constants.py` file. In this file, you have the flexibility to modify parameters such as the base path for the database or point to an alternative configuration file.
 
 ### Add a large language model
 
@@ -107,7 +111,7 @@ To add a new LLM, subclass the `LLModel` in `models/llm_model.py` and return the
 
 To create a vector out of the input data so that it can be stored in the vector database, the OpenAI embedding is used by default in the `DatabaseService`. To change the embedding, subclass the `EmbeddingModel` in `models/embedding_model.py`.
 
-The default [OpenAI embedding](https://openai.com/blog/new-and-improved-embedding-model) `text-embedding-ada-002` is a
+The default [OpenAI embedding](https://openai.com/blog/new-and-improved-embedding-model) is `text-embedding-ada-002`.
 
 ### Add new database
 
@@ -115,17 +119,15 @@ To add a new vector database, subclass the `VectorDataBaseModel` and use it in t
 
 ### Add custom UI
 
-The UI is defined in `static/index.html`. It uses the fast api endpoints which you can use to add a different frontend.
+The UI is defined in `static/index.html`. It uses the fast api endpoints which are defined in `docucite/api.py`.
 
 ### Change prompt
 
-Using the retrieved information from the vector database, the information is concatenated to a string and along with the question passed into the `PromptGenerator` in `models/prompt_model.py`. This prompt can be changed and it might be worth to experiment with variations. You can use my [tool]() to evaluate different prompts to find the one which works best for you.
+Using the retrieved information from the vector database, the information is concatenated to a string and along with the question passed into the `PromptGenerator` in `models/prompt_model.py`. This prompt can be changed and it might be worth to experiment with variations.
 
 ### Further changes
 
-The changes described so far only swap out components. For further optimization different changes can be made, for example changing the similarity measure used to retrieve vectors from the database. Anot
-
-Text splittin For more advanced settings, you can add a different chunking method to the `TextSplitterService` in `services/text_splitter_service.py` (currently langchain's `RecursiveCharacterTextSplitter` is used).
+The changes described so far swap out existing components. Further optimization could for example include changing the similarity measure used to retrieve vectors from the database, or using a different text splitting method in `TextSplitterService` in `services/text_splitter_service.py` (currently langchain's `RecursiveCharacterTextSplitter` is used).
 
 ## Contributing
 
@@ -149,7 +151,7 @@ black docucite/
 mypy docucite/
 ```
 
-New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well. And keep pull requests small by changing only relevant code, as this simplifies reviews and simplifies debugging if something goes wrong in the future.
+New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well. And please keep pull requests small by changing only relevant code, as this simplifies reviews and debugging if something goes wrong in the future.
 
 ### Conventional Commits
 
@@ -169,8 +171,8 @@ Commits in PRs will be squashed into one commit. By using conventional commits a
 
 ## License
 
-The project comes with a MIT license. You are free to use and modify the code in your applications.
+The project is licensed under the MIT license, granting you the freedom to use and modify the code for your applications.
 
 ## Support
 
-If you like this work and you find it helpful, I would appreciate your support [here](https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS). Your contribution enables me to continue to work on this project.
+If you find this work valuable and helpful, I would greatly appreciate your support. Consider contributing [here](https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS) to help sustain and advance the development of this project. Your generosity enables me to dedicate more time and effort to enhance the project further. Thank you for your support!
