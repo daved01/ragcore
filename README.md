@@ -4,61 +4,74 @@
 ![GitHub](https://img.shields.io/github/license/daved01/docucite)
 [![GitHub Actions](https://github.com/daved01/docucite/workflows/code-check-main/badge.svg)](https://github.com/daved01/docucite/actions)
 
-Docucite is built to help you to start getting insights from your documents through natural language in less than one minute and to simplify customization as a base for your custom applications.
+Docucite is designed to help you to start getting insights from your documents through natural language in less than one minute and to simplify customization as a base for your custom applications.
 
-It uses Langchain, OpenAI, and Chroma. Want to use a different LLM or Vector database? Adding these components is made easy, so you can quickly iterate with for example different LLMs, and build an application to your requirements on top.
+Leveraging Langchain, OpenAI, and Chroma, Docucite allows seamless integration of alternative Large Language Models (LLM) or Vector databases. This flexibility enables rapid iteration, empowering you to experiment with various LLMs and construct applications tailored to your specific needs.
 
-Worried about privacy? By using a local database, only relevant text extracts are exposed to the languge model (TODO: What about the embedding?). Furthermore, adding a different language model is made easy, so you can for example use a hosted LLM.
+## Quick start
 
-# Quick start
+Before installation, make sure you have at least Python 3.10 installed. Additionally, for the default configuration you need an OpenAI [API key](https://platform.openai.com/api-keys) in your environment variables with the name `OPENAI_API_KEY` as described [here](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key).
 
-Before installation, make sure you have at least Python 3.10 installed. Additionally, for the default configuration you need an OpenAI [API key](https://platform.openai.com/api-keys) in your environment variables with the name `OPENAI_API_KEY`.
-
-## Installation
+### Installation
 
 To install, just run `pip install -r requirements.txt`. Make sure you have at least Python 3.10 installed.
 
-## Usage
+### Usage
 
-If you want to quickly add a pdf file and start searching it, add it to the path `data`, and add the name of the file in the `configuration.yaml` file. Then, just run the cli application with `python -m docucute.cli` and follow the instructions to create a new database. Once that is done, you can start typing in a question in the CLI, or open the web interface with `uvicorn fastapi_app:app --reload`.
+To quickly add a PDF file for searching, place it in the data directory and specify the filename in the `configuration.yaml` file. Run the CLI application with `python -m docucute.cli` and follow the prompts to generate a new database. Once completed, you can enter questions in the CLI or launch the web interface using `uvicorn fastapi_app:app --reload`.
 
-To learn more about how the app works and how you can customize it, read on.
+For a deeper understanding of the app's functionality and customization options, see the following sections.
 
-## Advanced configuration
+### Advanced configuration
 
 The app has a default configuration so you can start quickly. You can adjust the configuration to your needs with the `configuration.yaml` file in the root. The file looks like this:
 
 ```
 database_name: "chroma"
 document: "Python summary.pdf"
-chunk_size: 150
-chunk_overlap: 50
+chunk_size: 256
+chunk_overlap: 64
 ```
 
 The field `database_name` is the name of the vector database. The database will be created in the folder `data/database` if it does not already exists. Otherwise, the existing database is loaded. The final name of the database will also include the chunk size and chunk overlap. The final database name is in the format `<database_name>_<chunk_size>_<chunk_overlap>`.
 
 The second field `document` is the name of the document you want to load into the database. The document is expected in the base path `data`. Currently supported document types are: `pdf`.
 
-The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is processed before it is added into the database. These two parameters are very important as they determine the performance of your application. Chunk size is the length of the chunks into which the document is split. For example, a chunk size of 87 would add this whole sentence if it were the first one. (TODO: verify). But it is likely that the information you are interested in is spread over multiple sentences. Consequently, you want to also consider what comes before and after. This is exactly what `chunk_overlap` does. It determines how many characters of the previous document is repeated in the next one. For more information about this topic see for example: TODO: Add source.
+The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is broken down before it is added to the database. These two parameters are very important as they determine the performance of your application by impacting the relevance of the documents we retrieve given an input.
 
-In general, a larger chunk size allows for more context at the expense of processing time. A larger overlap
+The chunk size is the number of tokens of the chunks into which the document is split. Choosing a good value depends mainly on your documents and the embedding model you use. In general, you want a chunk to contain relevant information and to make sense by itself while keeping it short for reasons of performance and LLM cost (multiple chunks are send to the LLM to generate the answer).
 
-# How it works
+Chunk overlap is how much overlap there is between adjacent chunks. Overlap is useful to not miss any information that is potentially on the edge of a chunk or spread over multiple chunks. The trade-off is some redudancy in the database and increased computation.
+
+For more information about text splitting see for example [here](https://www.pinecone.io/learn/chunking-strategies/).
+
+## How it works
 
 The following image shows the components.
 
-TODO: Add image
-[!image]
+![image](/docs/placeholder.png)
 
-# Development
+**Adding documents**
+
+To add a document, the document is split into overlapping chunks first. Then, these chunks are vectorized using the embedding, before these vectors along with the content is added to the database.
+
+![image](/docs/placeholder.png)
+
+**Querying documents**
+
+A new query is sent to the embedding to create the vector. With this vector a simlarity score is cacluated with vectors in the database to find related documents which are then returned. With these documents and the original query, a prompt is constructed and sent to the LLM to generate the answer which is then returned to the user.
+
+![image](/docs/placeholder.png)
+
+## Development
 
 First, set up a development environment by installing the development dependencies with `pip install -r requirements_dev.txt`.
 
-## App structure
+### App structure
 
 The project is structured as follows
 
-```
+```bash
 ├── data
     └── <your-document>
     └── ...
@@ -82,10 +95,6 @@ The project is structured as follows
 
 The app in the source folder `docucite` is structured into the layers `app`, `dto`, `models`, and `services`.
 
-## How to: customization
-
-This section shows how to customize and extend the app.
-
 ### Changing defaults
 
 In the previous section it was shown how to configure the app with the configuration file. If anything is missing, defaults are used (with the exception of the document name). These defaults, along with other constants, are defined in the file `constants.py`. Here you can for example change the base path for the database, or point to a different configuration file.
@@ -98,15 +107,27 @@ To add a new LLM, subclass the `LLModel` in `models/llm_model.py` and return the
 
 To create a vector out of the input data so that it can be stored in the vector database, the OpenAI embedding is used by default in the `DatabaseService`. To change the embedding, subclass the `EmbeddingModel` in `models/embedding_model.py`.
 
+The default [OpenAI embedding](https://openai.com/blog/new-and-improved-embedding-model) `text-embedding-ada-002` is a
+
 ### Add new database
 
-To add a new database, subclass the `VectorDataBaseModel` and use it in the `DatabaseService`.
+To add a new vector database, subclass the `VectorDataBaseModel` and use it in the `DatabaseService`. To learn more about what a vector database is and how it works, check out for example [this](https://www.pinecone.io/learn/vector-database/) great post by the Pinecone team.
 
 ### Add custom UI
 
 The UI is defined in `static/index.html`. It uses the fast api endpoints which you can use to add a different frontend.
 
-# Contributing
+### Change prompt
+
+Using the retrieved information from the vector database, the information is concatenated to a string and along with the question passed into the `PromptGenerator` in `models/prompt_model.py`. This prompt can be changed and it might be worth to experiment with variations. You can use my [tool]() to evaluate different prompts to find the one which works best for you.
+
+### Further changes
+
+The changes described so far only swap out components. For further optimization different changes can be made, for example changing the similarity measure used to retrieve vectors from the database. Anot
+
+Text splittin For more advanced settings, you can add a different chunking method to the `TextSplitterService` in `services/text_splitter_service.py` (currently langchain's `RecursiveCharacterTextSplitter` is used).
+
+## Contributing
 
 Contributions in the form of pull requests are highly welcome. To keep the codebase maintainable, please follow a few guidelines regarding code and commit messages. In short:
 
@@ -118,11 +139,11 @@ Contributions in the form of pull requests are highly welcome. To keep the codeb
 
 + Use Conventional Commits
 
-## Code quality
+### Code quality
 
 Before opening a PR, please make sure that your code in `docucite` passes all quality checks. You can check your code before opening a PR with the commands
 
-```
+```bash
 pylint docucite/
 black docucite/
 mypy docucite/
@@ -130,7 +151,7 @@ mypy docucite/
 
 New code must be covered by tests and documented with comments where applicable. In most cases type hints should be added as well. And keep pull requests small by changing only relevant code, as this simplifies reviews and simplifies debugging if something goes wrong in the future.
 
-## Conventional Commits
+### Conventional Commits
 
 Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) with the following commit elements:
 
@@ -146,10 +167,10 @@ Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/
 
 Commits in PRs will be squashed into one commit. By using conventional commits and squashing a `Changelog` file is unecessary.
 
-# License
+## License
 
 The project comes with a MIT license. You are free to use and modify the code in your applications.
 
-# Support
+## Support
 
 If you like this work and you find it helpful, I would appreciate your support [here](https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS). Your contribution enables me to continue to work on this project.

@@ -2,5 +2,5 @@
 
 database_name: "chroma"
 document: "Python summary.pdf"
-chunk_size: 150
-chunk_overlap: 50
+chunk_size: 256
+chunk_overlap: 64
