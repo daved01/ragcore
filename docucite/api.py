@@ -18,7 +18,7 @@ fastapi = FastAPI(
 
 # Initialize app
 app = DocuCiteApp()
-app._init_database_service()
+app.init_database_service()
 app.llm_service = LLMService(app.logger)
 app.llm_service.initialize_llm()
 

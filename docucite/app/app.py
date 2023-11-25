@@ -26,7 +26,7 @@ class DocuCiteApp(AbstractApp):
         )
 
         # Create database or load existing one
-        self._init_database_service()
+        self.init_database_service()
 
         # Add documents
         if user_input.lower() == "n":
@@ -49,6 +49,27 @@ class DocuCiteApp(AbstractApp):
 
         # Run app
         self._run_event_loop()
+
+    # TODO: Add tests
+    def init_database_service(self):
+        """
+        Creates a database or loads an existing one.
+        The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
+        """
+        self.database_service = DatabaseService(
+            logger=self.logger,
+            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
+            + "_"
+            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
+        )
+
+        # Load database if exists or create it
+        try:
+            self.database_service.load_database()
+        except DatabaseError:
+            self.database_service.create_database()
 
     def _run_event_loop(self):
         """Main event loop for CLI app"""
@@ -73,27 +94,6 @@ class DocuCiteApp(AbstractApp):
             # Show response
             separator_line = "--" * 64
             print(f"\n{separator_line}\n{response}\n{separator_line}\n")
-
-    # TODO: Add tests
-    def _init_database_service(self):
-        """
-        Creates a database or loads an existing one.
-        The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
-        """
-        self.database_service = DatabaseService(
-            logger=self.logger,
-            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
-            + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
-            + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
-        )
-
-        # Load database if exists or create it
-        try:
-            self.database_service.load_database()
-        except DatabaseError:
-            self.database_service.create_database()
 
     def _get_config(self) -> dict[str, str | int]:
         """
