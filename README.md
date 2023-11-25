@@ -1,8 +1,11 @@
 # Docucite
 
-[![Unit Tests](https://github.com/daved01/docucite/workflows/code-check-main.yml/badge.svg)](https://github.com/daved01/docucite/workflows/code-check-main.yml)
-![GitHub](https://img.shields.io/github/license/daved01/docucite)
-[![GitHub Actions](https://github.com/daved01/docucite/workflows/code-check-main/badge.svg)](https://github.com/daved01/docucite/actions)
+<p align="center">
+  <a href="https://www.python.org/downloads/release/python-310/"><img src="https://img.shields.io/badge/python-3.10-green.svg" alt="Python 3.10"></a>
+  <a href="https://www.python.org/downloads/release/python-311/"><img src="https://img.shields.io/badge/python-3.11-green.svg" alt="Python 3.11"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a>
+  <img src="https://github.com/daved01/docucite/actions/workflows/code-check-main.yml/badge.svg" alt="example workflow">
+</p>
 
 Docucite is designed to help you to start getting insights from your documents through natural language within minutes and to simplify customization as a base for your custom applications.
 
@@ -49,19 +52,19 @@ For more information about text splitting see for example [here](https://www.pin
 
 The system consists of a few basic components.
 
-![image](/docs/placeholder.png)
+![image](/docs/architecture.png)
 
 **Adding documents**
 
 To add a document, the document is split into overlapping chunks first. Then, these chunks are vectorized using the embedding, before these vectors, along with the contents, are added to the database.
 
-![image](/docs/placeholder.png)
+![image](/docs/adding_documents.png)
 
 **Querying documents**
 
 A new query triggers the creation of a vector through embedding. This vector is used to calculate a similarity score with vectors in the database, identifying related documents that are subsequently retrieved. Using these documents and the initial query, a prompt is constructed and forwarded to the Language Model (LLM) to generate an answer, which is then returned to the user.
 
-![image](/docs/placeholder.png)
+![image](/docs/querying.png)
 
 ## Development
 
