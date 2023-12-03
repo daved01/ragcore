@@ -32,8 +32,8 @@ The app has a default configuration so you can start quickly. You can adjust the
 ```bash
 database_name: "chroma"
 document: ""
-chunk_size: 256
-chunk_overlap: 64
+chunk_size: 1024
+chunk_overlap: 256
 ```
 
 The field `database_name` is the name of the vector database. The database will be created in the folder `data/database` if it does not already exists. Otherwise, the existing database is loaded. The final name of the database will also include the chunk size and chunk overlap. The final database name is in the format `<database_name>_<chunk_size>_<chunk_overlap>`.
@@ -105,6 +105,17 @@ The app in the source folder `docucite` is structured into the layers `app`, `dt
 ### Changing defaults
 
 In the previous section, we covered configuring the app using the configuration file. Any missing configurations default to default values (excluding the document name). These defaults, alongside other constants, are specified in the `constants.py` file. In this file, you have the flexibility to modify parameters such as the base path for the database or point to an alternative configuration file.
+
+### Supported models
+
+The app supports OpenAI models and Azure OpenAI models. For the former, a valid API key has to be in the environment with the name `OPENAI_API_KEY`. For Azure deployments, the following environment variables are required.
+
+```bash
+AZURE_DEPLOYMENT_ID
+AZURE_API_VERSION
+AZURE_API_BASE_URL
+AZURE_API_KEY
+```
 
 ### Add a large language model
 

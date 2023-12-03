@@ -47,7 +47,7 @@ class DocuCiteApp(AbstractApp):
             self.database_service.add_documents(self.document_service.documents)
 
         # Initialize LLMService
-        self.llm_service = LLMService(self.logger)
+        self.llm_service = LLMService(self.logger, llm_name="openai")
         self.llm_service.initialize_llm()
 
         # Run app
