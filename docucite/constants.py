@@ -10,8 +10,8 @@ class AppConstants:
 class ConfigurationConstants:
     CONFIG_FILE_PATH = "./configuration.yaml"
     KEY_DATABASE_NAME = "database_name"
-    DEFAULT_CHUNK_OVERLAP = 64
-    DEFAULT_CHUNK_SIZE = 256
+    DEFAULT_CHUNK_OVERLAP = 256
+    DEFAULT_CHUNK_SIZE = 1024
     DEFAULT_DATABASE_NAME = "chroma"
     KEY_CHUNK_OVERLAP = "chunk_overlap"
     KEY_CHUNK_SIZE = "chunk_size"
