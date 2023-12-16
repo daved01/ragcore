@@ -48,8 +48,8 @@ class TestDocuCiteApp(BaseTest):
 
         assert config[ConfigurationConstants.KEY_DATABASE_NAME] == "chroma"  # Default
         assert config[ConfigurationConstants.KEY_DOCUMENT] == "my_document.pdf"
-        assert config[ConfigurationConstants.KEY_CHUNK_SIZE] == 256  # Default
-        assert config[ConfigurationConstants.KEY_CHUNK_OVERLAP] == 64  # Default
+        assert config[ConfigurationConstants.KEY_CHUNK_SIZE] == 1024  # Default
+        assert config[ConfigurationConstants.KEY_CHUNK_OVERLAP] == 256  # Default
 
     def test_get_config_missing_document_key(self, mocker):
         mocker.patch(
