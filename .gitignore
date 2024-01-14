@@ -117,3 +117,5 @@ dev-*
 
 # Data folder
 data/
+
+configuration.yaml
