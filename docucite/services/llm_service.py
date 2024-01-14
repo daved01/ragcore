@@ -1,25 +1,29 @@
 from logging import Logger
 
-from docucite.constants import AppConstants
 from docucite.models.document_model import Document
 from docucite.models.prompt_model import PromptGenerator
-from docucite.models.llm_model import LLMModel
-from docucite.errors import LLMError, PromptError
+from docucite.models.llm_model import OpenAIModel, AzureModel
+from docucite.errors import LLMError, PromptError, UserConfigurationError
 
 
 class LLMService:
-    def __init__(
-        self, logger: Logger, llm_name=AppConstants.OPENAI_LLM_MODEL, llm_temperature=0
-    ) -> None:
+    def __init__(self, logger: Logger, llm_name: str, llm_temperature=0) -> None:
         self.logger = logger
         self.llm_name = llm_name
         self.llm_temperature = llm_temperature
         self.llm = None
 
     def initialize_llm(self):
-        self.llm = LLMModel(self.llm_name, self.llm_temperature)
+        model_classes = {"openai": OpenAIModel, "azure": AzureModel}
+
+        model_class = model_classes.get(self.llm_name)
+
+        if model_class:
+            self.llm = model_class(self.llm_name, self.llm_temperature)
+        else:
+            raise UserConfigurationError(f"Unsupported model name: {self.llm_name}")
         self.logger.info(
-            f"Initialized LLM `{self.llm_name}` with temperature {self.llm_temperature}."
+            f"Initialized LLM of type `{self.llm_name}` with temperature {self.llm_temperature}."
         )
 
     def create_prompt(self, question: str, context: list[Document]) -> str:
@@ -37,7 +41,7 @@ class LLMService:
         if not self.llm:
             raise LLMError("Tried to make a request, but the llm is not initialized.")
 
-        self.logger.info(f"Sending request to llm {self.llm_name} ...")
+        self.logger.info(f"Sending request to llm of type {self.llm_name} ...")
         response: str = self.llm.predict(text=prompt)
         self.logger.info("Received response from llm.")
         return response
