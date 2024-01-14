@@ -1,6 +1,6 @@
 # Configuration of app parameters
 
 database_name: "chroma"
-document: "Fluent Python.pdf"
+document: ""
 chunk_size: 1024
 chunk_overlap: 256
