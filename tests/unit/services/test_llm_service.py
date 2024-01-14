@@ -32,15 +32,17 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
         with pytest.raises(PromptError):
             llm_service.create_prompt(question, mock_documents)
 
-    def test_make_openai_request(self, mock_logger, mocker):
-        class MockChatOpenAI:
-            def __init__(self, model_name, temperature):
+    def test_make_openai_request(self, mock_logger, mocker, mock_openai_response):
+        class MockOpenAI:
+            def __init__(self):
                 pass
 
-            def predict(self, text):
-                return "This is the response!"
+            class chat:
+                class completions:
+                    def create(model, messages):
+                        return mock_openai_response
 
-        mocker.patch("docucite.models.llm_model.ChatOpenAI", MockChatOpenAI)
+        mocker.patch("docucite.models.llm_model.OpenAI", MockOpenAI)
 
         llm_service = LLMService(mock_logger, "openai")
         llm_service.initialize_llm()

@@ -47,7 +47,7 @@ class DocuCiteApp(AbstractApp):
             self.database_service.add_documents(self.document_service.documents)
 
         # Initialize LLMService
-        self.llm_service = LLMService(self.logger, llm_name="openai")
+        self.llm_service = LLMService(self.logger, llm_provider="openai")
         self.llm_service.initialize_llm()
 
         # Run app
@@ -85,11 +85,13 @@ class DocuCiteApp(AbstractApp):
                 break
 
             # Get relevant chunks from database
-            contexts: list[Document] = self.database_service.search(query=question)
+            # contexts: list[Document] = self.database_service.search(query=question)
+            contexts = []
 
             # Construct prompt from template and context
             prompt: str = self.llm_service.create_prompt(question, contexts)
 
+            print(prompt)
             # Query llm with prompt
             response: str = self.llm_service.make_llm_request(prompt)
 
