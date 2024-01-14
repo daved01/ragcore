@@ -2,7 +2,7 @@ black==23.7.0
 chromadb==0.4.5
 langchain==0.0.256
 mypy==1.5.1
-openai==0.27.8
+openai==1.7.2
 pre-commit==3.3.3
 pylint==2.17.5
 pypdf==3.15.0
