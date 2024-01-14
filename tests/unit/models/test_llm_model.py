@@ -1,6 +1,6 @@
 from langchain.chat_models import ChatOpenAI
 
-from docucite.models.llm_model import OpenAIModel, AzureChatOpenAI
+from docucite.models.llm_model import OpenAIModel
 
 
 class TestLLMModel:
