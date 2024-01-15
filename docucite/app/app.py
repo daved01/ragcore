@@ -52,13 +52,13 @@ class DocuCiteApp(AbstractApp):
                 ConfigurationConstants.KEY_LLM_PROVIDER,
                 ConfigurationConstants.DEFAULT_LLM_PROVIDER,
             ),
-            llm_model=self.configuration.get(ConfigurationConstants.KEY_LLM_MODEL),
+            llm_model=self.configuration.get(ConfigurationConstants.KEY_LLM_MODEL, ""),
             llm_config={
                 ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration.get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
+                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT, ""
                 ),
                 ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration.get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION
+                    ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION, ""
                 ),
             },
         )

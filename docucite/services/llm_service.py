@@ -14,13 +14,11 @@ class LLMService:
         logger: Logger,
         llm_provider: str,
         llm_model: str,
-        llm_temperature: int = 0,
         llm_config: Optional[dict[str, str]] = None,
     ) -> None:
         self.logger = logger
         self.llm_provider = llm_provider
         self.llm_model = llm_model
-        self.llm_temperature = llm_temperature
         self.llm_config = llm_config
         self.llm = None
 
@@ -33,16 +31,11 @@ class LLMService:
         model_class = model_classes.get(self.llm_provider)
 
         if model_class:
-            self.llm = model_class(
-                self.llm_provider, self.llm_temperature, self.llm_model, self.llm_config
-            )
+            self.llm = model_class(self.llm_provider, self.llm_model, self.llm_config)
         else:
             raise UserConfigurationError(f"Unsupported model name: {self.llm_provider}")
         self.logger.info(
-            (
-                f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`, ",
-                f"temperature {self.llm_temperature}.",
-            )
+            f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`."
         )
 
     def create_prompt(self, question: str, context: list[Document]) -> str:

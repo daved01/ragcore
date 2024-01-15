@@ -12,12 +12,10 @@ class LLMModel(ABC):
     def __init__(
         self,
         llm_provider: str,
-        llm_temperature: int,
         llm_model: str,
         llm_config: Optional[dict[str, str]],
     ):
         self.llm_provider = llm_provider
-        self.llm_temperature = llm_temperature
         self.llm_model = llm_model
         self.llm_config = llm_config
         self.llm = self._get_llm()
