@@ -4,7 +4,6 @@ import yaml
 from docucite.app import AbstractApp
 from docucite.constants import AppConstants, ConfigurationConstants
 from docucite.errors import DatabaseError, UserConfigurationError
-from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService
 from docucite.services.llm_service import LLMService
@@ -47,7 +46,22 @@ class DocuCiteApp(AbstractApp):
             self.database_service.add_documents(self.document_service.documents)
 
         # Initialize LLMService
-        self.llm_service = LLMService(self.logger, llm_name="openai")
+        self.llm_service = LLMService(
+            self.logger,
+            llm_provider=self.configuration.get(
+                ConfigurationConstants.KEY_LLM_PROVIDER,
+                ConfigurationConstants.DEFAULT_LLM_PROVIDER,
+            ),
+            llm_model=self.configuration.get(ConfigurationConstants.KEY_LLM_MODEL, ""),
+            llm_config={
+                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration.get(
+                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT, ""
+                ),
+                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration.get(
+                    ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION, ""
+                ),
+            },
+        )
         self.llm_service.initialize_llm()
 
         # Run app
@@ -85,7 +99,8 @@ class DocuCiteApp(AbstractApp):
                 break
 
             # Get relevant chunks from database
-            contexts: list[Document] = self.database_service.search(query=question)
+            # contexts: list[Document] = self.database_service.search(query=question)
+            contexts = []
 
             # Construct prompt from template and context
             prompt: str = self.llm_service.create_prompt(question, contexts)
@@ -129,6 +144,23 @@ class DocuCiteApp(AbstractApp):
             ConfigurationConstants.DEFAULT_CHUNK_OVERLAP,
         )
 
+        llm_provider = config.get(
+            ConfigurationConstants.KEY_LLM_PROVIDER,
+            ConfigurationConstants.DEFAULT_LLM_PROVIDER,
+        )
+
+        llm_model = config.get(
+            ConfigurationConstants.KEY_LLM_MODEL,
+        )
+
+        azure_api_version = config.get(
+            ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION,
+        )
+
+        azure_endpoint = config.get(
+            ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT,
+        )
+
         self.logger.info(
             f"Loaded config `{config}` from file `{ConfigurationConstants.CONFIG_FILE_PATH}`."
         )
@@ -138,4 +170,8 @@ class DocuCiteApp(AbstractApp):
             ConfigurationConstants.KEY_DOCUMENT: document,
             ConfigurationConstants.KEY_CHUNK_SIZE: int(chunk_size),
             ConfigurationConstants.KEY_CHUNK_OVERLAP: int(chunk_overlap),
+            ConfigurationConstants.KEY_LLM_PROVIDER: llm_provider,
+            ConfigurationConstants.KEY_LLM_MODEL: llm_model,
+            ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: azure_api_version,
+            ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: azure_endpoint,
         }

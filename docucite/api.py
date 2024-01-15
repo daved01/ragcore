@@ -21,7 +21,7 @@ fastapi = FastAPI(
 # Initialize app
 app = DocuCiteApp()
 app.init_database_service()
-app.llm_service = LLMService(app.logger, "openai")
+app.llm_service = LLMService(app.logger, "openai", "gpt-3.5-turbo")
 app.llm_service.initialize_llm()
 
 

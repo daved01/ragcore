@@ -96,3 +96,15 @@ class DocuciteTestSetup:
             {"page": 2, "title": "Best book"},
             {"page": 2},
         ]
+
+    @pytest.fixture
+    def mock_openai_response(self, mocker):
+        mock_content = "This is the response!"
+        mock_message = mocker.Mock()
+        mock_message.content = mock_content
+        mock_choice = mocker.Mock()
+        mock_choice.message = mock_message
+        mock_choices = [mock_choice]
+        mock_response = mocker.Mock()
+        mock_response.choices = mock_choices
+        return mock_response

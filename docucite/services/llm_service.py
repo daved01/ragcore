@@ -1,29 +1,41 @@
 from logging import Logger
+from typing import Optional
 
 from docucite.models.document_model import Document
 from docucite.models.prompt_model import PromptGenerator
-from docucite.models.llm_model import OpenAIModel, AzureModel
+from docucite.models.llm_model import OpenAIModel, AzureOpenAIModel
+from docucite.constants import ConfigurationConstants
 from docucite.errors import LLMError, PromptError, UserConfigurationError
 
 
 class LLMService:
-    def __init__(self, logger: Logger, llm_name: str, llm_temperature=0) -> None:
+    def __init__(
+        self,
+        logger: Logger,
+        llm_provider: str,
+        llm_model: str,
+        llm_config: Optional[dict[str, str]] = None,
+    ) -> None:
         self.logger = logger
-        self.llm_name = llm_name
-        self.llm_temperature = llm_temperature
+        self.llm_provider = llm_provider
+        self.llm_model = llm_model
+        self.llm_config = llm_config
         self.llm = None
 
     def initialize_llm(self):
-        model_classes = {"openai": OpenAIModel, "azure": AzureModel}
+        model_classes = {
+            ConfigurationConstants.LLM_PROVIDER_OPENAI: OpenAIModel,
+            ConfigurationConstants.LLM_PROVIDER_AZUREOPENAI: AzureOpenAIModel,
+        }
 
-        model_class = model_classes.get(self.llm_name)
+        model_class = model_classes.get(self.llm_provider)
 
         if model_class:
-            self.llm = model_class(self.llm_name, self.llm_temperature)
+            self.llm = model_class(self.llm_provider, self.llm_model, self.llm_config)
         else:
-            raise UserConfigurationError(f"Unsupported model name: {self.llm_name}")
+            raise UserConfigurationError(f"Unsupported model name: {self.llm_provider}")
         self.logger.info(
-            f"Initialized LLM of type `{self.llm_name}` with temperature {self.llm_temperature}."
+            f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`."
         )
 
     def create_prompt(self, question: str, context: list[Document]) -> str:
@@ -41,7 +53,7 @@ class LLMService:
         if not self.llm:
             raise LLMError("Tried to make a request, but the llm is not initialized.")
 
-        self.logger.info(f"Sending request to llm of type {self.llm_name} ...")
+        self.logger.info(f"Sending request to llm of type {self.llm_provider} ...")
         response: str = self.llm.predict(text=prompt)
         self.logger.info("Received response from llm.")
         return response

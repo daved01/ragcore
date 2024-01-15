@@ -1,6 +1,10 @@
 # Configuration of app parameters
 
 database_name: "chroma"
-document: ""
+document: "Fluent Python.pdf"
 chunk_size: 1024
 chunk_overlap: 256
+llm_provider: "openai"
+llm_model: "gpt-3.5-turbo"
+azure_api_version: ""
+azure_endpoint: ""
