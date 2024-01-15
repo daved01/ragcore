@@ -39,7 +39,10 @@ class LLMService:
         else:
             raise UserConfigurationError(f"Unsupported model name: {self.llm_provider}")
         self.logger.info(
-            f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`, temperature {self.llm_temperature}."
+            (
+                f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`, ",
+                f"temperature {self.llm_temperature}.",
+            )
         )
 
     def create_prompt(self, question: str, context: list[Document]) -> str:

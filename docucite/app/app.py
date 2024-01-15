@@ -2,9 +2,8 @@ from typing import Optional, Any
 import yaml
 
 from docucite.app import AbstractApp
-from docucite.constants import AppConstants, ConfigurationConstants, APIConstants
+from docucite.constants import AppConstants, ConfigurationConstants
 from docucite.errors import DatabaseError, UserConfigurationError
-from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService
 from docucite.services.llm_service import LLMService
