@@ -3,7 +3,7 @@ import os
 from openai import OpenAI, AzureOpenAI
 from typing import Optional
 
-from docucite.constants import ConfigurationConstants, APIConstants
+from docucite.constants import ConfigurationConstants, LLMProviderConstants
 
 
 class LLMModel(ABC):
@@ -33,7 +33,7 @@ class OpenAIModel(LLMModel):
     """OpenAI model"""
 
     def _get_llm(self):
-        return OpenAI(api_key=os.getenv(APIConstants.KEY_OPENAI_API_KEY))
+        return OpenAI(api_key=os.getenv(LLMProviderConstants.KEY_OPENAI_API_KEY))
 
     def predict(self, text: str) -> str:
         response = self.llm.chat.completions.create(
@@ -48,7 +48,7 @@ class AzureOpenAIModel(LLMModel):
 
     def _get_llm(self):
         return AzureOpenAI(
-            api_key=os.getenv(APIConstants.KEY_AZURE_OPENAI_API_KEY),
+            api_key=os.getenv(LLMProviderConstants.KEY_AZURE_OPENAI_API_KEY),
             api_version=self.llm_config.get(
                 ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION
             ),

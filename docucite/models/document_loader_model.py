@@ -1,4 +1,4 @@
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 from docucite.dto.document_dto import DocumentDTO
 from docucite.models.document_model import Document

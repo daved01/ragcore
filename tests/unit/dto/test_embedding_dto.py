@@ -1,5 +1,5 @@
 import pytest
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 
 from docucite.models.embedding_model import Embedding
 from docucite.dto.embedding_dto import EmbeddingDTO

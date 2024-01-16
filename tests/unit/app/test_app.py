@@ -84,7 +84,7 @@ class TestDocuCiteApp(BaseTest):
         app = DocuCiteApp()
         app.init_database_service()
 
-        assert app.database_service.database_path == "data/database/my_database_256_64"
+        assert app.database_service.database_name == "data/database/my_database_256_64"
         assert database_service_mock_load_database.call_count == 1
         assert database_service_mock_create_database.call_count == 1
 
@@ -104,6 +104,6 @@ class TestDocuCiteApp(BaseTest):
         app = DocuCiteApp()
         app.init_database_service()
 
-        assert app.database_service.database_path == "data/database/my_database_256_64"
+        assert app.database_service.database_name == "data/database/my_database_256_64"
         assert database_service_mock_load_database.call_count == 1
         assert database_service_mock_create_database.call_count == 0

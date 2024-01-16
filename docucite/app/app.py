@@ -1,12 +1,14 @@
+import argparse
 from typing import Optional, Any
 import yaml
 
 from docucite.app import AbstractApp
 from docucite.constants import AppConstants, ConfigurationConstants
-from docucite.errors import DatabaseError, UserConfigurationError
+from docucite.errors import DatabaseError
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService
 from docucite.services.llm_service import LLMService
+from docucite.models.document_model import Document
 
 
 class DocuCiteApp(AbstractApp):
@@ -15,7 +17,10 @@ class DocuCiteApp(AbstractApp):
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
-        self.configuration: dict[str, Any] = self._get_config()
+        self.args: dict[str, str] = self._parse_args()
+        self.configuration: dict[str, dict[str, Any]] = self._get_config(
+            self.args.get(AppConstants.CONFIG_FILE_PATH)
+        )
 
     def run(self) -> None:
         self.logger.info("Setting up session ...")
@@ -35,30 +40,40 @@ class DocuCiteApp(AbstractApp):
             title = input("Enter title of document: ")
             self.document_service = DocumentService(self.logger)
             self.document_service.load_document(
-                path=AppConstants.DOCUMENT_BASE_PATH
-                + self.configuration[ConfigurationConstants.KEY_DOCUMENT],
+                path=self.configuration[ConfigurationConstants.KEY_DATABASE][
+                    ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
+                ]
+                + "/"
+                + title,
                 document_title=title,
             )
             self.document_service.split_document(
-                self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE],
-                self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP],
+                self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                    ConfigurationConstants.KEY_CHUNK_SIZE
+                ],
+                self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                    ConfigurationConstants.KEY_CHUNK_OVERLAP
+                ],
             )
             self.database_service.add_documents(self.document_service.documents)
 
         # Initialize LLMService
         self.llm_service = LLMService(
             self.logger,
-            llm_provider=self.configuration.get(
-                ConfigurationConstants.KEY_LLM_PROVIDER,
-                ConfigurationConstants.DEFAULT_LLM_PROVIDER,
-            ),
-            llm_model=self.configuration.get(ConfigurationConstants.KEY_LLM_MODEL, ""),
+            llm_provider=self.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_LLM_PROVIDER
+            ],
+            llm_model=self.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_LLM_MODEL
+            ],
             llm_config={
-                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration.get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT, ""
-                ),
-                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration.get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION, ""
+                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration[
+                    ConfigurationConstants.KEY_LLM
+                ].get(ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION),
+                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration[
+                    ConfigurationConstants.KEY_LLM
+                ].get(
+                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
                 ),
             },
         )
@@ -74,11 +89,30 @@ class DocuCiteApp(AbstractApp):
         """
         self.database_service = DatabaseService(
             logger=self.logger,
-            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE_NAME]
+            database_base_path=self.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_BASE_PAH
+            ],
+            database_name=self.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_NAME
+            ]
             + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_SIZE])
+            + str(
+                self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                    ConfigurationConstants.KEY_CHUNK_SIZE
+                ]
+            )
             + "_"
-            + str(self.configuration[ConfigurationConstants.KEY_CHUNK_OVERLAP]),
+            + str(
+                self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                    ConfigurationConstants.KEY_CHUNK_OVERLAP
+                ]
+            ),
+            embedding_model=self.configuration[ConfigurationConstants.KEY_EMBEDDING][
+                ConfigurationConstants.KEY_EMBEDDING_MODEL
+            ],
+            num_search_results=self.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS
+            ],
         )
 
         # Load database if exists or create it
@@ -99,8 +133,7 @@ class DocuCiteApp(AbstractApp):
                 break
 
             # Get relevant chunks from database
-            # contexts: list[Document] = self.database_service.search(query=question)
-            contexts = []
+            contexts: list[Document] = self.database_service.search(query=question)
 
             # Construct prompt from template and context
             prompt: str = self.llm_service.create_prompt(question, contexts)
@@ -112,66 +145,41 @@ class DocuCiteApp(AbstractApp):
             separator_line = "--" * 64
             print(f"\n{separator_line}\n{response}\n{separator_line}\n")
 
-    def _get_config(self) -> dict[str, str | int]:
+    def _get_config(self, config_file_path: str) -> dict[str, dict[str, str | int]]:
         """
-        Gets the configuration from the configuration.yaml file in the root.
-        If the file is not present or incomplete, a default configuration is used instead,
-        with the exception of a document name which must be provided.
+        Gets the configuration from the configuration.yaml. The configuration has the
+        top-level keys:
+        - database
+        - splitter
+        - embedding
+        - llm
         """
-        with open(
-            ConfigurationConstants.CONFIG_FILE_PATH, "r", encoding="utf-8"
-        ) as filehandler:
+
+        if not config_file_path:
+            config_file_path = AppConstants.CONFIG_FILE_PATH
+
+        with open(config_file_path, "r", encoding="utf-8") as filehandler:
             config = yaml.load(filehandler, yaml.FullLoader)
-        database_name = config.get(
-            ConfigurationConstants.KEY_DATABASE_NAME,
-            ConfigurationConstants.DEFAULT_DATABASE_NAME,
-        )
 
-        document = config.get(ConfigurationConstants.KEY_DOCUMENT)
-
-        if not document:
-            raise UserConfigurationError(
-                f"A document to load must be provided in the configuration "
-                f"file under the key `{ConfigurationConstants.KEY_DOCUMENT}`.",
-            )
-
-        chunk_size = config.get(
-            ConfigurationConstants.KEY_CHUNK_SIZE,
-            ConfigurationConstants.DEFAULT_CHUNK_SIZE,
-        )
-        chunk_overlap = config.get(
-            ConfigurationConstants.KEY_CHUNK_OVERLAP,
-            ConfigurationConstants.DEFAULT_CHUNK_OVERLAP,
-        )
-
-        llm_provider = config.get(
-            ConfigurationConstants.KEY_LLM_PROVIDER,
-            ConfigurationConstants.DEFAULT_LLM_PROVIDER,
-        )
-
-        llm_model = config.get(
-            ConfigurationConstants.KEY_LLM_MODEL,
-        )
-
-        azure_api_version = config.get(
-            ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION,
-        )
-
-        azure_endpoint = config.get(
-            ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT,
-        )
+        database_config = config.get(ConfigurationConstants.KEY_DATABASE, {})
+        splitter_config = config.get(ConfigurationConstants.KEY_SPLITTER, {})
+        embedding_config = config.get(ConfigurationConstants.KEY_EMBEDDING, {})
+        llm_config = config.get(ConfigurationConstants.KEY_LLM, {})
 
         self.logger.info(
-            f"Loaded config `{config}` from file `{ConfigurationConstants.CONFIG_FILE_PATH}`."
+            f"Loaded config \n{config}\nfrom file `{AppConstants.CONFIG_FILE_PATH}`."
         )
 
         return {
-            ConfigurationConstants.KEY_DATABASE_NAME: database_name,
-            ConfigurationConstants.KEY_DOCUMENT: document,
-            ConfigurationConstants.KEY_CHUNK_SIZE: int(chunk_size),
-            ConfigurationConstants.KEY_CHUNK_OVERLAP: int(chunk_overlap),
-            ConfigurationConstants.KEY_LLM_PROVIDER: llm_provider,
-            ConfigurationConstants.KEY_LLM_MODEL: llm_model,
-            ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: azure_api_version,
-            ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: azure_endpoint,
+            ConfigurationConstants.KEY_DATABASE: database_config,
+            ConfigurationConstants.KEY_SPLITTER: splitter_config,
+            ConfigurationConstants.KEY_EMBEDDING: embedding_config,
+            ConfigurationConstants.KEY_LLM: llm_config,
         }
+
+    def _parse_args(self) -> dict[str, str]:
+        parser = argparse.ArgumentParser(description="Docucite")
+        parser.add_argument("--config", type=str, help="Path to the config file")
+        args = parser.parse_args()
+
+        return {AppConstants.CONFIG_FILE_PATH: args.config}

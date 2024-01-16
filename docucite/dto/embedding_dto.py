@@ -1,5 +1,5 @@
 from typing import Optional
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 
 from docucite.models.embedding_model import Embedding
 

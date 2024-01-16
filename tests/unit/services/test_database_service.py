@@ -17,7 +17,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         with pytest.raises(DatabaseError):
             db_service = DatabaseService(mock_logger, "database_already_exists")
 
-            db_service.database_path = "path"
+            db_service.database_name = "path"
             mocker.patch("os.path.exists", return_value=True)
             mocker.patch("os.path.isdir", return_value=True)
 
@@ -79,7 +79,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         db_service.vectordb = VectorDataBaseModel.from_documents(
             mock_documents_best_book,
             db_service.embedding,
-            persist_directory=db_service.database_path,
+            persist_directory=db_service.database_name,
         )
 
         ids_first_docs = db_service.vectordb.get().get("ids")
@@ -192,7 +192,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         db_service.vectordb = VectorDataBaseModel.from_documents(
             mock_documents,
             db_service.embedding,
-            persist_directory=db_service.database_path,
+            persist_directory=db_service.database_name,
         )
 
         db_service._validate_documents_not_in_database(metadatas=mock_two_metadatas_two)
@@ -205,7 +205,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
             db_service.vectordb = VectorDataBaseModel.from_documents(
                 mock_documents,
                 db_service.embedding,
-                persist_directory=db_service.database_path,
+                persist_directory=db_service.database_name,
             )
 
             db_service._validate_documents_not_in_database(metadatas=metadatas)
