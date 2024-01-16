@@ -2,7 +2,6 @@ from logging import Logger
 import os
 from typing import Optional
 
-from docucite.constants import AppConstants
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
 from docucite.models.document_model import Document
 from docucite.models.embedding_model import Embedding
@@ -29,9 +28,11 @@ class DatabaseService:
         num_search_results: int,
     ) -> None:
         self.logger: Logger = logger
-        self.base_path = database_base_path
+        self.base_path: str = database_base_path
         self.database_name: Optional[str] = database_name if database_name else None
-        self.full_path = self.base_path + "/" + self.database_name
+        self.full_path: str = (
+            self.base_path + "/" + database_name if database_name else self.base_path
+        )
         self.number_search_results: int = num_search_results
         self.vectordb: Optional[VectorDataBaseModel] = None
         self.embedding: Embedding = Embedding(model=embedding_model)
@@ -168,11 +169,9 @@ class DatabaseService:
 
     def _create_base_dir(self) -> None:
         """Helper to make sure database base dir exists."""
-        self.logger.info(
-            f"Creating base dir for database `{AppConstants.DATABASE_BASE_DIR}` ..."
-        )
-        if not os.path.exists(AppConstants.DATABASE_BASE_DIR):
-            os.makedirs(AppConstants.DATABASE_BASE_DIR)
+        self.logger.info(f"Creating base dir for database `{self.base_path}` ...")
+        if not os.path.exists(self.base_path):
+            os.makedirs(self.base_path)
 
     @staticmethod
     def _extract_data(

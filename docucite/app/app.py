@@ -69,11 +69,11 @@ class DocuCiteApp(AbstractApp):
             llm_config={
                 ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration[
                     ConfigurationConstants.KEY_LLM
-                ].get(ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION),
+                ].get(ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION, ""),
                 ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration[
                     ConfigurationConstants.KEY_LLM
                 ].get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
+                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT, ""
                 ),
             },
         )
