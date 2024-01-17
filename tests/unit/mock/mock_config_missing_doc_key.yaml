@@ -1,5 +1,0 @@
-# Mock config. The document key is missing.
-
-database_name: "my_database"
-chunk_size: 100
-chunk_overlap: 10

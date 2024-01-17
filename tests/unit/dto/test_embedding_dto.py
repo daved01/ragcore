@@ -35,7 +35,7 @@ class TestEmbeddingDTO(BaseTest):
         if input_model:
             embedding = Embedding(model=input_model)
         else:
-            embedding = Embedding()
+            embedding = Embedding(model="text-embedding-ada-002")
         dto = EmbeddingDTO(model=embedding.model)
 
         embedding = dto.to_langchain()

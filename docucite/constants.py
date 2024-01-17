@@ -1,5 +1,6 @@
 class AppConstants:
-    CONFIG_FILE_PATH = "./configuration.yaml"
+    KEY_CONFIGURATION_PATH = "config_path"
+    DEFAULT_CONFIG_FILE_PATH = "./configuration.yaml"
 
 
 class LLMProviderConstants:

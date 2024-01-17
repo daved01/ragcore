@@ -1,6 +1,26 @@
 # Mock config. Valid file with correct key names and correct value datatypes.
 
-database_name: "my_database"
-document: "some_document.txt"
-chunk_size: 256
-chunk_overlap: 64
+database:
+  base_dir: "data/database"
+  name: "my_database"
+  document_base_path: "data"
+  number_search_results: 5
+
+splitter:
+  chunk_overlap: 256
+  chunk_size: 1024
+
+embedding:
+  model: "text-embedding-ada-002"
+
+# OpenAI
+llm:
+  provider: "openai"
+  model: "gpt-3.5-turbo"
+
+# AzureOpenAI
+# llm:
+#   provider: "azure"
+#   model: "gpt-3.5-turbo"
+#   endpoint: ""
+#   api_version: ""

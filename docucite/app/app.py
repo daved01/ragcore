@@ -1,4 +1,3 @@
-import argparse
 from typing import Optional, Any
 import yaml
 
@@ -12,14 +11,15 @@ from docucite.models.document_model import Document
 
 
 class DocuCiteApp(AbstractApp):
-    def __init__(self, file_logging=False):
+    def __init__(self, config_path: Optional[str] = None, file_logging=False):
         super().__init__(file_logging)
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
-        self.llm_service: Optional[LLMService] = None
-        self.args: dict[str, str] = self._parse_args()
+        self.llm_service: Optional[LLMService] = None  #
         self.configuration: dict[str, dict[str, Any]] = self._get_config(
-            self.args.get(AppConstants.CONFIG_FILE_PATH)
+            config_file_path=config_path
+            if config_path
+            else AppConstants.DEFAULT_CONFIG_FILE_PATH
         )
 
     def run(self) -> None:
@@ -155,9 +155,6 @@ class DocuCiteApp(AbstractApp):
         - llm
         """
 
-        if not config_file_path:
-            config_file_path = AppConstants.CONFIG_FILE_PATH
-
         with open(config_file_path, "r", encoding="utf-8") as filehandler:
             config = yaml.load(filehandler, yaml.FullLoader)
 
@@ -167,7 +164,7 @@ class DocuCiteApp(AbstractApp):
         llm_config = config.get(ConfigurationConstants.KEY_LLM, {})
 
         self.logger.info(
-            f"Loaded config \n{config}\nfrom file `{AppConstants.CONFIG_FILE_PATH}`."
+            f"Loaded config \n{config}\nfrom file `{AppConstants.DEFAULT_CONFIG_FILE_PATH}`."
         )
 
         return {
@@ -176,10 +173,3 @@ class DocuCiteApp(AbstractApp):
             ConfigurationConstants.KEY_EMBEDDING: embedding_config,
             ConfigurationConstants.KEY_LLM: llm_config,
         }
-
-    def _parse_args(self) -> dict[str, str]:
-        parser = argparse.ArgumentParser(description="Docucite")
-        parser.add_argument("--config", type=str, help="Path to the config file")
-        args = parser.parse_args()
-
-        return {AppConstants.CONFIG_FILE_PATH: args.config}

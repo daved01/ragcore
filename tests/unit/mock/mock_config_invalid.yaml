@@ -1,6 +1,7 @@
-# Mock config. All keys except the document key are named incorrectly.
+# Mock config. All keys except database top-level key are invalid.
 
-non_existing_key: "my_database"
-document: "my_document.pdf"
-chunk_size_wrong: "1028"
-chunk_overlap_wrong: "512"
+database:
+  basic_base_dir: "data/database"
+  non_existing_key: "my_database"
+  base_path: "data"
+  search_results: 5
