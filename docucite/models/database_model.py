@@ -2,7 +2,6 @@ from typing import Optional, Any
 from langchain_community.vectorstores import Chroma
 
 from docucite.models.embedding_model import Embedding
-from docucite.constants import AppConstants
 from docucite.models.document_model import Document
 from docucite.dto.document_dto import DocumentDTO
 from docucite.dto.embedding_dto import EmbeddingDTO

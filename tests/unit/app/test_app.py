@@ -2,7 +2,7 @@ import pytest
 
 from docucite.app.app import DocuCiteApp
 from docucite.constants import ConfigurationConstants
-from docucite.errors import DatabaseError, UserConfigurationError
+from docucite.errors import DatabaseError
 from tests import BaseTest
 from docucite.services.database_service import DatabaseService
 from docucite.models.embedding_model import Embedding
