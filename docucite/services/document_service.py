@@ -1,9 +1,12 @@
+import re
 from logging import Logger
 
 from docucite.services.text_splitter_service import TextSplitterService
 from docucite.models.document_model import Document
 from docucite.models.document_loader_model import PDFLoader
 from docucite.errors import UserConfigurationError
+
+PDF_PATTERN = r"\.pdf$"
 
 
 class DocumentService:
@@ -26,6 +29,12 @@ class DocumentService:
         - path: Path to document to be uploaded
         - document_title: Title of document
         """
+
+        if not re.search(PDF_PATTERN, document_title, re.IGNORECASE):
+            raise UserConfigurationError(
+                "Prodived document does not have PDF file extension."
+            )
+
         self.logger.info("Loading documents into memory ...")
 
         loader = PDFLoader(path)

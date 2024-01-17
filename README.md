@@ -21,7 +21,7 @@ To install, just run `pip install -r requirements.txt`. Make sure you have at le
 
 ### Usage
 
-To quickly add a PDF file for querying, place it in the `data` directory (create it or run the CLI tool) and specify the filename in the `configuration.yaml` file. Run the CLI application with `python -m docucute.cli` and follow the prompts to generate a new database. Once completed, you can enter questions in the CLI or launch the web interface using `uvicorn docucite.api:fastapi --reload`.
+To add a PDF file for querying, place it in the `data` directory (create it or run the CLI tool). Run the CLI application with `python -m docucute.cli` and follow the prompts to generate a new database, and upload your PDF file by entering its name when prompted. Once completed, you can enter questions in the CLI or launch the web interface using `uvicorn docucite.api:fastapi --reload`.
 
 Explore the subsequent sections for an in-depth comprehension of the app's features and customization possibilities.
 
@@ -30,23 +30,54 @@ Explore the subsequent sections for an in-depth comprehension of the app's featu
 The app has a default configuration so you can start quickly. You can adjust the configuration to your needs with the `configuration.yaml` file in the root. The file looks like this by default:
 
 ```bash
-database_name: "chroma"
-document: ""
-chunk_size: 1024
-chunk_overlap: 256
+database:
+  base_dir: "data/database"
+  name: "chroma"
+  document_base_path: "data"
+  number_search_results: 5
+
+splitter:
+  chunk_overlap: 256
+  chunk_size: 1024
+
+embedding:
+  model: "text-embedding-ada-002"
+
+# OpenAI
+llm:
+  provider: "openai"
+  model: "gpt-3.5-turbo"
+
+# AzureOpenAI
+# llm:
+#   provider: "azure"
+#   model: "gpt-3.5-turbo"
+#   endpoint: ""
+#   api_version: ""
+
 ```
 
-The field `database_name` is the name of the vector database. The database will be created in the folder `data/database` if it does not already exists. Otherwise, the existing database is loaded. The final name of the database will also include the chunk size and chunk overlap. The final database name is in the format `<database_name>_<chunk_size>_<chunk_overlap>`.
+The `configuration.yaml` file contains the keys `database`, `splitter`, `embedding`, and `llm` and is designed to serve as a starting configuration.
 
-The second field `document` is the name of the document you want to load into the database. The document is expected in the base path `data`. Currently supported document types are: `pdf`.
+#### Database
 
-The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is broken down before it is added to the database. These two parameters are very important as they determine the performance of your application by impacting the relevance of the documents that are retrieved given an input.
+In the `database` section, the field `name` is the name of the vector database. The database will be created in the folder under `base_dir` if it does not already exists. Otherwise, the existing database is loaded. The final name of the database will also include the chunk size and chunk overlap. The final database name is in the format `<database_name>_<chunk_size>_<chunk_overlap>`.
+
+#### Splitter
+
+In the `splitter` part the parameters for splitting of documents are specified. The `chunk_size` and `chunk_overlap` are two parameters which determine how the document is broken down before it is added to the database. These two parameters are very important as they determine the performance of your application by impacting the relevance of the documents that are retrieved given an input.
 
 The chunk size represents the number of tokens in each document chunk. Optimal selection depends on your documents and the chosen embedding model. Strive for a chunk size that produces chunks that in isolation a human would understand, while minimizing the length to keep cost for LLM request in check (multiple relevant chunks are send to the LLM, see below).
 
 Chunk overlap is how much overlap there is between adjacent chunks. Overlap is useful to not miss any information that is potentially on the edge of a chunk or spread over multiple chunks. The trade-off is some redudancy in the database and increased computation.
 
 For more information about text splitting see for example [here](https://www.pinecone.io/learn/chunking-strategies/).
+
+#### LLM
+
+Currently, OpenAI and AzureOpenAI are supported. By default `openai` is used as an llm provider, as you can see in the config file. Make sure to have your API key set in the environment variable `OPENAI_API_KEY`.
+
+To use AzureOpenAI, uncomment the AzureOpenAI part and remove the OpenAI part. Please note that AzureOpenAI requires you to provide an `endpoint` and an `api_version`. Additionally, you must have an API key set in the environment variable `AZURE_OPENAI_API_KEY`.
 
 ## How it works
 
@@ -108,14 +139,7 @@ In the previous section, we covered configuring the app using the configuration 
 
 ### Supported models
 
-The app supports OpenAI models and Azure OpenAI models. For the former, a valid API key has to be in the environment with the name `OPENAI_API_KEY`. For Azure deployments, the following environment variables are required.
-
-```bash
-AZURE_DEPLOYMENT_ID
-AZURE_API_VERSION
-AZURE_API_BASE_URL
-AZURE_API_KEY
-```
+The app supports OpenAI models and Azure OpenAI models. For the former, a valid API key has to be in the environment with the name `OPENAI_API_KEY`. For Azure deployments, the environment variable `AZURE_OPENAI_API_KEY` is required.
 
 ### Add a large language model
 

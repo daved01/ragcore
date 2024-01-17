@@ -1,31 +1,35 @@
-class APIConstants:
+class AppConstants:
+    KEY_CONFIGURATION_PATH = "config_path"
+    DEFAULT_CONFIG_FILE_PATH = "./configuration.yaml"
+
+
+class LLMProviderConstants:
     KEY_AZURE_OPENAI_API_KEY = "AZURE_OPENAI_API_KEY"
     KEY_OPENAI_API_KEY = "OPENAI_API_KEY"
 
 
-class AppConstants:
-    DATABASE_BASE_DIR = "data/database/"
-    DATABASE_SEARCH_DEFAULT_K = 3
-    DOCUMENT_BASE_PATH = "data/"
-    NUMBER_OF_SEARCH_RESULTS = 5
-    OPENAI_EMBEDDING = "text-embedding-ada-002"
-
-
 class ConfigurationConstants:
-    CONFIG_FILE_PATH = "./configuration.yaml"
-    DEFAULT_CHUNK_OVERLAP = 256
-    DEFAULT_CHUNK_SIZE = 1024
-    DEFAULT_DATABASE_NAME = "chroma"
-    KEY_LLM_MODEL = "llm_model"
-    KEY_CHUNK_OVERLAP = "chunk_overlap"
+    # Database
+    KEY_DATABASE = "database"
+    KEY_DATABASE_BASE_PAH = "base_dir"
+    KEY_DATABASE_NAME = "name"
+    KEY_DOCUMENT_BASE_PATH = "document_base_path"
+    KEY_NUMBER_SEARCH_RESULTS = "number_search_results"
+
+    # Splitter
+    KEY_SPLITTER = "splitter"
     KEY_CHUNK_SIZE = "chunk_size"
-    KEY_DATABASE_NAME = "database_name"
-    KEY_DOCUMENT = "document"
-    KEY_LLM_PROVIDER = "llm_provider"
+    KEY_CHUNK_OVERLAP = "chunk_overlap"
 
-    KEY_AZURE_OPENAI_API_VERSION = "azure_api_version"
-    KEY_AZURE_OPENAI_AZURE_ENDPOINT = "azure_endpoint"
+    # Embedding
+    KEY_EMBEDDING = "embedding"
+    KEY_EMBEDDING_MODEL = "model"
 
+    # LLMs
+    KEY_LLM = "llm"
+    KEY_LLM_PROVIDER = "provider"
+    KEY_LLM_MODEL = "model"
     LLM_PROVIDER_OPENAI = "openai"
     LLM_PROVIDER_AZUREOPENAI = "azure"
-    DEFAULT_LLM_PROVIDER = LLM_PROVIDER_OPENAI
+    KEY_AZURE_OPENAI_API_VERSION = "api_version"
+    KEY_AZURE_OPENAI_AZURE_ENDPOINT = "endpoint"

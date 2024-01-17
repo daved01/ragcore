@@ -1,6 +1,0 @@
-# Mock config. Instead of integer, string values are used.
-
-database_name: "my_database"
-document: "some_document.txt"
-chunk_size: "256"
-chunk_overlap: "64"

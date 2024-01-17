@@ -1,2 +1,5 @@
 [MESSAGES CONTROL]
 disable=logging-fstring-interpolation, missing-function-docstring, missing-module-docstring, missing-class-docstring,too-few-public-methods
+
+[DESIGN]
+max-args=10

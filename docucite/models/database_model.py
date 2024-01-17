@@ -1,8 +1,7 @@
 from typing import Optional, Any
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 
 from docucite.models.embedding_model import Embedding
-from docucite.constants import AppConstants
 from docucite.models.document_model import Document
 from docucite.dto.document_dto import DocumentDTO
 from docucite.dto.embedding_dto import EmbeddingDTO
@@ -40,9 +39,7 @@ class VectorDataBaseModel:
     ) -> list[str]:
         return self.chroma.add_texts(texts=texts, metadatas=metadatas)
 
-    def similarity_search(
-        self, query: str, k: int = AppConstants.DATABASE_SEARCH_DEFAULT_K
-    ) -> list[Document]:
+    def similarity_search(self, query: str, k: int) -> list[Document]:
         lang_docs = self.chroma.similarity_search(query=query, k=k)
 
         return DocumentDTO.to_docucite_list(lang_docs)

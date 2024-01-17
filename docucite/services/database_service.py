@@ -2,7 +2,6 @@ from logging import Logger
 import os
 from typing import Optional
 
-from docucite.constants import AppConstants
 from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
 from docucite.models.document_model import Document
 from docucite.models.embedding_model import Embedding
@@ -23,60 +22,66 @@ class DatabaseService:
     def __init__(
         self,
         logger: Logger,
+        database_base_path: str,
         database_name: str,
+        embedding_model: str,
+        num_search_results: int,
     ) -> None:
         self.logger: Logger = logger
-        self.database_path: Optional[str] = (
-            AppConstants.DATABASE_BASE_DIR + database_name if database_name else None
+        self.base_path: str = database_base_path
+        self.database_name: Optional[str] = database_name if database_name else None
+        self.full_path: str = (
+            self.base_path + "/" + database_name if database_name else self.base_path
         )
+        self.number_search_results: int = num_search_results
         self.vectordb: Optional[VectorDataBaseModel] = None
-        self.embedding: Embedding = Embedding()
+        self.embedding: Embedding = Embedding(model=embedding_model)
 
     def create_database(self) -> None:
         """
         Creates a new database if it does not already exist and saves it on disk
-        in the path `AppConstants.DATABASE_BASE_DIR`.
+        in the path `database_path`.
         """
 
         if (
-            self.database_path
-            and os.path.exists(self.database_path)
-            and os.path.isdir(self.database_path)
+            self.full_path
+            and os.path.exists(self.full_path)
+            and os.path.isdir(self.full_path)
         ):
             raise DatabaseError(
-                f"Cannot create database `{self.database_path}` because it already exists."
+                f"Cannot create database `{self.full_path}` because it already exists."
             )
 
         if not (
-            AppConstants.DATABASE_BASE_DIR
-            and os.path.exists(AppConstants.DATABASE_BASE_DIR)
-            and os.path.isdir(AppConstants.DATABASE_BASE_DIR)
+            self.base_path
+            and os.path.exists(self.base_path)
+            and os.path.isdir(self.base_path)
         ):
             self._create_base_dir()
 
         self.vectordb = VectorDataBaseModel(
-            persist_directory=self.database_path, embedding_function=self.embedding
+            persist_directory=self.full_path, embedding_function=self.embedding
         )
 
-        self.logger.info(f"Created database in path `{self.database_path}`.")
+        self.logger.info(f"Created database in path `{self.full_path}`.")
 
     def load_database(self) -> None:
         """Loads an existing vector database into memory."""
         if not (
-            self.database_path
-            and os.path.exists(self.database_path)
-            and os.path.isdir(self.database_path)
+            self.full_path
+            and os.path.exists(self.full_path)
+            and os.path.isdir(self.full_path)
         ):
             raise DatabaseError(
-                f"Tried to load database `{self.database_path}`, but it does not exist."
+                f"Tried to load database `{self.full_path}`, but it does not exist."
             )
-        self.logger.info(f"Loading from database in path {self.database_path} ...")
+        self.logger.info(f"Loading from database in path {self.full_path} ...")
 
         self.vectordb = VectorDataBaseModel(
-            persist_directory=self.database_path, embedding_function=self.embedding
+            persist_directory=self.full_path, embedding_function=self.embedding
         )
         self.logger.info(
-            f"Successfully loaded database `{self.database_path}` with "
+            f"Successfully loaded database `{self.full_path}` with "
             f"{len(self.vectordb.get().get('ids', -1))} indexed documents."
         )
 
@@ -89,7 +94,7 @@ class DatabaseService:
         # Check if database exists on disk. If not exit.
         if not self.vectordb:
             raise DatabaseError(
-                f"Tried to add documents to database `{self.database_path}`, "
+                f"Tried to add documents to database `{self.full_path}`, "
                 "but this database does not exist."
             )
 
@@ -105,7 +110,7 @@ class DatabaseService:
 
         # Update database
         self.logger.info(
-            f"Adding {len(documents)} documents to database at `{self.database_path}`."
+            f"Adding {len(documents)} documents to database at `{self.full_path}`."
         )
 
         self.vectordb.add_texts(texts=new_texts, metadatas=new_metadatas)
@@ -122,9 +127,7 @@ class DatabaseService:
                 "Database does not exist. Please create it before running a search."
             )
 
-        return self.vectordb.similarity_search(
-            query, k=AppConstants.NUMBER_OF_SEARCH_RESULTS
-        )
+        return self.vectordb.similarity_search(query, k=self.number_search_results)
 
     def _validate_documents_metadata(
         self, texts: list[str], metadatas: list[Metadata]
@@ -166,11 +169,9 @@ class DatabaseService:
 
     def _create_base_dir(self) -> None:
         """Helper to make sure database base dir exists."""
-        self.logger.info(
-            f"Creating base dir for database `{AppConstants.DATABASE_BASE_DIR}` ..."
-        )
-        if not os.path.exists(AppConstants.DATABASE_BASE_DIR):
-            os.makedirs(AppConstants.DATABASE_BASE_DIR)
+        self.logger.info(f"Creating base dir for database `{self.base_path}` ...")
+        if not os.path.exists(self.base_path):
+            os.makedirs(self.base_path)
 
     @staticmethod
     def _extract_data(
