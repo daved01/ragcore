@@ -134,7 +134,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         """
         return self.collection.count()
 
-    def _init_collection(self):
+    def _init_collection(self) -> chromadb.Collection:
         """
         Gets the main collection or creates it.
         """
@@ -151,7 +151,9 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         """
         if not title:
             return 0
-        return self.collection.get(
-            where={DataConstants.KEY_TITLE: title},
-            include=[DatabaseConstants.KEY_CHROMA_METADATAS],
-        ).get(DatabaseConstants.KEY_CHROMA_METADATAS)
+        return len(
+            self.collection.get(
+                where={DataConstants.KEY_TITLE: title},
+                include=[DatabaseConstants.KEY_CHROMA_METADATAS],
+            ).get(DatabaseConstants.KEY_CHROMA_METADATAS)
+        )
