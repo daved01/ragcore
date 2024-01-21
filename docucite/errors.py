@@ -17,12 +17,12 @@ class DatabaseError(AppBaseError):
     """Database error."""
 
 
-class MissingMetadataError(AppBaseError):
-    """Missing metadata error."""
+class EmbeddingError(AppBaseError):
+    """Embedding error."""
 
 
-class InvalidMetadataError(AppBaseError):
-    """Invalid metadata error."""
+class MetadataError(AppBaseError):
+    """Metadata error."""
 
 
 class LLMError(AppBaseError):

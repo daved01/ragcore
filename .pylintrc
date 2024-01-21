@@ -3,3 +3,6 @@ disable=logging-fstring-interpolation, missing-function-docstring, missing-modul
 
 [DESIGN]
 max-args=10
+
+[FORMAT]
+max-line-length = 140

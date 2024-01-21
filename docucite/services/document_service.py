@@ -69,13 +69,3 @@ class DocumentService:
         self.logger.info(
             f"Created {len(self.documents)} documents from {len(self.pages)} pages."
         )
-
-    @staticmethod
-    def documents_to_texts(
-        documents: list[Document],
-    ) -> list[tuple[str, dict[str, str]]]:
-        """
-        Converts a list of documents to a list of strings and metadata.
-        Returns: List of tuples (text, metadata)
-        """
-        return [(document.page_content, document.metadata) for document in documents]

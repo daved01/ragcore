@@ -73,15 +73,3 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
         document_service = DocumentService(mock_logger)
         with pytest.raises(UserConfigurationError):
             document_service.split_document(10, 10)
-
-    def test_documents_to_texts(self, mock_logger, mock_documents):
-        document_service = DocumentService(logger=mock_logger)
-
-        results = document_service.documents_to_texts(mock_documents)
-        new_texts, new_metadatas = map(list, zip(*results))
-
-        assert len(new_texts) == len(new_metadatas)
-        assert new_texts[0] == mock_documents[0].page_content
-        assert new_texts[1] == mock_documents[1].page_content
-        assert new_metadatas[0] == mock_documents[0].metadata
-        assert new_metadatas[1] == mock_documents[1].metadata

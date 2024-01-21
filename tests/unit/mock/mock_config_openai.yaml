@@ -1,0 +1,5 @@
+# Mock config. LLM OpenAI part only. See other files for rest.
+
+llm:
+  provider: "openai"
+  model: "gpt-openai"

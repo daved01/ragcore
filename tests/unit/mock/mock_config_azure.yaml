@@ -1,0 +1,7 @@
+# Mock config. LLM Azure part only. See other files for rest.
+
+llm:
+  provider: "azure"
+  model: "gpt-azure"
+  endpoint: "https://endpoint.com"
+  api_version: "some-version"

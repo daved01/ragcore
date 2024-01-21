@@ -1,6 +1,7 @@
+import os
 import pytest
 
-from docucite.errors import PromptError, LLMError
+from docucite.errors import PromptError, LLMError, UserConfigurationError
 from docucite.models.llm_model import LLMModel
 from docucite.services.llm_service import LLMService
 from tests import BaseTest
@@ -32,51 +33,40 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
         with pytest.raises(PromptError):
             llm_service.create_prompt(question, mock_documents)
 
-    def test_make_openai_request(self, mock_logger, mocker, mock_openai_response):
-        class MockOpenAI:
-            def __init__(self, api_key):
-                pass
+    def test_init_not_supported_llm(self, mock_logger):
+        llm_service = LLMService(mock_logger, "no-supported", "great-model")
+        with pytest.raises(UserConfigurationError):
+            llm_service.initialize_llm()
 
-            class chat:
-                class completions:
-                    def create(model, messages):
-                        return mock_openai_response
-
-        mocker.patch("docucite.models.llm_model.OpenAI", MockOpenAI)
+    def test_openai_init_request(self, mock_logger, mocker, mock_openai_response):
+        mocker.patch(
+            "docucite.models.llm_model.OpenAI", return_value=mock_openai_response
+        )
+        mocker.patch.dict(os.environ, {"OPENAI_API_KEY": "secret-token"})
 
         llm_service = LLMService(mock_logger, "openai", "great-model")
         llm_service.initialize_llm()
 
         response = llm_service.make_llm_request(prompt="This is a full prompt.")
-        assert response == "This is the response!"
 
-    def test_make_azureopenai_request(self, mock_logger, mocker, mock_openai_response):
-        class MockAzureChatOpenAI:
-            def __init__(
-                self,
-                api_key,
-                api_version,
-                azure_endpoint,
-            ):
-                pass
+        assert response == "This is the response."
 
-            class chat:
-                class completions:
-                    def create(model, messages):
-                        return mock_openai_response
-
-        mocker.patch("docucite.models.llm_model.AzureOpenAI", MockAzureChatOpenAI)
+    def test_azure_init_request(self, mock_logger, mocker, mock_openai_response):
+        mocker.patch(
+            "docucite.models.llm_model.AzureOpenAI", return_value=mock_openai_response
+        )
+        mocker.patch.dict(os.environ, {"AZURE_OPENAI_API_KEY": "secret-token"})
 
         llm_service = LLMService(
             mock_logger,
             "azure",
             "great-model",
-            llm_config={"azure_api_version": "", "azure_endpoint": ""},
+            llm_config={"api_version": "", "endpoint": ""},
         )
         llm_service.initialize_llm()
 
         response = llm_service.make_llm_request(prompt="This is a full prompt.")
-        assert response == "This is the response!"
+        assert response == "This is the response."
 
     def test_make_llm_request_no_model_initialized(self, mock_logger):
         llm_service = LLMService(mock_logger, "any", "great-model")

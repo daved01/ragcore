@@ -1,5 +1,5 @@
 black==23.7.0
-chromadb==0.4.5
+chromadb==0.4.22
 langchain==0.1.1
 langchain-community==0.0.13
 mypy==1.5.1

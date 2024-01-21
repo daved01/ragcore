@@ -1,18 +1,23 @@
-from typing import Optional
-from langchain_community.embeddings import OpenAIEmbeddings
+from abc import ABC, abstractmethod
+from openai import OpenAI
 
 
-class Embedding:
-    """Wrapper for embeddings."""
+class BaseEmbedding(ABC):
+    """ABC for embeddings."""
 
+    @abstractmethod
+    def embed_queries(self, queries: list[str]) -> list[list[float]]:
+        """Creates a list of embeddings for a list of queries."""
+
+
+class OpenAIEmbedding(BaseEmbedding):
     def __init__(self, model: str):
         self.model = model
-        self.openai_embedding = OpenAIEmbeddings(model=model, client=None)
+        self.client = OpenAI()  # Openai api key env variable must be set.
 
-    def embed_documents(
-        self, texts: list[str], chunk_size: Optional[int] = None
-    ) -> list[list[float]]:
-        return self.openai_embedding.embed_documents(texts=texts, chunk_size=chunk_size)
-
-    def embed_query(self, text: str) -> list[float]:
-        return self.openai_embedding.embed_query(text=text)
+    def embed_queries(self, queries: list[str]) -> list[list[float]]:
+        embedding_vectors = []
+        response = self.client.embeddings.create(input=queries, model=self.model)
+        for i in range(len(queries)):
+            embedding_vectors.append(response.data[i].embedding)
+        return embedding_vectors

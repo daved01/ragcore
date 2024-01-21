@@ -1,348 +1,244 @@
-import os
 import pytest
 
-from docucite.constants import AppConstants
-from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
-from docucite.models.document_model import Document
-from docucite.models.database_model import VectorDataBaseModel
+from docucite.errors import EmbeddingError, DatabaseError, MetadataError
+from docucite.models.database_model import ChromaDatabase
+from docucite.models.embedding_model import BaseEmbedding
 from docucite.services.database_service import DatabaseService
 from tests import BaseTest
 from tests.unit.services import DocuciteTestSetup
 
 
 class TestDatabaseService(BaseTest, DocuciteTestSetup):
-    def test_create_database_database_exists(self, mock_logger, mocker):
-        mocker.patch("docucite.services.database_service.Embedding")
-
-        with pytest.raises(DatabaseError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name="database_already_exists",
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-
-            db_service.database_name = "path"
-            mocker.patch("os.path.exists", return_value=True)
-            mocker.patch("os.path.isdir", return_value=True)
-
-            db_service.create_database()
-
-    def test_create_database_base_folder_exists(self, mock_logger, mocker):
-        mock_embedding = mocker.patch(
-            "docucite.models.embedding_model.OpenAIEmbeddings"
-        )
-
-        # If
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-
-        mocker.patch("os.path.exists", return_value=True)
-        mocker.patch("os.path.isdir", return_value=True)
-
-        makedirs_mock = mocker.patch("os.makedirs", return_value=None)
-
-        # When
-        db_service.create_database()
-
-        # Then
-        assert db_service.vectordb is not None
-        makedirs_mock.assert_not_called()
-        mock_embedding.assert_called_once()
-
-    @pytest.mark.skip(reason="Database will be replaced")
-    def test_create_database_base_folder_not_exists(self, mock_logger, mocker):
-        mock_embedding = mocker.patch(
-            "docucite.models.embedding_model.OpenAIEmbeddings"
-        )
-
-        # If
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="tmp",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-
-        mocker.patch("os.path.exists", return_value=False)
-        mocker.patch("os.path.isdir", return_value=False)
-
-        mocker.patch("os.path.exists", return_value=False)
-        makedirs_mock = mocker.patch("os.makedirs", return_value=None)
-
-        # When
-        db_service.create_database()
-
-        # Then
-        assert db_service.vectordb is not None
-        assert (
-            makedirs_mock.call_count == 2
-        )  # langchain Chroma dependency calls os.makedirs() too
-        makedirs_mock.assert_any_call(AppConstants.DATABASE_BASE_DIR)
-        mock_embedding.assert_called_once()
-
-    @pytest.mark.skip(reason="OpenAI embedding not mocked yet")
-    def test_update_database(
-        self, mock_logger, mock_documents, mock_documents_best_book
+    def test_init_embedding_openai(
+        self, mocker, mock_logger, mock_config, mock_openai_embedding
     ):
-        # Create database in memory with the mock_documents
-        db_service = DatabaseService(logger=mock_logger, database_name=None)
-
-        db_service.vectordb = VectorDataBaseModel.from_documents(
-            mock_documents_best_book,
-            db_service.embedding,
-            persist_directory=db_service.database_name,
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name=mock_config["name"],
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
         )
+        assert isinstance(database_service.embedding.client, mock_openai_embedding)
 
-        ids_first_docs = db_service.vectordb.get().get("ids")
-
-        # When
-        db_service.add_documents(mock_documents)
-
-        # Then
-        ids_second_docs = db_service.vectordb.get().get("ids")
-        assert len(ids_first_docs) == 1
-        assert len(ids_second_docs) == 3
-        assert ids_first_docs[0] in ids_second_docs
-
-    def test_search(self, mock_logger, mocker, mock_documents):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
-
-        class MockVectorDB:
-            def __init__(self):
-                pass
-
-            def similarity_search(self, query, k):
-                return mock_documents
-
-        mocker.patch(
-            "docucite.services.database_service.VectorDataBaseModel", MockVectorDB
-        )
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        db_service.vectordb = MockVectorDB()
-        res = db_service.search("What is a good question?")
-        assert len(res) == 2
-        assert isinstance(res[0], Document)
-        mock_embedding.assert_called_once()
-
-    def test_search_database_empty(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
-
-        class MockVectorDB:
-            def __init__(self):
-                pass
-
-            def similarity_search(self, query, k):
-                return []
-
-        mocker.patch(
-            "docucite.services.database_service.VectorDataBaseModel", MockVectorDB
-        )
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        db_service.vectordb = MockVectorDB()
-        res = db_service.search("What is a good question?")
-        assert len(res) == 0
-        mock_embedding.assert_called_once()
-
-    def test_search_no_database(self, mock_logger, mocker):
-        mocker.patch("docucite.services.database_service.Embedding")
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        with pytest.raises(DatabaseError):
-            db_service.search("Why does this fail?")
-
-    # All is good if no error is raised
-    def test_validate_documents_metadata_pass(
-        self, mock_logger, mock_three_texts, mock_three_metadatas, mocker
-    ):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        db_service._validate_documents_metadata(
-            texts=mock_three_texts, metadatas=mock_three_metadatas
-        )
-        mock_embedding.assert_called_once()
-
-    def test_validate_documents_metadata_missing_metadata(
-        self, mock_logger, mock_three_texts, mocker
-    ):
-        mocker.patch("docucite.services.database_service.Embedding")
-        with pytest.raises(MissingMetadataError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name=None,
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-            db_service._validate_documents_metadata(
-                texts=mock_three_texts, metadatas=[]
-            )
-
-    def test_validate_documents_metadata_one_metadata_missing(
-        self, mock_logger, mock_three_texts, mock_two_metadatas, mocker
-    ):
-        mocker.patch("docucite.services.database_service.Embedding")
-        with pytest.raises(MissingMetadataError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name=None,
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-            db_service._validate_documents_metadata(
-                texts=mock_three_texts, metadatas=mock_two_metadatas
-            )
-
-    def test_validate_documents_metadata_metadata_missing_title(
+    def test_init_embedding_invalid_provider(
         self,
         mock_logger,
-        mock_three_texts,
-        mock_three_metadatas_one_missing_title,
+        mock_config,
+    ):
+        with pytest.raises(EmbeddingError):
+            _ = DatabaseService(
+                logger=mock_logger,
+                base_path=mock_config["path"],
+                name=mock_config["name"],
+                num_search_results=mock_config["num_search_res"],
+                embedding_provider="not-supported",
+                embedding_model=mock_config["embedding_model"],
+            )
+
+    def test_initialize_local_database(
+        self, mocker, mock_logger, mock_config, mock_openai_embedding
+    ):
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+
+        database_service.initialize_local_database()
+
+        assert mock_makedirs.call_count == 1
+        assert mock_chroma_db_client.call_count == 1
+        assert database_service.base_path == "path"
+        assert database_service.name == "chroma"
+        assert database_service.number_search_results == 2
+        assert isinstance(database_service.embedding, BaseEmbedding)
+
+    def test_initialize_local_database_not_supported_database_name(
+        self, mocker, mock_logger, mock_config, mock_openai_embedding
+    ):
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="not_supported",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+        with pytest.raises(DatabaseError):
+            database_service.initialize_local_database()
+
+    def test_add_documents(
+        self, mocker, mock_logger, mock_config, mock_openai_embedding, mock_documents
+    ):
+        mock_add_docs = mocker.Mock()
+        mock_database_class = mocker.patch(
+            "docucite.models.database_model.ChromaDatabase"
+        )
+        mock_database_instance = mock_database_class.return_value
+        mock_database_instance.add_documents = mock_add_docs
+        mock_database_add_documents = mocker.patch(
+            "docucite.services.database_service.ChromaDatabase.add_documents",
+            mock_add_docs,
+        )
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+
+        database_service.initialize_local_database()
+        database_service.add_documents(documents=mock_documents)
+
+        assert isinstance(database_service.database, ChromaDatabase)
+        assert mock_database_add_documents.call_count == 1
+
+    def test_add_documents_database_not_exist(
+        self, mocker, mock_logger, mock_config, mock_openai_embedding, mock_documents
+    ):
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+        with pytest.raises(DatabaseError):
+            database_service.add_documents(mock_documents)
+
+    def test_add_documents_metadata_title_missing(
+        self,
         mocker,
+        mock_logger,
+        mock_config,
+        mock_openai_embedding,
+        mock_documents_metadata_title_missing,
     ):
-        mocker.patch("docucite.services.database_service.Embedding")
-        with pytest.raises(InvalidMetadataError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name=None,
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-            db_service._validate_documents_metadata(
-                texts=mock_three_texts, metadatas=mock_three_metadatas_one_missing_title
-            )
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
-    @pytest.mark.skip(reason="OpenAI embedding not mocked yet")
-    def test_validate_documents_not_in_database_pass(
-        self, mock_logger, mock_documents, mock_two_metadatas_two
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+        database_service.initialize_local_database()
+        with pytest.raises(MetadataError):
+            database_service.add_documents(mock_documents_metadata_title_missing)
+
+    def test_add_documents_metadata_missing(
+        self,
+        mocker,
+        mock_logger,
+        mock_config,
+        mock_openai_embedding,
+        mock_documents_missing_metadata,
     ):
-        # Create in memory database from mock_documents
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        db_service.vectordb = VectorDataBaseModel.from_documents(
-            mock_documents,
-            db_service.embedding,
-            persist_directory=db_service.database_name,
-        )
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
-        db_service._validate_documents_not_in_database(metadatas=mock_two_metadatas_two)
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+        database_service.initialize_local_database()
+        with pytest.raises(MetadataError):
+            database_service.add_documents(mock_documents_missing_metadata)
 
-    @pytest.mark.skip(reason="OpenAI embedding not mocked yet")
-    def test_validate_documents_not_in_database_fail(self, mock_logger, mock_documents):
-        metadatas = [{"page": 6, "title": "Greatest book"}]
+    def test_query(self, mocker, mock_logger, mock_config, mock_documents):
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch(
+            "docucite.services.database_service.DatabaseService.query",
+            return_value="Hello",
+        )
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
+        database_service.initialize_local_database()
+        response = database_service.query("my_query")
+
+        assert response == "Hello"
+
+    def test_query_fail(self, mocker, mock_logger, mock_config, mock_documents):
+        mock_database = mocker.Mock()
+        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["path"],
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
+        )
         with pytest.raises(DatabaseError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name=None,
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-            db_service.vectordb = VectorDataBaseModel.from_documents(
-                mock_documents,
-                db_service.embedding,
-                persist_directory=db_service.database_name,
-            )
+            database_service.query("my_query")
 
-            db_service._validate_documents_not_in_database(metadatas=metadatas)
-
-    def test_update_database_not_exist(self, mock_logger, mock_documents, mocker):
-        mocker.patch("docucite.services.database_service.Embedding")
-        with pytest.raises(DatabaseError):
-            db_service = DatabaseService(
-                mock_logger,
-                database_base_path="",
-                database_name="database_does_not_exist",
-                embedding_model="my_embedding",
-                num_search_results=5,
-            )
-            db_service.add_documents(mock_documents)
-
-    @pytest.mark.skip(reason="Database will be replaced")
-    def test_create_base_dir(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="base",
-            database_name="my_database",
-            embedding_model="my_embedding",
-            num_search_results=5,
+    def test_create_base_dir(self, mocker, mock_logger, mock_config):
+        base_path = "/path/to/base"
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=base_path,
+            name="chroma",
+            num_search_results=mock_config["num_search_res"],
+            embedding_provider="openai",
+            embedding_model=mock_config["embedding_model"],
         )
-        db_service._create_base_dir()
 
-        assert os.path.exists(AppConstants.DATABASE_BASE_DIR)
-        mock_embedding.assert_called_once()
+        os_makedirs_mock = mocker.patch("os.makedirs")
 
-    def test_create_base_dir_exist(self, mock_logger, mocker):
-        mock_embedding = mocker.patch("docucite.services.database_service.Embedding")
-        mocker.patch("os.path.exists", return_value=True)
-        makedirs_spy = mocker.spy(os, "makedirs")
+        database_service._create_base_dir()
 
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="base",
-            database_name="my_database",
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        db_service._create_base_dir()
-
-        makedirs_spy.assert_not_called()
-        mock_embedding.assert_called_once()
-
-    def test_extract_data(self, mock_logger):
-        datas = [
-            ("Text A", {"metadata": [{"page": 1}]}),
-            ("Text B", {"metadata": [{"page": 2}]}),
-            (None, {}),
-        ]
-
-        db_service = DatabaseService(
-            mock_logger,
-            database_base_path="base",
-            database_name=None,
-            embedding_model="my_embedding",
-            num_search_results=5,
-        )
-        texts, metadatas = db_service._extract_data(datas=datas)
-
-        for i, data in enumerate(datas):
-            assert data[0] == texts[i]
-            assert data[1] == metadatas[i]
+        os_makedirs_mock.assert_called_once_with(base_path)

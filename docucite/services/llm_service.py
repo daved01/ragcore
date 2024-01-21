@@ -41,9 +41,9 @@ class LLMService:
     def create_prompt(self, question: str, context: list[Document]) -> str:
         if not question:
             raise PromptError("Tried to create prompt, but no question provided.")
-        prompt_template = PromptGenerator()
+        prompt_generator = PromptGenerator()
         context_str = self.document_to_str(context)
-        prompt = prompt_template.get_prompt(question, context_str)
+        prompt = prompt_generator.get_prompt(question, context_str)
         self.logger.info(
             f"Created prompt from question and {len(context)} documents as context."
         )
