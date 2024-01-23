@@ -2,7 +2,7 @@ from typing import Optional, Any
 import yaml
 
 from docucite.app import AbstractApp
-from docucite.constants import AppConstants, ConfigurationConstants
+from docucite.shared.constants import AppConstants, ConfigurationConstants
 from docucite.models.document_model import Document
 from docucite.services.document_service import DocumentService
 from docucite.services.database_service import DatabaseService

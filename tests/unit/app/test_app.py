@@ -1,8 +1,8 @@
 import pytest
 
 from docucite.app.app import DocuCiteApp
-from docucite.constants import ConfigurationConstants
-from docucite.errors import DatabaseError
+from docucite.shared.constants import ConfigurationConstants
+from docucite.shared.errors import DatabaseError
 from tests import BaseTest
 from docucite.services.database_service import DatabaseService
 from docucite.models.embedding_model import OpenAIEmbedding
@@ -66,7 +66,7 @@ class TestDocuCiteApp(BaseTest):
 
     def test_get_config_verify_config_no_path(self, mocker):
         mocker.patch(
-            "docucite.constants.AppConstants.KEY_CONFIGURATION_PATH",
+            "docucite.shared.constants.AppConstants.KEY_CONFIGURATION_PATH",
             "tests/unit/mock/mock_config_no_llms.yaml",
         )
         app = DocuCiteApp()

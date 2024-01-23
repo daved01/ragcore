@@ -1,7 +1,7 @@
 import pytest
 
 from docucite.services.document_service import DocumentService
-from docucite.errors import UserConfigurationError
+from docucite.shared.errors import UserConfigurationError
 from tests import BaseTest
 from tests.unit.services import DocuciteTestSetup
 

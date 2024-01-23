@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from openai import OpenAI
 
+from docucite.shared.utils import slice_list
+
 
 class BaseEmbedding(ABC):
     """ABC for embeddings."""
@@ -17,7 +19,14 @@ class OpenAIEmbedding(BaseEmbedding):
 
     def embed_queries(self, queries: list[str]) -> list[list[float]]:
         embedding_vectors = []
-        response = self.client.embeddings.create(input=queries, model=self.model)
-        for i in range(len(queries)):
-            embedding_vectors.append(response.data[i].embedding)
+
+        query_slices: list[list[str]] = slice_list(queries, 200)
+
+        for query_slice in query_slices:
+            response = self.client.embeddings.create(
+                input=query_slice, model=self.model
+            )
+            for i in range(len(query_slice)):
+                embedding_vectors.append(response.data[i].embedding)
+
         return embedding_vectors

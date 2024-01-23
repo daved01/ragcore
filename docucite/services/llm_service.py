@@ -4,8 +4,8 @@ from typing import Optional
 from docucite.models.document_model import Document
 from docucite.models.prompt_model import PromptGenerator
 from docucite.models.llm_model import OpenAIModel, AzureOpenAIModel
-from docucite.constants import ConfigurationConstants
-from docucite.errors import LLMError, PromptError, UserConfigurationError
+from docucite.shared.constants import ConfigurationConstants
+from docucite.shared.errors import LLMError, PromptError, UserConfigurationError
 
 
 class LLMService:

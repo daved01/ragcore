@@ -2,8 +2,12 @@ from logging import Logger
 import os
 from typing import Optional
 
-from docucite.constants import DatabaseConstants, DataConstants, EmbeddingConstants
-from docucite.errors import DatabaseError, MetadataError, EmbeddingError
+from docucite.shared.constants import (
+    DatabaseConstants,
+    DataConstants,
+    EmbeddingConstants,
+)
+from docucite.shared.errors import DatabaseError, MetadataError, EmbeddingError
 from docucite.models.document_model import Document
 from docucite.models.embedding_model import BaseEmbedding, OpenAIEmbedding
 from docucite.models.database_model import BaseVectorDatabaseModel, ChromaDatabase

@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from docucite.errors import PromptError, LLMError, UserConfigurationError
+from docucite.shared.errors import PromptError, LLMError, UserConfigurationError
 from docucite.models.llm_model import LLMModel
 from docucite.services.llm_service import LLMService
 from tests import BaseTest

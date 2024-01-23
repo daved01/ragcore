@@ -3,7 +3,7 @@ import chromadb
 from typing import Optional, Any, Mapping, Sized
 import uuid
 
-from docucite.constants import DataConstants, DatabaseConstants
+from docucite.shared.constants import DataConstants, DatabaseConstants
 from docucite.models.embedding_model import BaseEmbedding
 from docucite.models.document_model import Document
 

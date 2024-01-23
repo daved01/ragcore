@@ -4,7 +4,7 @@ from logging import Logger
 from docucite.services.text_splitter_service import TextSplitterService
 from docucite.models.document_model import Document
 from docucite.models.document_loader_model import PDFLoader
-from docucite.errors import UserConfigurationError
+from docucite.shared.errors import UserConfigurationError
 
 PDF_PATTERN = r"\.pdf$"
 

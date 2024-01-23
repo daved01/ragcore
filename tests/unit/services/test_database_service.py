@@ -1,6 +1,6 @@
 import pytest
 
-from docucite.errors import EmbeddingError, DatabaseError, MetadataError
+from docucite.shared.errors import EmbeddingError, DatabaseError, MetadataError
 from docucite.models.database_model import ChromaDatabase
 from docucite.models.embedding_model import BaseEmbedding
 from docucite.services.database_service import DatabaseService
