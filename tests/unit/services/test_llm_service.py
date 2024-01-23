@@ -72,16 +72,3 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
         llm_service = LLMService(mock_logger, "any", "great-model")
         with pytest.raises(LLMError):
             llm_service.make_llm_request("")
-
-    def test_document_to_str(self, mock_logger, mock_documents):
-        llm_service = LLMService(mock_logger, "any", "great-model")
-        string = llm_service.document_to_str(mock_documents)
-        assert isinstance(string, str)
-        assert mock_documents[0].page_content in string
-        assert mock_documents[1].page_content in string
-        assert "\n" in string
-
-    def test_document_to_str_no_docs(self, mock_logger):
-        llm_service = LLMService(mock_logger, "any", "great-model")
-        empty_string = llm_service.document_to_str([])
-        assert empty_string == ""

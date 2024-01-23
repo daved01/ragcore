@@ -6,6 +6,7 @@ from docucite.models.prompt_model import PromptGenerator
 from docucite.models.llm_model import OpenAIModel, AzureOpenAIModel
 from docucite.shared.constants import ConfigurationConstants
 from docucite.shared.errors import LLMError, PromptError, UserConfigurationError
+from docucite.shared.utils import document_to_str
 
 
 class LLMService:
@@ -42,7 +43,7 @@ class LLMService:
         if not question:
             raise PromptError("Tried to create prompt, but no question provided.")
         prompt_generator = PromptGenerator()
-        context_str = self.document_to_str(context)
+        context_str = document_to_str(context)
         prompt = prompt_generator.get_prompt(question, context_str)
         self.logger.info(
             f"Created prompt from question and {len(context)} documents as context."
@@ -57,11 +58,3 @@ class LLMService:
         response: str = self.llm.predict(text=prompt)
         self.logger.info("Received response from llm.")
         return response
-
-    @staticmethod
-    def document_to_str(docs: list[Document]) -> str:
-        """Extracts the content from a list of Documents into a line-separated string."""
-        docs_text = []
-        for _, doc in enumerate(docs):
-            docs_text.append(doc.page_content)
-        return "\n".join(docs_text)
