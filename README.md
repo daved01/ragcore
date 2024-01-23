@@ -31,30 +31,31 @@ The app has a default configuration so you can start quickly. You can adjust the
 
 ```bash
 database:
-  base_dir: "data/database"
-  name: "chroma"
-  document_base_path: "data"
+  provider: "chroma"
   number_search_results: 5
+  # For local databases
+  base_dir: "data/database"
+  document_base_path: "data"
 
 splitter:
   chunk_overlap: 256
   chunk_size: 1024
 
 embedding:
-  model: "text-embedding-ada-002"
+  provider: "openai"
+  model: "text-embedding-model"
 
 # OpenAI
 llm:
   provider: "openai"
-  model: "gpt-3.5-turbo"
+  model: "gpt-model"
 
 # AzureOpenAI
 # llm:
 #   provider: "azure"
-#   model: "gpt-3.5-turbo"
+#   model: "gpt-model"
 #   endpoint: ""
 #   api_version: ""
-
 ```
 
 The `configuration.yaml` file contains the keys `database`, `splitter`, `embedding`, and `llm` and is designed to serve as a starting configuration.

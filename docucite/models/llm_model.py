@@ -3,7 +3,7 @@ import os
 from openai import OpenAI, AzureOpenAI
 from typing import Optional
 
-from docucite.constants import ConfigurationConstants, LLMProviderConstants
+from docucite.shared.constants import ConfigurationConstants, LLMProviderConstants
 
 
 class LLMModel(ABC):

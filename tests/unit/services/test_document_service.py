@@ -1,7 +1,7 @@
 import pytest
 
 from docucite.services.document_service import DocumentService
-from docucite.errors import UserConfigurationError
+from docucite.shared.errors import UserConfigurationError
 from tests import BaseTest
 from tests.unit.services import DocuciteTestSetup
 
@@ -12,7 +12,9 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
             def __init__(self, file_path):
                 self.file_path = file_path
 
-            def load_and_split(self):
+            def load_and_split(self, title):
+                for page in mock_pages:
+                    page.metadata["title"] = title
                 return mock_pages
 
         mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
@@ -34,7 +36,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
             def __init__(self, file_path):
                 self.file_path = file_path
 
-            def load_and_split(self):
+            def load_and_split(self, title):
                 return []
 
         mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
@@ -73,15 +75,3 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
         document_service = DocumentService(mock_logger)
         with pytest.raises(UserConfigurationError):
             document_service.split_document(10, 10)
-
-    def test_documents_to_texts(self, mock_logger, mock_documents):
-        document_service = DocumentService(logger=mock_logger)
-
-        results = document_service.documents_to_texts(mock_documents)
-        new_texts, new_metadatas = map(list, zip(*results))
-
-        assert len(new_texts) == len(new_metadatas)
-        assert new_texts[0] == mock_documents[0].page_content
-        assert new_texts[1] == mock_documents[1].page_content
-        assert new_metadatas[0] == mock_documents[0].metadata
-        assert new_metadatas[1] == mock_documents[1].metadata

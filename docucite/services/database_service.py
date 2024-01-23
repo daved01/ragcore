@@ -2,11 +2,15 @@ from logging import Logger
 import os
 from typing import Optional
 
-from docucite.errors import DatabaseError, MissingMetadataError, InvalidMetadataError
+from docucite.shared.constants import (
+    DatabaseConstants,
+    DataConstants,
+    EmbeddingConstants,
+)
+from docucite.shared.errors import DatabaseError, MetadataError, EmbeddingError
 from docucite.models.document_model import Document
-from docucite.models.embedding_model import Embedding
-from docucite.models.database_model import VectorDataBaseModel
-from docucite.services.document_service import DocumentService
+from docucite.models.embedding_model import BaseEmbedding, OpenAIEmbedding
+from docucite.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
 
 
 Metadata = dict[str, str]
@@ -22,36 +26,32 @@ class DatabaseService:
     def __init__(
         self,
         logger: Logger,
-        database_base_path: str,
-        database_name: str,
-        embedding_model: str,
+        base_path: str,
+        name: str,
         num_search_results: int,
+        embedding_provider: str,
+        embedding_model: str,
     ) -> None:
         self.logger: Logger = logger
-        self.base_path: str = database_base_path
-        self.database_name: Optional[str] = database_name if database_name else None
-        self.full_path: str = (
-            self.base_path + "/" + database_name if database_name else self.base_path
-        )
+        self.base_path: str = base_path
+        self.name: Optional[str] = name if name else None
         self.number_search_results: int = num_search_results
-        self.vectordb: Optional[VectorDataBaseModel] = None
-        self.embedding: Embedding = Embedding(model=embedding_model)
+        self.embedding: BaseEmbedding = self._init_embedding(
+            provider=embedding_provider, model=embedding_model
+        )
+        self.database: Optional[BaseVectorDatabaseModel] = None
 
-    def create_database(self) -> None:
+    def _init_embedding(self, provider: str, model: str) -> BaseEmbedding:
+        """Initializes an embedding model."""
+        if provider == EmbeddingConstants.PROVIDER_OPENAI:
+            return OpenAIEmbedding(model=model)
+        raise EmbeddingError(f"Selected embedding provider {provider} not supported.")
+
+    def initialize_local_database(self) -> None:
         """
-        Creates a new database if it does not already exist and saves it on disk
-        in the path `database_path`.
+        Initializes a local database.
         """
-
-        if (
-            self.full_path
-            and os.path.exists(self.full_path)
-            and os.path.isdir(self.full_path)
-        ):
-            raise DatabaseError(
-                f"Cannot create database `{self.full_path}` because it already exists."
-            )
-
+        # Create base path if it does not exist
         if not (
             self.base_path
             and os.path.exists(self.base_path)
@@ -59,31 +59,27 @@ class DatabaseService:
         ):
             self._create_base_dir()
 
-        self.vectordb = VectorDataBaseModel(
-            persist_directory=self.full_path, embedding_function=self.embedding
-        )
-
-        self.logger.info(f"Created database in path `{self.full_path}`.")
-
-    def load_database(self) -> None:
-        """Loads an existing vector database into memory."""
-        if not (
-            self.full_path
-            and os.path.exists(self.full_path)
-            and os.path.isdir(self.full_path)
-        ):
-            raise DatabaseError(
-                f"Tried to load database `{self.full_path}`, but it does not exist."
+        if self.name and DatabaseConstants.PROVIDER_CHROMA in self.name:
+            self.database = ChromaDatabase(
+                persist_directory=self.base_path + "/" + self.name,
+                num_search_results=self.number_search_results,
+                embedding_function=self.embedding,
             )
-        self.logger.info(f"Loading from database in path {self.full_path} ...")
+        else:
+            raise DatabaseError(
+                f"Specified database {self.name.split('_')[0] if self.name else '<no-name>'} is not supported."
+            )
 
-        self.vectordb = VectorDataBaseModel(
-            persist_directory=self.full_path, embedding_function=self.embedding
-        )
         self.logger.info(
-            f"Successfully loaded database `{self.full_path}` with "
-            f"{len(self.vectordb.get().get('ids', -1))} indexed documents."
+            f"Initialized database `{self.base_path + '/' + self.name if self.name else ''}` with "
+            f"{self.database.get_number_of_documents()} indexed documents."
         )
+
+    def initialize_remote_database(self) -> None:
+        """
+        Initializes a remote database.
+        """
+        raise NotImplementedError("Remote database is not implemented yet.")
 
     def add_documents(self, documents: list[Document]) -> None:
         """
@@ -92,95 +88,64 @@ class DatabaseService:
         Adding documents with the same title multiple times is not possible.
         """
         # Check if database exists on disk. If not exit.
-        if not self.vectordb:
+        if not self.database:
             raise DatabaseError(
-                f"Tried to add documents to database `{self.full_path}`, "
+                f"Tried to add documents to database `{self.base_path + '/' + self.name if self.name else ''}`, "
                 "but this database does not exist."
             )
 
-        new_datas: list[tuple[str, Metadata]] = DocumentService.documents_to_texts(
-            documents
-        )
+        # Validate metadata.
+        if not self._validate_documents_metadata(documents=documents):
+            raise MetadataError(
+                "Tried to add documents with invalid metadata! Check if all documents have metadata and the field `title`."
+            )
 
-        new_texts, new_metadatas = self._extract_data(new_datas)
-
-        # Check if we can add the new documents
-        self._validate_documents_metadata(texts=new_texts, metadatas=new_metadatas)
-        self._validate_documents_not_in_database(metadatas=new_metadatas)
-
-        # Update database
+        # Add the documents.
         self.logger.info(
-            f"Adding {len(documents)} documents to database at `{self.full_path}`."
+            f"Adding {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
         )
 
-        self.vectordb.add_texts(texts=new_texts, metadatas=new_metadatas)
+        if self.database.add_documents(documents=documents):
+            self.logger.info(
+                "Added all documents to database. "
+                f"Total number of documents in database: {self.database.get_number_of_documents()}",
+            )
+        else:
+            self.logger.info(
+                (
+                    "Did not add documents to database, because documents with the title you "
+                    "are trying to add already exist in the database."
+                )
+            )
 
-        self.logger.info(
-            f"Successfully added {len(documents)} documents to database. "
-            f"Number of indexed documents is now: {len(self.vectordb.get().get('ids', -1))}",
-        )
-
-    def search(self, query: str) -> list[Document]:
-        """Returns a list of documents for a query."""
-        if not self.vectordb:
+    def query(self, query: str) -> Optional[list[Document]]:
+        """
+        Returns a list of documents for a query.
+        """
+        if not self.database:
             raise DatabaseError(
-                "Database does not exist. Please create it before running a search."
+                "Database does not exist. Please create it before running a query."
             )
 
-        return self.vectordb.similarity_search(query, k=self.number_search_results)
+        return self.database.query(query)
 
-    def _validate_documents_metadata(
-        self, texts: list[str], metadatas: list[Metadata]
-    ) -> None:
-        if not metadatas or not len(texts) == len(metadatas):
-            raise MissingMetadataError(
-                "At least one document you are trying to add has missing metadata."
-            )
-
-        for metadata in metadatas:
-            if not metadata.get("title"):
-                raise InvalidMetadataError("Metadata does not have a title.")
-
-    # We want the documents in the database to be unique, which we enforce through the metadata
-    # field `title`. We assume that the metadata with which this method is called is valid.
-    def _validate_documents_not_in_database(
-        self, metadatas: list[dict[str, str]]
-    ) -> None:
-        if not self.vectordb:
-            raise DatabaseError(
-                "Tried to validate documents in database, "
-                "but the database has not been initialized."
-            )
-
-        vectordb_titles = self.vectordb.get().get("metadatas")
-
-        existing_titles = (
-            set(title.get("title").lower() for title in vectordb_titles)
-            if vectordb_titles
-            else set()
-        )
-        new_titles = set(title.get("title", "").lower() for title in metadatas)
-
-        union = new_titles & existing_titles
-        if union:
-            raise DatabaseError(
-                f"Tried to add documents {union} to database, but they already exist."
-            )
+    def _validate_documents_metadata(self, documents: list[Document]) -> bool:
+        """
+        Validate if document metadata exists and has the title key.
+        """
+        for document in documents:
+            if (
+                not document.metadata
+                or not DataConstants.KEY_TITLE in document.metadata
+            ):
+                self.logger.debug("Metadata does not exist.")
+                return False
+        return True
 
     def _create_base_dir(self) -> None:
-        """Helper to make sure database base dir exists."""
+        """
+        Helper to make sure database base dir exists.
+        """
         self.logger.info(f"Creating base dir for database `{self.base_path}` ...")
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
-
-    @staticmethod
-    def _extract_data(
-        datas: list[tuple[str, Metadata]]
-    ) -> tuple[list[str], list[Metadata]]:
-        new_texts = []
-        new_metadatas = []
-        for data in datas:
-            new_texts.append(data[0])
-            new_metadatas.append(data[1])
-
-        return new_texts, new_metadatas

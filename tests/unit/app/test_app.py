@@ -1,134 +1,161 @@
-import pytest
-
 from docucite.app.app import DocuCiteApp
-from docucite.constants import ConfigurationConstants
-from docucite.errors import DatabaseError
+from docucite.shared.constants import ConfigurationConstants
 from tests import BaseTest
-from docucite.services.database_service import DatabaseService
-from docucite.models.embedding_model import Embedding
 
 
 class TestDocuCiteApp(BaseTest):
-    def test_get_config_verify_config(self, mocker):
-        mocker.patch(
-            "docucite.constants.AppConstants.KEY_CONFIGURATION_PATH",
-            "tests/unit/mock/mock_config.yaml",
-        )
-        app = DocuCiteApp()
-
-        config = app._get_config(config_file_path="./tests/unit/mock/mock_config.yaml")
+    def test_get_config_verify_config(self):
+        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_no_llms.yaml")
 
         # Database
         assert (
-            config[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DATABASE_NAME
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_PROVIDER
             ]
-            == "my_database"
+            == "chroma"
         )
         assert (
-            config[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
-            ]
-            == "data"
-        )
-        assert (
-            config[ConfigurationConstants.KEY_DATABASE][
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
                 ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS
             ]
             == 5
         )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_BASE_PATH
+            ]
+            == "data/database"
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
+            ]
+            == "data"
+        )
         # Splitter
         assert (
-            config[ConfigurationConstants.KEY_SPLITTER][
+            app.configuration[ConfigurationConstants.KEY_SPLITTER][
                 ConfigurationConstants.KEY_CHUNK_SIZE
             ]
             == 1024
         )
         assert (
-            config[ConfigurationConstants.KEY_SPLITTER][
+            app.configuration[ConfigurationConstants.KEY_SPLITTER][
                 ConfigurationConstants.KEY_CHUNK_OVERLAP
             ]
             == 256
         )
         # Embedding
         assert (
-            config[ConfigurationConstants.KEY_EMBEDDING][
+            app.configuration[ConfigurationConstants.KEY_EMBEDDING][
+                ConfigurationConstants.KEY_EMBEDDING_PROVIDER
+            ]
+            == "openai"
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_EMBEDDING][
                 ConfigurationConstants.KEY_EMBEDDING_MODEL
             ]
             == "text-embedding-ada-002"
         )
-        # LLM
+
+    def test_get_config_verify_config_no_path(self, mocker):
+        mocker.patch(
+            "docucite.shared.constants.AppConstants.KEY_CONFIGURATION_PATH",
+            "tests/unit/mock/mock_config_no_llms.yaml",
+        )
+        app = DocuCiteApp()
+
+        # Database
         assert (
-            config[ConfigurationConstants.KEY_LLM][
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_PROVIDER
+            ]
+            == "chroma"
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS
+            ]
+            == 5
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DATABASE_BASE_PATH
+            ]
+            == "data/database"
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_DATABASE][
+                ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
+            ]
+            == "data"
+        )
+        # Splitter
+        assert (
+            app.configuration[ConfigurationConstants.KEY_SPLITTER][
+                ConfigurationConstants.KEY_CHUNK_SIZE
+            ]
+            == 1024
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_SPLITTER][
+                ConfigurationConstants.KEY_CHUNK_OVERLAP
+            ]
+            == 256
+        )
+        # Embedding
+        assert (
+            app.configuration[ConfigurationConstants.KEY_EMBEDDING][
+                ConfigurationConstants.KEY_EMBEDDING_PROVIDER
+            ]
+            == "openai"
+        )
+        assert (
+            app.configuration[ConfigurationConstants.KEY_EMBEDDING][
+                ConfigurationConstants.KEY_EMBEDDING_MODEL
+            ]
+            == "text-embedding-ada-002"
+        )
+
+    def test_get_config_verify_llm_openai(self):
+        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_openai.yaml")
+        assert (
+            app.configuration[ConfigurationConstants.KEY_LLM][
                 ConfigurationConstants.KEY_LLM_PROVIDER
             ]
             == "openai"
         )
         assert (
-            config[ConfigurationConstants.KEY_LLM][ConfigurationConstants.KEY_LLM_MODEL]
-            == "gpt-3.5-turbo"
+            app.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_LLM_MODEL
+            ]
+            == "gpt-openai"
         )
 
-    def test_get_config_invalid(self, mocker):
-        mocker.patch(
-            "docucite.constants.AppConstants.KEY_CONFIGURATION_PATH",
-            "tests/unit/mock/mock_config_invalid.yaml",
+    def test_get_config_verify_llm_azure(self):
+        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_azure.yaml")
+        assert (
+            app.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_LLM_PROVIDER
+            ]
+            == "azure"
         )
-        app = DocuCiteApp()
-
-        config = app._get_config(
-            config_file_path="./tests/unit/mock/mock_config_invalid.yaml"
+        assert (
+            app.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_LLM_MODEL
+            ]
+            == "gpt-azure"
         )
-
-        key = config[ConfigurationConstants.KEY_DATABASE]
-        assert ConfigurationConstants.KEY_DATABASE_BASE_PAH not in key
-
-    @pytest.fixture
-    def database_service_mock_create_database(self, mocker):
-        return mocker.patch.object(
-            DatabaseService, "create_database", return_value=None
+        assert (
+            app.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
+            ]
+            == "https://endpoint.com"
         )
-
-    @pytest.fixture
-    def mock_openai_embedding(self, mocker):
-        return mocker.patch.object(Embedding, "__init__", return_value=None)
-
-    def test_init_database_service_create_database(
-        self, mocker, database_service_mock_create_database
-    ):
-        mocker.patch(
-            "docucite.constants.AppConstants.KEY_CONFIGURATION_PATH",
-            "tests/unit/mock/mock_config.yaml",
+        assert (
+            app.configuration[ConfigurationConstants.KEY_LLM][
+                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION
+            ]
+            == "some-version"
         )
-        database_service_mock_load_database = mocker.patch.object(
-            DatabaseService, "load_database", side_effect=DatabaseError
-        )
-
-        app = DocuCiteApp(config_path="tests/unit/mock/mock_config.yaml")
-        app.init_database_service()
-
-        assert app.database_service.database_name == "my_database_1024_256"
-        assert app.database_service.base_path == "data/database"
-        assert app.database_service.full_path == "data/database/my_database_1024_256"
-        assert database_service_mock_load_database.call_count == 1
-        assert database_service_mock_create_database.call_count == 1
-
-    def test_init_database_service_load_database(
-        self,
-        mocker,
-        database_service_mock_create_database,
-    ):
-        mocker.patch(
-            "docucite.constants.AppConstants.KEY_CONFIGURATION_PATH",
-            "tests/unit/mock/mock_config.yaml",
-        )
-        database_service_mock_load_database = mocker.patch.object(
-            DatabaseService, "load_database", return_value=None
-        )
-
-        app = DocuCiteApp(config_path="tests/unit/mock/mock_config.yaml")
-        app.init_database_service()
-
-        assert app.database_service.full_path == "data/database/my_database_1024_256"
-        assert database_service_mock_load_database.call_count == 1
-        assert database_service_mock_create_database.call_count == 0

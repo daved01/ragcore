@@ -1,10 +1,11 @@
+from typing import Any, Mapping
 from langchain.schema import Document as LangDocument
 
 from docucite.models.document_model import Document
 
 
 class DocumentDTO:
-    def __init__(self, page_content: str, metadata: dict[str, str]):
+    def __init__(self, page_content: str, metadata: Mapping[str, Any]):
         self.page_content = page_content
         self.metadata = metadata
 

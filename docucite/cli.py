@@ -1,5 +1,5 @@
 import argparse
-from docucite.constants import AppConstants
+from docucite.shared.constants import AppConstants
 from docucite.app.app import DocuCiteApp
 
 

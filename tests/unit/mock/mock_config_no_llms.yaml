@@ -1,4 +1,4 @@
-# Configuration of app parameters
+# Mock config. Valid file without llm part. See other files for llms.
 
 database:
   provider: "chroma"
@@ -14,15 +14,3 @@ splitter:
 embedding:
   provider: "openai"
   model: "text-embedding-ada-002"
-
-# OpenAI
-llm:
-  provider: "openai"
-  model: "gpt-3.5-turbo"
-
-# AzureOpenAI
-# llm:
-#   provider: "azure"
-#   model: "gpt-3.5-turbo"
-#   endpoint: ""
-#   api_version: ""

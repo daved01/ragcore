@@ -4,7 +4,7 @@ from logging import Logger
 from docucite.services.text_splitter_service import TextSplitterService
 from docucite.models.document_model import Document
 from docucite.models.document_loader_model import PDFLoader
-from docucite.errors import UserConfigurationError
+from docucite.shared.errors import UserConfigurationError
 
 PDF_PATTERN = r"\.pdf$"
 
@@ -38,11 +38,7 @@ class DocumentService:
         self.logger.info("Loading documents into memory ...")
 
         loader = PDFLoader(path)
-        self.pages = loader.load_and_split()
-
-        # TODO: Must add book page, not pdf page! # pylint: disable=fixme
-        for i, _ in enumerate(self.pages):
-            self.pages[i].metadata["title"] = document_title
+        self.pages = loader.load_and_split(document_title)
 
         self.logger.info(
             f"Loaded {len(self.pages)} pages from PDF file with title "
@@ -69,13 +65,3 @@ class DocumentService:
         self.logger.info(
             f"Created {len(self.documents)} documents from {len(self.pages)} pages."
         )
-
-    @staticmethod
-    def documents_to_texts(
-        documents: list[Document],
-    ) -> list[tuple[str, dict[str, str]]]:
-        """
-        Converts a list of documents to a list of strings and metadata.
-        Returns: List of tuples (text, metadata)
-        """
-        return [(document.page_content, document.metadata) for document in documents]

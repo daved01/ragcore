@@ -45,7 +45,9 @@ def process(user_input: UserInputData) -> Optional[dict]:
 
     question = user_input.user_input
     app.logger.info(f"Sending POST request with content `{question}` ...")
-    contexts: list[Document] = app.database_service.search(query=question)
+    contexts: Optional[list[Document]] = app.database_service.query(query=question)
+    if not contexts:
+        return {"results": None}
     prompt: str = app.llm_service.create_prompt(question, contexts)
     response: str = app.llm_service.make_llm_request(prompt)
 
