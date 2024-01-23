@@ -1,5 +1,4 @@
 import pytest
-import chromadb
 from docucite.models.database_model import ChromaDatabase
 
 from tests import BaseTest
