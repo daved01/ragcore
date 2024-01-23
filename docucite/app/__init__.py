@@ -18,7 +18,10 @@ class AbstractApp(metaclass=ABCMeta):
         logger = logging.getLogger(__name__)
         logger.setLevel(LOG_LEVEL)
         console_handler = logging.StreamHandler()
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s [%(module)s] - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
 
