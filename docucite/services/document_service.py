@@ -38,11 +38,7 @@ class DocumentService:
         self.logger.info("Loading documents into memory ...")
 
         loader = PDFLoader(path)
-        self.pages = loader.load_and_split()
-
-        # TODO: Must add book page, not pdf page! # pylint: disable=fixme
-        for i, _ in enumerate(self.pages):
-            self.pages[i].metadata["title"] = document_title
+        self.pages = loader.load_and_split(document_title)
 
         self.logger.info(
             f"Loaded {len(self.pages)} pages from PDF file with title "

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import chromadb
-from typing import Optional, Any
+from typing import Optional, Any, Mapping, Sized
 import uuid
 
 from docucite.constants import DataConstants, DatabaseConstants
@@ -27,7 +27,7 @@ class BaseVectorDatabaseModel(ABC):
         """Deletes all documents with title `title` from the database."""
 
     @abstractmethod
-    def query(self, query: str) -> list[Document]:
+    def query(self, query: str) -> Optional[list[Document]]:
         """Queries the database with a query using a similarity metric."""
 
     @abstractmethod
@@ -80,8 +80,8 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         Returns True if the documents have been added, otherwise False.
         """
         docs = [doc.page_content for doc in documents]
-        metadatas = [data.metadata for data in documents]
-        embeddings = self.embedding.embed_queries(docs)
+        metadatas: Any = [data.metadata for data in documents]
+        embeddings: Any = self.embedding.embed_queries(docs)
         ids = [str(uuid.uuid1()) for _ in range(len(documents))]
 
         # Check if the documents already exist in database.
@@ -111,20 +111,32 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         return not (num_docs_before == num_docs_after)
 
-    # TODO: Investigate similarity measures
-    def query(self, query: str) -> list[Document]:
-        embeddings = self.embedding.embed_queries([query])
+    def query(self, query: str) -> Optional[list[Document]]:
+        embeddings: Any = self.embedding.embed_queries([query])
         response = self.collection.query(
             query_embeddings=embeddings, n_results=self.num_search_results
         )
 
+        if not response:
+            return []
+
         # Create Documents.
         documents = []
-        response_docs = response[DatabaseConstants.KEY_CHROMA_DOCUMENTS][0]
-        response_metadata = response[DatabaseConstants.KEY_CHROMA_METADATAS][0]
+
+        # We give it only one query, consequently there is only one set of `num_search_results`
+        # documents in the response, so why we can index with `0`.
+        response_docs_list = response["documents"]
+        response_metadata_list = response["metadatas"]
+
+        if not response_docs_list or not response_metadata_list:
+            return []
+
+        response_docs = response_docs_list[0]
+        response_metadata = response_metadata_list[0]
 
         for doc, metadata in zip(response_docs, response_metadata):
-            documents.append(Document(page_content=doc, metadata=metadata))
+            metadata_mapping: Mapping[str, Any] = metadata
+            documents.append(Document(page_content=doc, metadata=metadata_mapping))
 
         return documents
 
@@ -151,9 +163,12 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         """
         if not title:
             return 0
-        return len(
-            self.collection.get(
-                where={DataConstants.KEY_TITLE: title},
-                include=[DatabaseConstants.KEY_CHROMA_METADATAS],
-            ).get(DatabaseConstants.KEY_CHROMA_METADATAS)
-        )
+
+        metadata = self.collection.get(
+            where={DataConstants.KEY_TITLE: title},
+            include=["metadatas"],
+        ).get(DatabaseConstants.KEY_CHROMA_METADATAS, [])
+
+        if not isinstance(metadata, Sized):
+            return 0
+        return len(metadata)

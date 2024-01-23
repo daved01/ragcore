@@ -12,7 +12,9 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
             def __init__(self, file_path):
                 self.file_path = file_path
 
-            def load_and_split(self):
+            def load_and_split(self, title):
+                for page in mock_pages:
+                    page.metadata["title"] = title
                 return mock_pages
 
         mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
@@ -34,7 +36,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
             def __init__(self, file_path):
                 self.file_path = file_path
 
-            def load_and_split(self):
+            def load_and_split(self, title):
                 return []
 
         mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)

@@ -108,11 +108,13 @@ class DatabaseService:
             )
         else:
             self.logger.info(
-                "Did not add documents to database, because documents with the title you ",
-                "are trying to add already exist in the database.",
+                (
+                    "Did not add documents to database, because documents with the title you "
+                    "are trying to add already exist in the database."
+                )
             )
 
-    def query(self, query: str) -> list[Document]:
+    def query(self, query: str) -> Optional[list[Document]]:
         """
         Returns a list of documents for a query.
         """
