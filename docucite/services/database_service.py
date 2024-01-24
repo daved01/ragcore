@@ -1,15 +1,20 @@
 from logging import Logger
 import os
-from typing import Optional
+from typing import Optional, Mapping
 
 from docucite.shared.constants import (
+    ConfigurationConstants,
     DatabaseConstants,
     DataConstants,
     EmbeddingConstants,
 )
 from docucite.shared.errors import DatabaseError, MetadataError, EmbeddingError
 from docucite.models.document_model import Document
-from docucite.models.embedding_model import BaseEmbedding, OpenAIEmbedding
+from docucite.models.embedding_model import (
+    BaseEmbedding,
+    OpenAIEmbedding,
+    AzureOpenAIEmbedding,
+)
 from docucite.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
 
 
@@ -29,22 +34,40 @@ class DatabaseService:
         base_path: str,
         name: str,
         num_search_results: int,
-        embedding_provider: str,
-        embedding_model: str,
+        embedding_config: Mapping[str, str],
     ) -> None:
         self.logger: Logger = logger
         self.base_path: str = base_path
         self.name: Optional[str] = name if name else None
         self.number_search_results: int = num_search_results
-        self.embedding: BaseEmbedding = self._init_embedding(
-            provider=embedding_provider, model=embedding_model
-        )
+        self.embedding: BaseEmbedding = self._init_embedding(config=embedding_config)
         self.database: Optional[BaseVectorDatabaseModel] = None
 
-    def _init_embedding(self, provider: str, model: str) -> BaseEmbedding:
+    def _init_embedding(self, config: Mapping[str, str]) -> BaseEmbedding:
         """Initializes an embedding model."""
+        provider = config.get(ConfigurationConstants.KEY_EMBEDDING_PROVIDER)
+        model = config.get(ConfigurationConstants.KEY_EMBEDDING_MODEL)
+        api_version = config.get(
+            ConfigurationConstants.KEY_EMBEDDING_AZURE_OPENAI_API_VERSION, ""
+        )
+        endpoint = config.get(
+            ConfigurationConstants.KEY_EMBEDDING_AZURE_OPENAI_AZURE_ENDPOINT, ""
+        )
+        if not provider or not model:
+            raise EmbeddingError("Provider or model missing in the configuration.")
+
         if provider == EmbeddingConstants.PROVIDER_OPENAI:
+            self.logger.info(
+                f"Using embedding model {model}, provider `{EmbeddingConstants.PROVIDER_OPENAI}`."
+            )
             return OpenAIEmbedding(model=model)
+        if provider == EmbeddingConstants.PROVIDER_AZURE_OPENAI:
+            self.logger.info(
+                f"Using embedding model {model}, provider `{EmbeddingConstants.PROVIDER_AZURE_OPENAI}`."
+            )
+            return AzureOpenAIEmbedding(
+                model=model, api_version=api_version, endpoint=endpoint
+            )
         raise EmbeddingError(f"Selected embedding provider {provider} not supported.")
 
     def initialize_local_database(self) -> None:

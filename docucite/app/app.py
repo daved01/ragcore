@@ -110,12 +110,7 @@ class DocuCiteApp(AbstractApp):
             num_search_results=self.configuration[ConfigurationConstants.KEY_DATABASE][
                 ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS
             ],
-            embedding_provider=self.configuration[ConfigurationConstants.KEY_EMBEDDING][
-                ConfigurationConstants.KEY_EMBEDDING_PROVIDER
-            ],
-            embedding_model=self.configuration[ConfigurationConstants.KEY_EMBEDDING][
-                ConfigurationConstants.KEY_EMBEDDING_MODEL
-            ],
+            embedding_config=self.configuration[ConfigurationConstants.KEY_EMBEDDING],
         )
 
         # Initialize the database. If a base path is given in the configuration, we use a local
