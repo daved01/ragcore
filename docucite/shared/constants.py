@@ -5,34 +5,6 @@ class AppConstants:
     DEFAULT_CONFIG_FILE_PATH = "./configuration.yaml"
 
 
-class DataConstants:
-    """Constants for the data model."""
-
-    KEY_TITLE = "title"
-    KEY_PAGE = "page"
-
-
-class LLMProviderConstants:
-    """Constants for LLM models and service."""
-
-    KEY_AZURE_OPENAI_API_KEY = "AZURE_OPENAI_API_KEY"
-    KEY_OPENAI_API_KEY = "OPENAI_API_KEY"
-
-
-class DatabaseConstants:
-    """Constants for database models and service."""
-
-    PROVIDER_CHROMA = "chroma"
-    KEY_CHROMA_DOCUMENTS = "documents"
-    KEY_CHROMA_METADATAS = "metadatas"
-
-
-class EmbeddingConstants:
-    """Constants for embedding models."""
-
-    PROVIDER_OPENAI = "openai"
-
-
 class ConfigurationConstants:
     """Constants for the configuration file."""
 
@@ -53,6 +25,8 @@ class ConfigurationConstants:
     KEY_EMBEDDING = "embedding"
     KEY_EMBEDDING_PROVIDER = "provider"
     KEY_EMBEDDING_MODEL = "model"
+    KEY_EMBEDDING_AZURE_OPENAI_API_VERSION = "api_version"
+    KEY_EMBEDDING_AZURE_OPENAI_AZURE_ENDPOINT = "endpoint"
 
     # LLMs
     KEY_LLM = "llm"
@@ -62,3 +36,33 @@ class ConfigurationConstants:
     LLM_PROVIDER_AZUREOPENAI = "azure"
     KEY_AZURE_OPENAI_API_VERSION = "api_version"
     KEY_AZURE_OPENAI_AZURE_ENDPOINT = "endpoint"
+
+
+class DataConstants:
+    """Constants for the data model."""
+
+    KEY_TITLE = "title"
+    KEY_PAGE = "page"
+
+
+class DatabaseConstants:
+    """Constants for database models and service."""
+
+    PROVIDER_CHROMA = "chroma"
+    KEY_CHROMA_DOCUMENTS = "documents"
+    KEY_CHROMA_METADATAS = "metadatas"
+
+
+class EmbeddingConstants:
+    """Constants for embedding models."""
+
+    KEY_AZURE_OPENAI_API_KEY = "AZURE_OPENAI_API_KEY"
+    PROVIDER_AZURE_OPENAI = "azure"
+    PROVIDER_OPENAI = "openai"
+
+
+class LLMProviderConstants:
+    """Constants for LLM models and service."""
+
+    KEY_AZURE_OPENAI_API_KEY = "AZURE_OPENAI_API_KEY"
+    KEY_OPENAI_API_KEY = "OPENAI_API_KEY"

@@ -145,14 +145,19 @@ class DocuciteTestSetup:
 
     @pytest.fixture
     def mock_config(self):
-        base_path = "path"
-        name = ""
-        embedding_provider = ""
-        embedding_model = ""
         return {
-            "path": base_path,
-            "name": name,
-            "num_search_res": 2,
-            "embedding_provider": embedding_provider,
-            "embedding_model": embedding_model,
+            "database": {
+                "provider": "chroma",
+                "num_search_res": 2,
+                "base_dir": "database-base-dir",
+                "document_base_path": "database-document-path",
+            },
+            "splitter": {},
+            "embedding": {
+                "provider": "openai",
+                "model": "embedding-model",
+                "endpoint": "embedding-endpoint",
+                "api_version": "embedding-api-version",
+            },
+            "llm": {},
         }

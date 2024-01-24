@@ -15,11 +15,10 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name=mock_config["name"],
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
         assert isinstance(database_service.embedding.client, mock_openai_embedding)
 
@@ -29,13 +28,14 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_config,
     ):
         with pytest.raises(EmbeddingError):
+            embedding_config = mock_config["embedding"]
+            embedding_config["provider"] = "not-supported"
             _ = DatabaseService(
                 logger=mock_logger,
-                base_path=mock_config["path"],
-                name=mock_config["name"],
-                num_search_results=mock_config["num_search_res"],
-                embedding_provider="not-supported",
-                embedding_model=mock_config["embedding_model"],
+                base_path=mock_config["database"]["base_dir"],
+                name=mock_config["database"]["provider"] + "_256_64",
+                num_search_results=mock_config["database"]["num_search_res"],
+                embedding_config=embedding_config,
             )
 
     def test_initialize_local_database(
@@ -49,18 +49,17 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
+            base_path=mock_config["database"]["base_dir"],
             name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
 
         database_service.initialize_local_database()
 
         assert mock_makedirs.call_count == 1
         assert mock_chroma_db_client.call_count == 1
-        assert database_service.base_path == "path"
+        assert database_service.base_path == "database-base-dir"
         assert database_service.name == "chroma"
         assert database_service.number_search_results == 2
         assert isinstance(database_service.embedding, BaseEmbedding)
@@ -73,14 +72,15 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="not_supported",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name="not-supported",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         with pytest.raises(DatabaseError):
             database_service.initialize_local_database()
 
@@ -103,11 +103,10 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
 
         database_service.initialize_local_database()
@@ -125,12 +124,12 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         with pytest.raises(DatabaseError):
             database_service.add_documents(mock_documents)
 
@@ -150,12 +149,12 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         database_service.initialize_local_database()
         with pytest.raises(MetadataError):
             database_service.add_documents(mock_documents_metadata_title_missing)
@@ -176,12 +175,12 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         database_service.initialize_local_database()
         with pytest.raises(MetadataError):
             database_service.add_documents(mock_documents_missing_metadata)
@@ -198,12 +197,12 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         database_service.initialize_local_database()
         response = database_service.query("my_query")
 
@@ -217,24 +216,24 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
         database_service = DatabaseService(
             logger=mock_logger,
-            base_path=mock_config["path"],
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
+
         with pytest.raises(DatabaseError):
             database_service.query("my_query")
 
     def test_create_base_dir(self, mocker, mock_logger, mock_config):
         base_path = "/path/to/base"
+
         database_service = DatabaseService(
             logger=mock_logger,
             base_path=base_path,
-            name="chroma",
-            num_search_results=mock_config["num_search_res"],
-            embedding_provider="openai",
-            embedding_model=mock_config["embedding_model"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
         )
 
         os_makedirs_mock = mocker.patch("os.makedirs")

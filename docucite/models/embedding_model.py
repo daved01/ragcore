@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
+import os
 
 from docucite.shared.utils import slice_list
+from docucite.shared.constants import EmbeddingConstants
 
 
 class BaseEmbedding(ABC):
@@ -12,10 +14,14 @@ class BaseEmbedding(ABC):
         """Creates a list of embeddings for a list of queries."""
 
 
-class OpenAIEmbedding(BaseEmbedding):
-    def __init__(self, model: str):
-        self.model = model
-        self.client = OpenAI()  # Openai api key env variable must be set.
+class BaseOpenAIEmbeddings(BaseEmbedding):
+    """Class for OpenAI and AzureOpenAI embeddings."""
+
+    client: OpenAI | AzureOpenAI
+    model: str
+
+    def __init__(self, client: OpenAI | AzureOpenAI) -> None:
+        self.client = client
 
     def embed_queries(self, queries: list[str]) -> list[list[float]]:
         embedding_vectors = []
@@ -30,3 +36,21 @@ class OpenAIEmbedding(BaseEmbedding):
                 embedding_vectors.append(response.data[i].embedding)
 
         return embedding_vectors
+
+
+class OpenAIEmbedding(BaseOpenAIEmbeddings):
+    def __init__(self, model: str):
+        self.model = model
+        client = OpenAI()  # Openai api key env variable must be set.
+        super().__init__(client)
+
+
+class AzureOpenAIEmbedding(BaseOpenAIEmbeddings):
+    def __init__(self, model: str, api_version: str, endpoint: str):
+        self.model = model
+        client = AzureOpenAI(
+            api_key=os.getenv(EmbeddingConstants.KEY_AZURE_OPENAI_API_KEY),
+            api_version=api_version,
+            azure_endpoint=endpoint,
+        )
+        super().__init__(client)
