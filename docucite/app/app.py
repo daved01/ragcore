@@ -20,44 +20,52 @@ class DocuCiteApp(AbstractApp):
             if config_path
             else AppConstants.DEFAULT_CONFIG_FILE_PATH
         )
+        self._init_database_service()
+        self._init_llm_service()
 
-    def run(self) -> None:
-        self.logger.info("Setting up session ...")
+    def query(self, query: str) -> str:
+        """
+        Query the database and make LLM request with the prompt and the context
+        provided by the database.
+        """
+        # Get relevant chunks from database.
+        contexts: list[Document] = self.database_service.query(query=query)
 
-        # Create database or load existing one.
-        self.init_database_service()
+        # Construct prompt from template and context.
+        prompt: str = self.llm_service.create_prompt(query, contexts)
 
-        if not self.database_service:
-            return
+        # Query llm with prompt.
+        return self.llm_service.make_llm_request(prompt)
 
-        user_input = input(
-            "Enter (n/N) for new document, any key to load existing one. "
+    def add(self, path: str) -> None:
+        """
+        Add a document to the database.
+        The filename without the file extension is used as the title.
+        """
+        self.document_service = DocumentService(self.logger)
+        self.document_service.load_document(path=path)
+        self.document_service.split_document(
+            self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                ConfigurationConstants.KEY_CHUNK_SIZE
+            ],
+            self.configuration[ConfigurationConstants.KEY_SPLITTER][
+                ConfigurationConstants.KEY_CHUNK_OVERLAP
+            ],
         )
+        self.database_service.add_documents(self.document_service.documents)
 
-        # Add documents.
-        if user_input.lower() == "n":
-            title = input("Enter title of document: ")
-            self.document_service = DocumentService(self.logger)
-            self.document_service.load_document(
-                path=self.configuration[ConfigurationConstants.KEY_DATABASE][
-                    ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
-                ]
-                + "/"
-                + title,
-                document_title=title,
-            )
-            self.document_service.split_document(
-                self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                    ConfigurationConstants.KEY_CHUNK_SIZE
-                ],
-                self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                    ConfigurationConstants.KEY_CHUNK_OVERLAP
-                ],
-            )
+    def delete(self, title: str) -> None:
+        """
+        Deletes a collection from the database.
+        A collection is a set of all documents with the same title.
+        """
+        # TODO: Implement
+        pass
 
-            self.database_service.add_documents(self.document_service.documents)
-
-        # Initialize LLMService.
+    def _init_llm_service(self):
+        """
+        Initialize LLM service.
+        """
         self.llm_service = LLMService(
             self.logger,
             llm_provider=self.configuration[ConfigurationConstants.KEY_LLM][
@@ -79,10 +87,7 @@ class DocuCiteApp(AbstractApp):
         )
         self.llm_service.initialize_llm()
 
-        # Run app.
-        self._run_event_loop()
-
-    def init_database_service(self) -> None:
+    def _init_database_service(self) -> None:
         """
         Creates a database or loads an existing one.
         The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
@@ -121,30 +126,6 @@ class DocuCiteApp(AbstractApp):
             self.database_service.initialize_local_database()
         else:
             self.database_service.initialize_remote_database()
-
-    def _run_event_loop(self):
-        """Main event loop for CLI app"""
-        print("\nEvent loop started. Type `quit` to exit.\n")
-        while True:
-            question = input("Enter your question (`quit` to exit): ")
-
-            # Check for exit condition.
-            if question.lower() == "quit":
-                print("Exiting ...")
-                break
-
-            # Get relevant chunks from database.
-            contexts: list[Document] = self.database_service.query(query=question)
-
-            # Construct prompt from template and context.
-            prompt: str = self.llm_service.create_prompt(question, contexts)
-
-            # Query llm with prompt.
-            response: str = self.llm_service.make_llm_request(prompt)
-
-            # Show response.
-            separator_line = "--" * 64
-            print(f"\n{separator_line}\n{response}\n{separator_line}\n")
 
     def _get_config(self, config_file_path: str) -> dict[str, dict[str, str | int]]:
         """

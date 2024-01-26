@@ -36,5 +36,13 @@ class AbstractApp(metaclass=ABCMeta):
         return logger
 
     @abstractmethod
-    def run(self):
-        """Run the app"""
+    def query(self, query: str) -> str:
+        """Run a query against a database."""
+
+    @abstractmethod
+    def add(self, path: str) -> None:
+        """Adds a document to the database."""
+
+    @abstractmethod
+    def delete(self, title: str) -> None:
+        """Removes a document from the database."""
