@@ -16,7 +16,7 @@ from docucite.models.embedding_model import (
     AzureOpenAIEmbedding,
 )
 from docucite.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
-
+from docucite.shared import utils
 
 Metadata = dict[str, str]
 
@@ -140,6 +140,22 @@ class DatabaseService:
                     "are trying to add already exist in the database."
                 )
             )
+
+    def delete_documents(self, title: str) -> None:
+        """
+        Deletes documents with the title `title` from the database.
+        """
+        if not self.database:
+            raise DatabaseError(
+                "Database does not exist. Please create it before running a query."
+            )
+
+        title = utils.remove_file_extension(title)
+
+        if self.database.delete_documents(title=title):
+            self.logger.info(f"Deleted documents with title `{title}` from database.")
+        else:
+            self.logger.info("Did not delete documents.")
 
     def query(self, query: str) -> Optional[list[Document]]:
         """

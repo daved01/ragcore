@@ -1,6 +1,10 @@
+import re
 from typing import Any
 
 from docucite.models.document_model import Document
+
+
+FILE_EXTENSION_PATTERN = re.compile(r"\.pdf$")
 
 
 def slice_list(input_list: list[Any], slice_size: int) -> list[list[Any]]:
@@ -17,3 +21,8 @@ def document_to_str(docs: list[Document]) -> str:
     for _, doc in enumerate(docs):
         docs_text.append(doc.page_content)
     return "\n".join(docs_text)
+
+
+def remove_file_extension(string: str) -> str:
+    """Removes selected file extensions."""
+    return FILE_EXTENSION_PATTERN.sub("", string)

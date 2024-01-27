@@ -50,7 +50,7 @@ class DocuCiteApp(AbstractApp):
         The filename without the file extension is used as the title.
         """
         if not self.database_service:
-            return None
+            return
 
         self.document_service = DocumentService(self.logger)
         self.document_service.load_document(path=path)
@@ -69,6 +69,10 @@ class DocuCiteApp(AbstractApp):
         Deletes a collection from the database.
         A collection is a set of all documents with the same title.
         """
+        if not title or not self.database_service:
+            return
+
+        self.database_service.delete_documents(title=title)
 
     def _init_llm_service(self):
         """
