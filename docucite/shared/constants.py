@@ -2,6 +2,7 @@ class AppConstants:
     """Constants for the app."""
 
     KEY_CONFIGURATION_PATH = "config_path"
+    KEY_LOGGER_FLAG = "verbose_logger"
     DEFAULT_CONFIG_FILE_PATH = "./configuration.yaml"
 
 
