@@ -125,7 +125,7 @@ class DatabaseService:
 
         # Add the documents.
         self.logger.info(
-            f"Adding {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
+            f"Trying to add {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
         )
 
         if self.database.add_documents(documents=documents):
@@ -136,7 +136,7 @@ class DatabaseService:
         else:
             self.logger.info(
                 (
-                    "Did not add documents to database, because documents with the title you "
+                    f"Did not add documents to database, because documents with the title you "
                     "are trying to add already exist in the database."
                 )
             )

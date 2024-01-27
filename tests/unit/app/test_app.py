@@ -1,10 +1,19 @@
+import pytest
+
 from docucite.app.app import DocuCiteApp
 from docucite.shared.constants import ConfigurationConstants
 from tests import BaseTest
 
 
 class TestDocuCiteApp(BaseTest):
-    def test_get_config_verify_config(self):
+    @pytest.fixture
+    def mock_method_inits(self, mocker):
+        mocker.patch(
+            "docucite.app.app.DocuCiteApp._init_database_service", mocker.Mock()
+        )
+        mocker.patch("docucite.app.app.DocuCiteApp._init_llm_service", mocker.Mock())
+
+    def test_get_config_verify_config(self, mock_method_inits):
         app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_no_llms.yaml")
 
         # Database
@@ -25,12 +34,6 @@ class TestDocuCiteApp(BaseTest):
                 ConfigurationConstants.KEY_DATABASE_BASE_PATH
             ]
             == "data/database"
-        )
-        assert (
-            app.configuration[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
-            ]
-            == "data"
         )
         # Splitter
         assert (
@@ -85,12 +88,6 @@ class TestDocuCiteApp(BaseTest):
             ]
             == "data/database"
         )
-        assert (
-            app.configuration[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DOCUMENT_BASE_PATH
-            ]
-            == "data"
-        )
         # Splitter
         assert (
             app.configuration[ConfigurationConstants.KEY_SPLITTER][
@@ -118,7 +115,7 @@ class TestDocuCiteApp(BaseTest):
             == "text-embedding-ada-002"
         )
 
-    def test_get_config_verify_llm_openai(self):
+    def test_get_config_verify_llm_openai(self, mock_method_inits):
         app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_openai.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][
@@ -133,7 +130,7 @@ class TestDocuCiteApp(BaseTest):
             == "gpt-openai"
         )
 
-    def test_get_config_verify_llm_azure(self):
+    def test_get_config_verify_llm_azure(self, mock_method_inits):
         app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_azure.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][

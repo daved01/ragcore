@@ -23,13 +23,20 @@ class DocuCiteApp(AbstractApp):
         self._init_database_service()
         self._init_llm_service()
 
-    def query(self, query: str) -> str:
+    def query(self, query: str) -> Optional[str]:
         """
         Query the database and make LLM request with the prompt and the context
         provided by the database.
         """
+        if not query:
+            return
+
         # Get relevant chunks from database.
         contexts: list[Document] = self.database_service.query(query=query)
+
+        if not contexts:
+            print("Did not find documents in the database. Maybe it is empty?")
+            return
 
         # Construct prompt from template and context.
         prompt: str = self.llm_service.create_prompt(query, contexts)

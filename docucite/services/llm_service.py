@@ -50,7 +50,10 @@ class LLMService:
         )
         return prompt
 
-    def make_llm_request(self, prompt: str) -> str:
+    def make_llm_request(self, prompt: str) -> Optional[str]:
+        if not prompt:
+            return
+
         if not self.llm:
             raise LLMError("Tried to make a request, but the llm is not initialized.")
 

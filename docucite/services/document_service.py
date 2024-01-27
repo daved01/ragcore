@@ -23,14 +23,16 @@ class DocumentService:
         self.pages: list[Document] = []
         self.documents: list[Document] = []
 
-    def load_document(self, path: str, document_title: str) -> None:
+    def load_document(self, path: str) -> None:
         """Loads a document into memory.
         Accepts:
-        - path: Path to document to be uploaded
-        - document_title: Title of document
+        - path: Relative path to document to be uploaded
         """
 
-        if not re.search(PDF_PATTERN, document_title, re.IGNORECASE):
+        filename = path.split("/")[-1]
+        title = filename.split(".")[0]
+
+        if not re.search(PDF_PATTERN, filename, re.IGNORECASE):
             raise UserConfigurationError(
                 "Prodived document does not have PDF file extension."
             )
@@ -38,11 +40,11 @@ class DocumentService:
         self.logger.info("Loading documents into memory ...")
 
         loader = PDFLoader(path)
-        self.pages = loader.load_and_split(document_title)
+        self.pages = loader.load_and_split(title)
 
         self.logger.info(
             f"Loaded {len(self.pages)} pages from PDF file with title "
-            f"`{document_title}` from path `{path}`."
+            f"`{title}` from path `{path}`."
         )
 
     def split_document(self, chunk_size: int, chunk_overlap: int) -> None:

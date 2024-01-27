@@ -23,7 +23,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
         assert not document_service.pages
         assert not document_service.documents
 
-        document_service.load_document("some_path", "Greatest Book.pdf")
+        document_service.load_document("some_path/Greatest_Book.pdf")
 
         assert len(document_service.pages) == 2
         assert document_service.pages[0] == mock_pages[0]
@@ -45,7 +45,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
         assert not document_service.pages
         assert not document_service.documents
 
-        document_service.load_document("some_path", "Greatest Book.pdf")
+        document_service.load_document("some_path/Greatest_Book.pdf")
 
         assert len(document_service.pages) == 0
 

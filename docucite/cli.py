@@ -1,6 +1,11 @@
 import argparse
+from typing import Optional
+
 from docucite.shared.constants import AppConstants
 from docucite.app.app import DocuCiteApp
+
+
+SEPARATOR_LINE = "--" * 64
 
 
 def run_app(app) -> None:
@@ -8,7 +13,7 @@ def run_app(app) -> None:
 
     while True:
         user_input = input(
-            "\nInput options:\n(n/N) add new document\n(d/D) delete a document\n(q/Q) exit\nQuestion to run a search:\n"
+            "\nEnter:\n(n/N) add new document\n(d/D) delete a document\n(q/Q) exit\nor a question to run a search:\n"
         )
         if user_input.lower() == "q":
             print("Exiting ...")
@@ -16,13 +21,15 @@ def run_app(app) -> None:
         elif user_input.lower() == "n":
             path = input("Enter relative path to new document: ")
             app.add(path=path)
+
         elif user_input.lower() == "d":
             title = input("Enter title to remove from database: ")
             app.delete(title=title)
         else:
-            response: str = app.query(query=user_input)
-            separator_line = "--" * 64
-            print(f"\n{separator_line}\n{response}\n{separator_line}\n")
+            response: Optional[str] = app.query(query=user_input)
+            if not response:
+                continue
+            print(f"\n{SEPARATOR_LINE}\n{response}\n{SEPARATOR_LINE}\n")
 
 
 def _parse_args() -> dict[str, str]:

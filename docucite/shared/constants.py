@@ -13,7 +13,6 @@ class ConfigurationConstants:
     KEY_DATABASE_BASE_PATH = "base_dir"
     KEY_DATABASE_PROVIDER = "provider"
     KEY_DATABASE_TYPE = "type"
-    KEY_DOCUMENT_BASE_PATH = "document_base_path"
     KEY_NUMBER_SEARCH_RESULTS = "number_search_results"
 
     # Splitter
