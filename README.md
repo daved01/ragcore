@@ -35,7 +35,6 @@ database:
   number_search_results: 5
   # For local databases
   base_dir: "data/database"
-  document_base_path: "data"
 
 splitter:
   chunk_overlap: 256

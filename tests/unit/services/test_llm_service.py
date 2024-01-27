@@ -71,4 +71,9 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
     def test_make_llm_request_no_model_initialized(self, mock_logger):
         llm_service = LLMService(mock_logger, "any", "great-model")
         with pytest.raises(LLMError):
-            llm_service.make_llm_request("")
+            llm_service.make_llm_request("some prompt")
+
+    def test_make_llm_request_no_prompt(self, mock_logger):
+        llm_service = LLMService(mock_logger, "any", "great-model")
+        response = llm_service.make_llm_request("")
+        assert response is None

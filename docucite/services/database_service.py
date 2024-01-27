@@ -125,7 +125,7 @@ class DatabaseService:
 
         # Add the documents.
         self.logger.info(
-            f"Adding {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
+            f"Trying to add {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
         )
 
         if self.database.add_documents(documents=documents):

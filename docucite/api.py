@@ -20,7 +20,6 @@ fastapi = FastAPI(
 
 # Initialize app
 app = DocuCiteApp()
-app.init_database_service()
 app.llm_service = LLMService(app.logger, "openai", "gpt-3.5-turbo")
 app.llm_service.initialize_llm()
 
@@ -49,6 +48,6 @@ def process(user_input: UserInputData) -> Optional[dict]:
     if not contexts:
         return {"results": None}
     prompt: str = app.llm_service.create_prompt(question, contexts)
-    response: str = app.llm_service.make_llm_request(prompt)
+    response: Optional[str] = app.llm_service.make_llm_request(prompt)
 
-    return {"result": response}
+    return {"result": response} if response else {"result": ""}

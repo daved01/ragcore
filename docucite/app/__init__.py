@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 import logging
 from logging import Logger
+from typing import Optional
+
 
 LOGGER_FILENAME = "app.log"
 LOG_LEVEL = logging.DEBUG
@@ -36,5 +38,13 @@ class AbstractApp(metaclass=ABCMeta):
         return logger
 
     @abstractmethod
-    def run(self):
-        """Run the app"""
+    def query(self, query: str) -> Optional[str]:
+        """Run a query against a database."""
+
+    @abstractmethod
+    def add(self, path: str) -> None:
+        """Adds a document to the database."""
+
+    @abstractmethod
+    def delete(self, title: str) -> None:
+        """Removes a document from the database."""
