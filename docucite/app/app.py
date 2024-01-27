@@ -69,6 +69,10 @@ class DocuCiteApp(AbstractApp):
         Deletes a collection from the database.
         A collection is a set of all documents with the same title.
         """
+        if not title:
+            return None
+
+        self.database_service.delete_documents(title=title)
 
     def _init_llm_service(self):
         """

@@ -56,3 +56,12 @@ class TestUtils(DocuciteTestSetup):
     def test_document_to_str_no_docs(self):
         empty_string = utils.document_to_str([])
         assert empty_string == ""
+
+    def test_remove_file_extension(self):
+        cases = [
+            ("Should_remove.pdf", "Should_remove"),
+            ("should_not_remove.txt", "should_not_remove.txt"),
+            ("should_not_remove", "should_not_remove"),
+        ]
+        for case, expected in cases:
+            assert utils.remove_file_extension(case) == expected

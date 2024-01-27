@@ -185,6 +185,21 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         with pytest.raises(MetadataError):
             database_service.add_documents(mock_documents_missing_metadata)
 
+    def test_delete_documents(self, mocker, mock_logger, mock_config):
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
+        )
+        database_service.database = mocker.Mock()
+        mock_model = mocker.patch.object(database_service.database, "delete_documents")
+
+        database_service.delete_documents("To delete")
+
+        assert mock_model.call_count == 1
+
     def test_query(self, mocker, mock_logger, mock_config, mock_documents):
         mock_database = mocker.Mock()
         mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
