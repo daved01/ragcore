@@ -136,7 +136,7 @@ class DatabaseService:
         else:
             self.logger.info(
                 (
-                    f"Did not add documents to database, because documents with the title you "
+                    "Did not add documents to database, because documents with the title you "
                     "are trying to add already exist in the database."
                 )
             )

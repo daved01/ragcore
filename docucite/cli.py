@@ -18,7 +18,7 @@ def run_app(app) -> None:
         if user_input.lower() == "q":
             print("Exiting ...")
             break
-        elif user_input.lower() == "n":
+        if user_input.lower() == "n":
             path = input("Enter relative path to new document: ")
             app.add(path=path)
 
@@ -41,5 +41,7 @@ def _parse_args() -> dict[str, str]:
 
 if __name__ == "__main__":
     arguments: dict[str, str] = _parse_args()
-    app = DocuCiteApp(config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH))
-    run_app(app)
+    cli_app = DocuCiteApp(
+        config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH)
+    )
+    run_app(cli_app)

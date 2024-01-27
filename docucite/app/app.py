@@ -28,15 +28,15 @@ class DocuCiteApp(AbstractApp):
         Query the database and make LLM request with the prompt and the context
         provided by the database.
         """
-        if not query:
-            return
+        if not query or not self.database_service or not self.llm_service:
+            return None
 
         # Get relevant chunks from database.
-        contexts: list[Document] = self.database_service.query(query=query)
+        contexts: Optional[list[Document]] = self.database_service.query(query=query)
 
         if not contexts:
             print("Did not find documents in the database. Maybe it is empty?")
-            return
+            return None
 
         # Construct prompt from template and context.
         prompt: str = self.llm_service.create_prompt(query, contexts)
@@ -49,6 +49,9 @@ class DocuCiteApp(AbstractApp):
         Add a document to the database.
         The filename without the file extension is used as the title.
         """
+        if not self.database_service:
+            return None
+
         self.document_service = DocumentService(self.logger)
         self.document_service.load_document(path=path)
         self.document_service.split_document(
@@ -66,8 +69,6 @@ class DocuCiteApp(AbstractApp):
         Deletes a collection from the database.
         A collection is a set of all documents with the same title.
         """
-        # TODO: Implement
-        pass
 
     def _init_llm_service(self):
         """
