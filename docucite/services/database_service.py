@@ -145,6 +145,11 @@ class DatabaseService:
         """
         Deletes documents with the title `title` from the database.
         """
+        if not self.database:
+            raise DatabaseError(
+                "Database does not exist. Please create it before running a query."
+            )
+
         title = utils.remove_file_extension(title)
 
         if self.database.delete_documents(title=title):
