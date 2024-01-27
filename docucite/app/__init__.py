@@ -5,20 +5,20 @@ from typing import Optional
 
 
 LOGGER_FILENAME = "app.log"
-LOG_LEVEL = logging.DEBUG
 
 
 class AbstractApp(metaclass=ABCMeta):
     logger: Logger
 
-    def __init__(self, file_logging=False):
+    def __init__(self, log_level="DEBUG", file_logging=False):
+        self.log_level = log_level
         self.file_logging = file_logging
-        self.logger = self.initialize_logger()
+        self.logger = self.initialize_logger(log_level)
 
-    def initialize_logger(self) -> Logger:
+    def initialize_logger(self, log_level) -> Logger:
         """Creates and configures a logger instance for console and file logging."""
         logger = logging.getLogger(__name__)
-        logger.setLevel(LOG_LEVEL)
+        logger.setLevel(log_level)
         console_handler = logging.StreamHandler()
         formatter = logging.Formatter(
             "%(asctime)s %(levelname)s [%(module)s] - %(message)s",
@@ -32,9 +32,11 @@ class AbstractApp(metaclass=ABCMeta):
             file_handler = logging.FileHandler(LOGGER_FILENAME)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)
-            logger.info(f"Logging to file {LOGGER_FILENAME} with log level {LOG_LEVEL}")
+            logger.info(
+                f"Logging to file {LOGGER_FILENAME} with log level {self.log_level}"
+            )
         else:
-            logger.info(f"Logging to terminal with log level {LOG_LEVEL}")
+            logger.info(f"Logging to terminal with log level {self.log_level}")
         return logger
 
     @abstractmethod

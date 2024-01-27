@@ -10,8 +10,10 @@ from docucite.services.llm_service import LLMService
 
 
 class DocuCiteApp(AbstractApp):
-    def __init__(self, config_path: Optional[str] = None, file_logging=False):
-        super().__init__(file_logging)
+    def __init__(
+        self, config_path: Optional[str] = None, log_level="DEBUG", file_logging=False
+    ):
+        super().__init__(log_level, file_logging)
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
