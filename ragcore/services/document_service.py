@@ -1,10 +1,10 @@
 import re
 from logging import Logger
 
-from docucite.services.text_splitter_service import TextSplitterService
-from docucite.models.document_model import Document
-from docucite.models.document_loader_model import PDFLoader
-from docucite.shared.errors import UserConfigurationError
+from ragcore.services.text_splitter_service import TextSplitterService
+from ragcore.models.document_model import Document
+from ragcore.models.document_loader_model import PDFLoader
+from ragcore.shared.errors import UserConfigurationError
 
 PDF_PATTERN = r"\.pdf$"
 

@@ -1,18 +1,18 @@
 import pytest
 
-from docucite.shared.errors import EmbeddingError, DatabaseError, MetadataError
-from docucite.models.database_model import ChromaDatabase
-from docucite.models.embedding_model import BaseEmbedding
-from docucite.services.database_service import DatabaseService
+from ragcore.shared.errors import EmbeddingError, DatabaseError, MetadataError
+from ragcore.models.database_model import ChromaDatabase
+from ragcore.models.embedding_model import BaseEmbedding
+from ragcore.services.database_service import DatabaseService
 from tests import BaseTest
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestDatabaseService(BaseTest, DocuciteTestSetup):
+class TestDatabaseService(BaseTest, RAGCoreTestSetup):
     def test_init_embedding_openai(
         self, mocker, mock_logger, mock_config, mock_openai_embedding
     ):
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         database_service = DatabaseService(
             logger=mock_logger,
             base_path=mock_config["database"]["base_dir"],
@@ -42,8 +42,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         self, mocker, mock_logger, mock_config, mock_openai_embedding
     ):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -68,8 +68,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         self, mocker, mock_logger, mock_config, mock_openai_embedding
     ):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -89,15 +89,15 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
     ):
         mock_add_docs = mocker.Mock()
         mock_database_class = mocker.patch(
-            "docucite.models.database_model.ChromaDatabase"
+            "ragcore.models.database_model.ChromaDatabase"
         )
         mock_database_instance = mock_database_class.return_value
         mock_database_instance.add_documents = mock_add_docs
         mock_database_add_documents = mocker.patch(
-            "docucite.services.database_service.ChromaDatabase.add_documents",
+            "ragcore.services.database_service.ChromaDatabase.add_documents",
             mock_add_docs,
         )
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -118,7 +118,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
     def test_add_documents_database_not_exist(
         self, mocker, mock_logger, mock_config, mock_openai_embedding, mock_documents
     ):
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -142,8 +142,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_documents_metadata_title_missing,
     ):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -168,8 +168,8 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
         mock_documents_missing_metadata,
     ):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
-        mocker.patch("docucite.models.embedding_model.OpenAI", mock_openai_embedding)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mock_openai_embedding)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 
@@ -202,9 +202,9 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
     def test_query(self, mocker, mock_logger, mock_config, mock_documents):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
         mocker.patch(
-            "docucite.services.database_service.DatabaseService.query",
+            "ragcore.services.database_service.DatabaseService.query",
             return_value="Hello",
         )
         mock_makedirs = mocker.patch("os.makedirs")
@@ -225,7 +225,7 @@ class TestDatabaseService(BaseTest, DocuciteTestSetup):
 
     def test_query_fail(self, mocker, mock_logger, mock_config, mock_documents):
         mock_database = mocker.Mock()
-        mocker.patch("docucite.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
         mock_makedirs = mocker.patch("os.makedirs")
         mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
 

@@ -1,7 +1,7 @@
 import re
 from typing import Any
 
-from docucite.models.document_model import Document
+from ragcore.models.document_model import Document
 
 
 FILE_EXTENSION_PATTERN = re.compile(r"\.pdf$")

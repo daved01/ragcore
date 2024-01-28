@@ -1,9 +1,9 @@
-from docucite.shared import utils
+from ragcore.shared import utils
 
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestUtils(DocuciteTestSetup):
+class TestUtils(RAGCoreTestSetup):
     def test_slice_list_with_even_size(self):
         queries = ["query1", "query2", "query3", "query4", "query5", "query6", "query7"]
         result = utils.slice_list(queries, slice_size=2)

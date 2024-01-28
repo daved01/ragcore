@@ -1,11 +1,11 @@
 import pytest
 
-from docucite.services.text_splitter_service import TextSplitterService
+from ragcore.services.text_splitter_service import TextSplitterService
 from tests import BaseTest
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestTextSplitterService(BaseTest, DocuciteTestSetup):
+class TestTextSplitterService(BaseTest, RAGCoreTestSetup):
     @pytest.mark.parametrize(
         "split, expected_num_docs",
         [((1000, 200), 2), ((50, 10), 6), ((106, 10), 3), ((10, 4), 28), ((50, 0), 6)],

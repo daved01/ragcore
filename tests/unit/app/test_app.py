@@ -1,20 +1,18 @@
 import pytest
 
-from docucite.app.app import DocuCiteApp
-from docucite.shared.constants import ConfigurationConstants
+from ragcore.app.app import RAGCore
+from ragcore.shared.constants import ConfigurationConstants
 from tests import BaseTest
 
 
-class TestDocuCiteApp(BaseTest):
+class TestRAGCore(BaseTest):
     @pytest.fixture
     def mock_method_inits(self, mocker):
-        mocker.patch(
-            "docucite.app.app.DocuCiteApp._init_database_service", mocker.Mock()
-        )
-        mocker.patch("docucite.app.app.DocuCiteApp._init_llm_service", mocker.Mock())
+        mocker.patch("ragcore.app.app.RAGCore._init_database_service", mocker.Mock())
+        mocker.patch("ragcore.app.app.RAGCore._init_llm_service", mocker.Mock())
 
     def test_get_config_verify_config(self, mock_method_inits):
-        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_no_llms.yaml")
+        app = RAGCore(config_path="./tests/unit/mock/mock_config_no_llms.yaml")
 
         # Database
         assert (
@@ -64,10 +62,10 @@ class TestDocuCiteApp(BaseTest):
 
     def test_get_config_verify_config_no_path(self, mocker):
         mocker.patch(
-            "docucite.shared.constants.AppConstants.KEY_CONFIGURATION_PATH",
+            "ragcore.shared.constants.AppConstants.KEY_CONFIGURATION_PATH",
             "tests/unit/mock/mock_config_no_llms.yaml",
         )
-        app = DocuCiteApp()
+        app = RAGCore()
 
         # Database
         assert (
@@ -116,7 +114,7 @@ class TestDocuCiteApp(BaseTest):
         )
 
     def test_get_config_verify_llm_openai(self, mock_method_inits):
-        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_openai.yaml")
+        app = RAGCore(config_path="./tests/unit/mock/mock_config_openai.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][
                 ConfigurationConstants.KEY_LLM_PROVIDER
@@ -131,7 +129,7 @@ class TestDocuCiteApp(BaseTest):
         )
 
     def test_get_config_verify_llm_azure(self, mock_method_inits):
-        app = DocuCiteApp(config_path="./tests/unit/mock/mock_config_azure.yaml")
+        app = RAGCore(config_path="./tests/unit/mock/mock_config_azure.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][
                 ConfigurationConstants.KEY_LLM_PROVIDER

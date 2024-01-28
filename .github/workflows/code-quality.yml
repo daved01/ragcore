@@ -19,10 +19,10 @@ jobs:
         pip install -r requirements_dev.txt
 
     - name: Run black code formatter
-      run: find docucite -name "*.py" -exec black {} +
+      run: find ragcore -name "*.py" -exec black {} +
 
     - name: Run mypy on source folder
-      run:  mypy docucite/
+      run:  mypy ragcore/
 
     - name: Run pylint
       run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')

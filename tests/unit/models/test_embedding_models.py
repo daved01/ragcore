@@ -1,12 +1,12 @@
-from docucite.models.embedding_model import OpenAIEmbedding, AzureOpenAIEmbedding
+from ragcore.models.embedding_model import OpenAIEmbedding, AzureOpenAIEmbedding
 from tests import BaseTest
 
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestOpenAIEmbeddingModels(BaseTest, DocuciteTestSetup):
+class TestOpenAIEmbeddingModels(BaseTest, RAGCoreTestSetup):
     def test_embed_queries(self, mocker):
-        mocker.patch("docucite.models.embedding_model.OpenAI", mocker.Mock())
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mocker.Mock())
         embedding = OpenAIEmbedding(model="some-model")
 
         mocker.patch.object(
@@ -28,9 +28,9 @@ class TestOpenAIEmbeddingModels(BaseTest, DocuciteTestSetup):
         assert result == expected_result
 
 
-class TestAzureOpenAIEmbeddingModels(BaseTest, DocuciteTestSetup):
+class TestAzureOpenAIEmbeddingModels(BaseTest, RAGCoreTestSetup):
     def test_embed_queries(self, mocker):
-        mocker.patch("docucite.models.embedding_model.AzureOpenAI", mocker.Mock())
+        mocker.patch("ragcore.models.embedding_model.AzureOpenAI", mocker.Mock())
         embedding = AzureOpenAIEmbedding(
             model="some-model", endpoint="https://endpoint.com", api_version="azure-1"
         )
