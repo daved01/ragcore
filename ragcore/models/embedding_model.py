@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from openai import OpenAI, AzureOpenAI
 import os
 
-from docucite.shared.utils import slice_list
-from docucite.shared.constants import EmbeddingConstants
+from ragcore.shared.utils import slice_list
+from ragcore.shared.constants import EmbeddingConstants
 
 
 class BaseEmbedding(ABC):

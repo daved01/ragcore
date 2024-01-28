@@ -2,21 +2,21 @@ from logging import Logger
 import os
 from typing import Optional, Mapping
 
-from docucite.shared.constants import (
+from ragcore.shared.constants import (
     ConfigurationConstants,
     DatabaseConstants,
     DataConstants,
     EmbeddingConstants,
 )
-from docucite.shared.errors import DatabaseError, MetadataError, EmbeddingError
-from docucite.models.document_model import Document
-from docucite.models.embedding_model import (
+from ragcore.shared.errors import DatabaseError, MetadataError, EmbeddingError
+from ragcore.models.document_model import Document
+from ragcore.models.embedding_model import (
     BaseEmbedding,
     OpenAIEmbedding,
     AzureOpenAIEmbedding,
 )
-from docucite.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
-from docucite.shared import utils
+from ragcore.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
+from ragcore.shared import utils
 
 Metadata = dict[str, str]
 

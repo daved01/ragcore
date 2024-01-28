@@ -1,8 +1,8 @@
 import argparse
 from typing import Optional
 
-from docucite.shared.constants import AppConstants
-from docucite.app.app import DocuCiteApp
+from ragcore.shared.constants import AppConstants
+from ragcore.app.app import RAGCore
 
 
 SEPARATOR_LINE = "--" * 64
@@ -35,7 +35,9 @@ def run_app(app) -> None:
 
 
 def _parse_args() -> dict[str, str]:
-    parser = argparse.ArgumentParser(description="Docucite")
+    parser = argparse.ArgumentParser(
+        description="RAG Core Kit is a library which helps you to create Retrieval Augmentations applications."
+    )
     parser.add_argument("--config", type=str, help="Path to the config file")
     parser.add_argument("-v", action="store_true", help="Verbose logger")
     args = parser.parse_args()
@@ -47,7 +49,7 @@ def _parse_args() -> dict[str, str]:
 
 if __name__ == "__main__":
     arguments: dict[str, str] = _parse_args()
-    cli_app = DocuCiteApp(
+    cli_app = RAGCore(
         config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
         log_level=LOGGER_LEVEL_DEBUG
         if arguments.get(AppConstants.KEY_LOGGER_FLAG)

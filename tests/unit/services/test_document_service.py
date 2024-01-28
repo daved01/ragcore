@@ -1,12 +1,12 @@
 import pytest
 
-from docucite.services.document_service import DocumentService
-from docucite.shared.errors import UserConfigurationError
+from ragcore.services.document_service import DocumentService
+from ragcore.shared.errors import UserConfigurationError
 from tests import BaseTest
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestDocumentService(BaseTest, DocuciteTestSetup):
+class TestDocumentService(BaseTest, RAGCoreTestSetup):
     def test_load_document(self, mock_logger, mock_pages, mocker):
         class MockPDFLoader:
             def __init__(self, file_path):
@@ -17,7 +17,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
                     page.metadata["title"] = title
                 return mock_pages
 
-        mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
+        mocker.patch("ragcore.services.document_service.PDFLoader", MockPDFLoader)
 
         document_service = DocumentService(mock_logger)
         assert not document_service.pages
@@ -39,7 +39,7 @@ class TestDocumentService(BaseTest, DocuciteTestSetup):
             def load_and_split(self, title):
                 return []
 
-        mocker.patch("docucite.services.document_service.PDFLoader", MockPDFLoader)
+        mocker.patch("ragcore.services.document_service.PDFLoader", MockPDFLoader)
 
         document_service = DocumentService(mock_logger)
         assert not document_service.pages

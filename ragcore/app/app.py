@@ -1,15 +1,15 @@
 from typing import Optional, Any
 import yaml
 
-from docucite.app import AbstractApp
-from docucite.shared.constants import AppConstants, ConfigurationConstants
-from docucite.models.document_model import Document
-from docucite.services.document_service import DocumentService
-from docucite.services.database_service import DatabaseService
-from docucite.services.llm_service import LLMService
+from ragcore.app import AbstractApp
+from ragcore.shared.constants import AppConstants, ConfigurationConstants
+from ragcore.models.document_model import Document
+from ragcore.services.document_service import DocumentService
+from ragcore.services.database_service import DatabaseService
+from ragcore.services.llm_service import LLMService
 
 
-class DocuCiteApp(AbstractApp):
+class RAGCore(AbstractApp):
     def __init__(
         self, config_path: Optional[str] = None, log_level="DEBUG", file_logging=False
     ):

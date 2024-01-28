@@ -3,9 +3,9 @@ import chromadb
 from typing import Optional, Any, Mapping, Sized
 import uuid
 
-from docucite.shared.constants import DataConstants, DatabaseConstants
-from docucite.models.embedding_model import BaseEmbedding
-from docucite.models.document_model import Document
+from ragcore.shared.constants import DataConstants, DatabaseConstants
+from ragcore.models.embedding_model import BaseEmbedding
+from ragcore.models.document_model import Document
 
 
 class BaseVectorDatabaseModel(ABC):

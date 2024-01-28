@@ -1,7 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-from docucite.models.document_model import Document
-from docucite.dto.document_dto import DocumentDTO
+from ragcore.models.document_model import Document
+from ragcore.dto.document_dto import DocumentDTO
 
 
 class TextSplitterService:
@@ -28,6 +28,6 @@ class TextSplitterService:
             document_dto = DocumentDTO(
                 page_content=split_lang.page_content, metadata=split_lang.metadata
             )
-            splits.append(document_dto.to_docucite())
+            splits.append(document_dto.to_ragcore())
 
         return splits

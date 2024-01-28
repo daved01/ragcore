@@ -1,12 +1,12 @@
 from logging import Logger
 from typing import Optional
 
-from docucite.models.document_model import Document
-from docucite.models.prompt_model import PromptGenerator
-from docucite.models.llm_model import OpenAIModel, AzureOpenAIModel
-from docucite.shared.constants import ConfigurationConstants
-from docucite.shared.errors import LLMError, PromptError, UserConfigurationError
-from docucite.shared.utils import document_to_str
+from ragcore.models.document_model import Document
+from ragcore.models.prompt_model import PromptGenerator
+from ragcore.models.llm_model import OpenAIModel, AzureOpenAIModel
+from ragcore.shared.constants import ConfigurationConstants
+from ragcore.shared.errors import LLMError, PromptError, UserConfigurationError
+from ragcore.shared.utils import document_to_str
 
 
 class LLMService:

@@ -1,7 +1,7 @@
 from typing import Any, Mapping
 from langchain.schema import Document as LangDocument
 
-from docucite.models.document_model import Document
+from ragcore.models.document_model import Document
 
 
 class DocumentDTO:
@@ -9,7 +9,7 @@ class DocumentDTO:
         self.page_content = page_content
         self.metadata = metadata
 
-    def to_docucite(self):
+    def to_ragcore(self):
         return Document(page_content=self.page_content, metadata=self.metadata)
 
     def to_langchain(self):
@@ -22,15 +22,15 @@ class DocumentDTO:
             doc_dto = DocumentDTO(
                 page_content=document.page_content, metadata=document.metadata
             )
-            lang_documents.append(doc_dto.to_docucite())
+            lang_documents.append(doc_dto.to_ragcore())
         return lang_documents
 
     @staticmethod
-    def to_docucite_list(lang_documents: list[LangDocument]) -> list[Document]:
+    def to_ragcore_list(lang_documents: list[LangDocument]) -> list[Document]:
         documents = []
         for lang_document in lang_documents:
             doc_dto = DocumentDTO(
                 page_content=lang_document.page_content, metadata=lang_document.metadata
             )
-            documents.append(doc_dto.to_docucite())
+            documents.append(doc_dto.to_ragcore())
         return documents

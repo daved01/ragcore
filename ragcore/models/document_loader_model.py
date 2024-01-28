@@ -1,7 +1,7 @@
 from langchain_community.document_loaders import PyPDFLoader
 
-from docucite.dto.document_dto import DocumentDTO
-from docucite.models.document_model import Document
+from ragcore.dto.document_dto import DocumentDTO
+from ragcore.models.document_model import Document
 
 
 class PDFLoader:
@@ -17,4 +17,4 @@ class PDFLoader:
         # TODO: Must add book page, not pdf page! # pylint: disable=fixme
         for i, _ in enumerate(lang_docs):
             lang_docs[i].metadata["title"] = title
-        return DocumentDTO.to_docucite_list(lang_docs)
+        return DocumentDTO.to_ragcore_list(lang_docs)

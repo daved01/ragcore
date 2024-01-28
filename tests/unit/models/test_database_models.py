@@ -1,11 +1,11 @@
 import pytest
-from docucite.models.database_model import ChromaDatabase
+from ragcore.models.database_model import ChromaDatabase
 
 from tests import BaseTest
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestChromaDatabaseModel(BaseTest, DocuciteTestSetup):
+class TestChromaDatabaseModel(BaseTest, RAGCoreTestSetup):
     @pytest.fixture
     def chromadb_client(self, mocker, mock_openai_embedding_values):
         mocker.patch("chromadb.PersistentClient")
@@ -18,7 +18,7 @@ class TestChromaDatabaseModel(BaseTest, DocuciteTestSetup):
 
     def test_add_documents(self, mocker, chromadb_client, mock_documents):
         mocker.patch(
-            "docucite.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
+            "ragcore.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
             return_value=0,
         )
         res = chromadb_client.add_documents(mock_documents)
@@ -28,7 +28,7 @@ class TestChromaDatabaseModel(BaseTest, DocuciteTestSetup):
         self, mocker, chromadb_client, mock_documents
     ):
         mocker.patch(
-            "docucite.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
+            "ragcore.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
             return_value=10,
         )
         res = chromadb_client.add_documents(mock_documents)
@@ -36,7 +36,7 @@ class TestChromaDatabaseModel(BaseTest, DocuciteTestSetup):
 
     def test_delete_documents_success(self, mocker, chromadb_client):
         mocker.patch(
-            "docucite.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
+            "ragcore.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
             side_effect=[10, 0],
         )
         res = chromadb_client.delete_documents("To be deleted")
@@ -44,7 +44,7 @@ class TestChromaDatabaseModel(BaseTest, DocuciteTestSetup):
 
     def test_delete_documents_fail(self, mocker, chromadb_client):
         mocker.patch(
-            "docucite.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
+            "ragcore.models.database_model.ChromaDatabase._get_number_of_documents_by_title",
             side_effect=[10, 10],
         )
         res = chromadb_client.delete_documents("To be deleted")

@@ -1,14 +1,14 @@
 import os
 import pytest
 
-from docucite.shared.errors import PromptError, LLMError, UserConfigurationError
-from docucite.models.llm_model import LLMModel
-from docucite.services.llm_service import LLMService
+from ragcore.shared.errors import PromptError, LLMError, UserConfigurationError
+from ragcore.models.llm_model import LLMModel
+from ragcore.services.llm_service import LLMService
 from tests import BaseTest
-from tests.unit.services import DocuciteTestSetup
+from tests.unit.services import RAGCoreTestSetup
 
 
-class TestLLMService(BaseTest, DocuciteTestSetup):
+class TestLLMService(BaseTest, RAGCoreTestSetup):
     def test_initialize_llm(self, mock_logger, mocker):
         mocker.patch("langchain.chat_models.ChatOpenAI")
 
@@ -40,7 +40,7 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
 
     def test_openai_init_request(self, mock_logger, mocker, mock_openai_response):
         mocker.patch(
-            "docucite.models.llm_model.OpenAI", return_value=mock_openai_response
+            "ragcore.models.llm_model.OpenAI", return_value=mock_openai_response
         )
         mocker.patch.dict(os.environ, {"OPENAI_API_KEY": "secret-token"})
 
@@ -53,7 +53,7 @@ class TestLLMService(BaseTest, DocuciteTestSetup):
 
     def test_azure_init_request(self, mock_logger, mocker, mock_openai_response):
         mocker.patch(
-            "docucite.models.llm_model.AzureOpenAI", return_value=mock_openai_response
+            "ragcore.models.llm_model.AzureOpenAI", return_value=mock_openai_response
         )
         mocker.patch.dict(os.environ, {"AZURE_OPENAI_API_KEY": "secret-token"})
 

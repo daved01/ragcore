@@ -1,11 +1,11 @@
 import pytest
 from langchain.schema import Document as LangDocument
 
-from docucite.models.document_model import Document
-from docucite.models.embedding_model import OpenAIEmbedding
+from ragcore.models.document_model import Document
+from ragcore.models.embedding_model import OpenAIEmbedding
 
 
-class DocuciteTestSetup:
+class RAGCoreTestSetup:
     @pytest.fixture
     def mock_pages(self):
         page1 = Document(
@@ -77,7 +77,7 @@ class DocuciteTestSetup:
 
     @pytest.fixture
     def mock_openai_embedding_values(self, mocker):
-        mocker.patch("docucite.models.embedding_model.OpenAI", mocker.Mock())
+        mocker.patch("ragcore.models.embedding_model.OpenAI", mocker.Mock())
         embedding = OpenAIEmbedding(model="some-model")
 
         mocker.patch.object(
