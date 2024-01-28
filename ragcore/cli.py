@@ -34,6 +34,17 @@ def run_app(app) -> None:
             print(f"\n{SEPARATOR_LINE}\n{response}\n{SEPARATOR_LINE}\n")
 
 
+def entrypoint():
+    arguments: dict[str, str] = _parse_args()
+    cli_app = RAGCore(
+        config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
+        log_level=LOGGER_LEVEL_DEBUG
+        if arguments.get(AppConstants.KEY_LOGGER_FLAG)
+        else LOGGER_LEVEL_WARN,
+    )
+    run_app(cli_app)
+
+
 def _parse_args() -> dict[str, str]:
     parser = argparse.ArgumentParser(
         description="RAG Core Kit is a library which helps you to create Retrieval Augmentations applications."
@@ -48,11 +59,4 @@ def _parse_args() -> dict[str, str]:
 
 
 if __name__ == "__main__":
-    arguments: dict[str, str] = _parse_args()
-    cli_app = RAGCore(
-        config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
-        log_level=LOGGER_LEVEL_DEBUG
-        if arguments.get(AppConstants.KEY_LOGGER_FLAG)
-        else LOGGER_LEVEL_WARN,
-    )
-    run_app(cli_app)
+    entrypoint()
