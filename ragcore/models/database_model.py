@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
-import chromadb
 from typing import Optional, Any, Mapping, Sized
 import uuid
+import chromadb
 
 from ragcore.shared.constants import DataConstants, DatabaseConstants
 from ragcore.models.embedding_model import BaseEmbedding
 from ragcore.models.document_model import Document
+
+
+NAME_MAIN_COLLECTION = "main_collection"
 
 
 class BaseVectorDatabaseModel(ABC):
@@ -109,7 +112,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         self.collection.delete(where={DataConstants.KEY_TITLE: title})
         num_docs_after = self._get_number_of_documents_by_title(title)
 
-        return not (num_docs_before == num_docs_after)
+        return not num_docs_before == num_docs_after
 
     def query(self, query: str) -> Optional[list[Document]]:
         embeddings: Any = self.embedding.embed_queries([query])
@@ -150,7 +153,6 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         """
         Gets the main collection or creates it.
         """
-        NAME_MAIN_COLLECTION = "main_collection"
         try:
             return self.client.get_collection(name=NAME_MAIN_COLLECTION)
         except ValueError:
