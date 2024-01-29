@@ -1,7 +1,7 @@
 from typing import Optional, Any
 import yaml
 
-from ragcore.app import AbstractApp
+from ragcore.app.base_app import AbstractApp
 from ragcore.shared.constants import AppConstants, ConfigurationConstants
 from ragcore.models.document_model import Document
 from ragcore.services.document_service import DocumentService
@@ -11,16 +11,14 @@ from ragcore.services.llm_service import LLMService
 
 class RAGCore(AbstractApp):
     def __init__(
-        self, config_path: Optional[str] = None, log_level="DEBUG", file_logging=False
+        self, config: Optional[str] = None, log_level="DEBUG", file_logging=False
     ):
         super().__init__(log_level, file_logging)
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
         self.configuration: dict[str, dict[str, Any]] = self._get_config(
-            config_file_path=config_path
-            if config_path
-            else AppConstants.DEFAULT_CONFIG_FILE_PATH
+            config_file_path=config if config else AppConstants.DEFAULT_CONFIG_FILE_PATH
         )
         self._init_database_service()
         self._init_llm_service()

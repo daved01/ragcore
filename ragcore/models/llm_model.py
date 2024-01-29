@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import os
-from openai import OpenAI, AzureOpenAI
 from typing import Optional
+from openai import OpenAI, AzureOpenAI
 
 from ragcore.shared.constants import ConfigurationConstants, LLMProviderConstants
 

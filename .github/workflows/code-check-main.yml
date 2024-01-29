@@ -1,4 +1,4 @@
-name: Code format and typing checks
+name: GitHub CI
 on:
   push:
     branches:
@@ -11,8 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Code quality checks
+    
     env:
-      OPENAI_API_KEY: "verysecretkey" # Replace with secret if required
+      OPENAI_API_KEY: "verysecretkey"
+    
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -22,6 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
+        pip install -r requirements.txt
         pip install -r requirements_dev.txt
 
     - name: Run black code formatter

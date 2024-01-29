@@ -6,3 +6,6 @@ max-args=10
 
 [FORMAT]
 max-line-length = 140
+
+[MASTER]
+extension-pkg-whitelist=pydantic

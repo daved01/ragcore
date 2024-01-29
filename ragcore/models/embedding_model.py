@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from openai import OpenAI, AzureOpenAI
 import os
+from openai import OpenAI, AzureOpenAI
 
 from ragcore.shared.utils import slice_list
 from ragcore.shared.constants import EmbeddingConstants
