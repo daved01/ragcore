@@ -1,7 +1,7 @@
 from typing import Optional, Any
 import yaml
 
-from ragcore.app import AbstractApp
+from ragcore.app.base_app import AbstractApp
 from ragcore.shared.constants import AppConstants, ConfigurationConstants
 from ragcore.models.document_model import Document
 from ragcore.services.document_service import DocumentService

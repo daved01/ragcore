@@ -1,9 +1,9 @@
-from setuptools import setup, find_packages
 import pathlib
-import ragcore
+from setuptools import setup, find_packages
 
+VERSION = "0.0.6"
 
-with open("requirements.txt", "utf-8") as fh:
+with open("requirements.txt", encoding="utf-8") as fh:
     requirements = [
         requirement
         for requirement in fh.read().splitlines()
@@ -15,27 +15,26 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 
 setup(
-    name=ragcore.__package_name__,
-    version=ragcore.__version__,
+    name="ragcore",
+    version=VERSION,
     description="A library to build Retrieval Augmentation Applications with only a few lines of code.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
-    author=ragcore.__author__,
-    author_email=ragcore.__email__,
+    url="https://github.com/daved01/ragcore",
+    author="David Kirchhoff",
+    author_email="david.kirchhoff@mail.utoronto.ca",
     classifiers=[
         "Development Status :: 3 - Alpha",
-        # Indicate who your project is intended for
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        # Pick your license as you wish
         "License :: OSI Approved :: MIT License",
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate you support Python 3. These classifiers are *not*
         # checked by 'pip install'. See instead 'python_requires' below.
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
     ],
     keywords="retrieval augmented generation, rag, development, artificial intelligence, large language models",
@@ -45,11 +44,11 @@ setup(
             "ragcore = ragcore.cli:entrypoint",
         ]
     },
-    packages=find_packages(where="ragcore"),
-    package_dir={"": "ragcore"},
+    packages=find_packages(include=["ragcore*"], exclude=["tests"]),
+    # package_dir={"": "ragcore"},
     include_package_data=True,
     package_data={
-        "": ["configuration.yaml"],
+        "ragcore": ["configuration.yaml", "requirements.txt"],
     },
     python_requires=">=3.10, <4",
     project_urls={
@@ -57,5 +56,6 @@ setup(
         "Funding": "https://github.com/sponsors/daved01",
         "Say Thanks!": "https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS",
         "Source": "https://github.com/daved01/ragcore",
+        "Documentation": "https://daved01.github.io/ragcore/",
     },
 )

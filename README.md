@@ -7,7 +7,7 @@
   <img src="https://github.com/daved01/ragcore/actions/workflows/code-check-main.yml/badge.svg" alt="example workflow">
 </p>
 
-A RAG library with a CLI interface.
+A RAG library with a CLI interface. See [documentation](https://daved01.github.io/ragcore/) for more details.
 
 # Quick start
 

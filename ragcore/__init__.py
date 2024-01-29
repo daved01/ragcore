@@ -1,5 +1,1 @@
-__version__ = "0.0.1"
-__email__ = "david.kirchhoff@mail.utoronto.ca"
-__author__ = "David Kirchhoff"
-__package_name__ = "ragcore"
-__project_name__ = "RAG Core"
+from ragcore.app.app import RAGCore
