@@ -37,7 +37,7 @@ def run_app(app) -> None:
 def entrypoint():
     arguments: dict[str, str] = _parse_args()
     cli_app = RAGCore(
-        config_path=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
+        config=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
         log_level=LOGGER_LEVEL_DEBUG
         if arguments.get(AppConstants.KEY_LOGGER_FLAG)
         else LOGGER_LEVEL_WARN,

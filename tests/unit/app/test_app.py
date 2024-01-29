@@ -12,7 +12,7 @@ class TestRAGCore(BaseTest):
         mocker.patch("ragcore.app.app.RAGCore._init_llm_service", mocker.Mock())
 
     def test_get_config_verify_config(self, mock_method_inits):
-        app = RAGCore(config_path="./tests/unit/mock/mock_config_no_llms.yaml")
+        app = RAGCore(config="./tests/unit/mock/mock_config_no_llms.yaml")
 
         # Database
         assert (
@@ -114,7 +114,7 @@ class TestRAGCore(BaseTest):
         )
 
     def test_get_config_verify_llm_openai(self, mock_method_inits):
-        app = RAGCore(config_path="./tests/unit/mock/mock_config_openai.yaml")
+        app = RAGCore(config="./tests/unit/mock/mock_config_openai.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][
                 ConfigurationConstants.KEY_LLM_PROVIDER
@@ -129,7 +129,7 @@ class TestRAGCore(BaseTest):
         )
 
     def test_get_config_verify_llm_azure(self, mock_method_inits):
-        app = RAGCore(config_path="./tests/unit/mock/mock_config_azure.yaml")
+        app = RAGCore(config="./tests/unit/mock/mock_config_azure.yaml")
         assert (
             app.configuration[ConfigurationConstants.KEY_LLM][
                 ConfigurationConstants.KEY_LLM_PROVIDER

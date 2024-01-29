@@ -48,7 +48,7 @@ setup(
     # package_dir={"": "ragcore"},
     include_package_data=True,
     package_data={
-        "ragcore": ["configuration.yaml", "requirements.txt"],
+        "ragcore": ["config.yaml", "requirements.txt"],
     },
     python_requires=">=3.10, <4",
     project_urls={

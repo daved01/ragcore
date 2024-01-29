@@ -8,9 +8,11 @@
   <img src="https://github.com/daved01/ragcore/actions/workflows/code-check-main.yml/badge.svg" alt="GitHub CI">
 </p>
 
-A RAG library with a CLI interface. See [documentation](https://daved01.github.io/ragcore/) for more details.
+A Retrieval Augmented Generation library with a CLI interface. Build RAG applications with just a few commands and a configuration file.
 
-# Quick start
+For more details see the [documentation](https://daved01.github.io/ragcore/).
+
+# Installation
 
 To install, run
 
@@ -18,16 +20,77 @@ To install, run
 pip install ragcore
 ```
 
-or clone and build form source
+or clone and build from source
 
 ```bash
-git clone ...
-cd ...
-..
+git clone https://github.com/daved01/ragcore.git
+cd ragcore
+pip install .
 ```
 
-# Usage
+If everything worked running
 
-RAG Core has ...
+```bash
+ragcore -h
+```
 
-# Extend
+should show you some information about `ragcore`.
+
+# A Simple Example
+
+To have build an application with OpenAI or AzureOpenAI LLMs and embeddings, and a local database, first set your API key
+
+```bash
+export OPENAI_API_KEY=[your token]
+```
+
+Then, create a config file `config.yaml` like this:
+
+```bash
+database:
+  provider: "chroma"
+  number_search_results: 5
+  # For local databases
+  base_dir: "data/database"
+
+splitter:
+  chunk_overlap: 256
+  chunk_size: 1024
+
+embedding:
+  provider: "openai"
+  model: "text-embedding-model"
+
+# OpenAI
+llm:
+  provider: "openai"
+  model: "gpt-model"
+
+# Uncomment for AzureOpenAI
+# llm:
+#   provider: "azure"
+#   model: "gpt-model"
+#   endpoint: ""
+#   api_version: ""
+```
+
+And finally, create your application using the config file:
+
+```python
+from ragcore import RAGCore
+
+app = RAGCore(config="config.yaml")
+
+# Upload a document "My_Book.pdf"
+app.add(path="My_Book.pdf")
+
+# Now you can ask questions
+answer = app.query(query="What did the elk say?")
+
+print(answer)
+
+# You can delete by title
+app.delete(title="My_Book")
+```
+
+And that's it! For more information, as well as an overview of supported integrations check out the [documentation](https://daved01.github.io/ragcore/).
