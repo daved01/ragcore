@@ -17,7 +17,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 setup(
     name="ragcore",
     version=VERSION,
-    description="A library to build Retrieval Augmentation Applications with only a few lines of code.",
+    description="A library to build Retrieval-Augmented Generation applications with only a few lines of code.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/daved01/ragcore",

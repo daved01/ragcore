@@ -8,7 +8,7 @@
   <img src="https://github.com/daved01/ragcore/actions/workflows/code-check-main.yml/badge.svg" alt="GitHub CI">
 </p>
 
-A Retrieval Augmented Generation library with a CLI interface. Build RAG applications with just a few commands and a configuration file.
+A Retrieval-Augmented Generation library with a CLI interface. Build RAG applications with just a few commands and a configuration file.
 
 For more details see the [documentation](https://daved01.github.io/ragcore/).
 

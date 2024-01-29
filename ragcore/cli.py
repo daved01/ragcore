@@ -47,7 +47,10 @@ def entrypoint():
 
 def _parse_args() -> dict[str, str]:
     parser = argparse.ArgumentParser(
-        description="RAG Core Kit is a library which helps you to create Retrieval Augmentations applications."
+        description=(
+            "RAG Core is a library which helps you to create Retrieval-Augmented Generation applications. Create a `config.yaml` "
+            "file to get started. For more information see: https://daved01.github.io/ragcore/"
+        )
     )
     parser.add_argument("--config", type=str, help="Path to the config file")
     parser.add_argument("-v", action="store_true", help="Verbose logger")
