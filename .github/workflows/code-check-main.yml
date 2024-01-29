@@ -1,4 +1,4 @@
-name: Code format and typing checks
+name: GitHub CI
 on:
   push:
     branches:
@@ -11,8 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Code quality checks
-    env:
-      OPENAI_API_KEY: "verysecretkey" # Replace with secret if required
+
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
