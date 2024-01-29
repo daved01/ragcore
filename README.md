@@ -44,7 +44,7 @@ To have build an application with OpenAI or AzureOpenAI LLMs and embeddings, and
 export OPENAI_API_KEY=[your token]
 ```
 
-Then, create a config file `config.yaml` like this:
+Then, create a config file `config.yaml` like this in the root of your project:
 
 ```bash
 database:
@@ -74,12 +74,13 @@ llm:
 #   api_version: ""
 ```
 
-And finally, create your application using the config file:
+And finally, create your application using this config file create your application:
 
 ```python
 from ragcore import RAGCore
 
-app = RAGCore(config="config.yaml")
+
+app = RAGCore() # pass config=<path-to-config.yaml> if not in root
 
 # Upload a document "My_Book.pdf"
 app.add(path="My_Book.pdf")
