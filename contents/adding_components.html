@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adding components &mdash; RAG Core 0.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=1fd71caa"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API reference" href="api_reference.html" />
+    <link rel="prev" title="Development setup" href="develop.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RAG Core
+          </a>
+              <div class="version">
+                0.0.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">About RAG</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">What is Retrieval-Augmented Generation?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="first_app.html">Building your first application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported_components.html">Supported components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="develop.html">Development setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#supported-model-provider">Supported model provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-large-language-model">Adding a large language model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-an-embedding">Adding an embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-new-database">Adding new database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changing-prompt">Changing prompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-changes">Further changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RAG Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Adding components</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/adding_components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adding-components">
+<span id="id1"></span><h1>Adding components<a class="headerlink" href="#adding-components" title="Link to this heading"></a></h1>
+<p>This section outlines the structure of <code class="docutils literal notranslate"><span class="pre">ragcore</span></code> and provides guidance on how you can add components. For detailed information about existing methods, refer to <a class="reference internal" href="api_reference.html#api-reference"><span class="std std-ref">API reference</span></a>.</p>
+<section id="supported-model-provider">
+<h2>Supported model provider<a class="headerlink" href="#supported-model-provider" title="Link to this heading"></a></h2>
+<p>The app supports OpenAI and Azure OpenAI for large language models and embedding models. For the former, a valid API key has to be in the environment with the name <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code>. For Azure deployments, the environment variable <code class="docutils literal notranslate"><span class="pre">AZURE_OPENAI_API_KEY</span></code> is required.</p>
+</section>
+<section id="adding-a-large-language-model">
+<h2>Adding a large language model<a class="headerlink" href="#adding-a-large-language-model" title="Link to this heading"></a></h2>
+<p>To add a new LLM, subclass the <code class="docutils literal notranslate"><span class="pre">LLModel</span></code> in <code class="docutils literal notranslate"><span class="pre">models/llm_model.py</span></code> and return the model in the <code class="docutils literal notranslate"><span class="pre">_get_llm()</span></code> method. This model is then used by the <code class="docutils literal notranslate"><span class="pre">LLMService</span></code> in <code class="docutils literal notranslate"><span class="pre">services/llm_service.py</span></code>.</p>
+</section>
+<section id="adding-an-embedding">
+<h2>Adding an embedding<a class="headerlink" href="#adding-an-embedding" title="Link to this heading"></a></h2>
+<p>To create a vector out of the input data so that it can be stored in the vector database, an OpenAI embedding model is used by default in the <code class="docutils literal notranslate"><span class="pre">DatabaseService</span></code>. To change the embedding, subclass the <code class="docutils literal notranslate"><span class="pre">EmbeddingModel</span></code> in <code class="docutils literal notranslate"><span class="pre">models/embedding_model.py</span></code>.</p>
+<p>The default <a class="reference external" href="https://openai.com/blog/new-and-improved-embedding-model">OpenAI embedding</a> is <code class="docutils literal notranslate"><span class="pre">text-embedding-ada-002</span></code>.</p>
+</section>
+<section id="adding-new-database">
+<h2>Adding new database<a class="headerlink" href="#adding-new-database" title="Link to this heading"></a></h2>
+<p>To add a new vector database, subclass the <code class="docutils literal notranslate"><span class="pre">VectorDataBaseModel</span></code> and use it in the <code class="docutils literal notranslate"><span class="pre">DatabaseService</span></code>. To learn more about what a vector database is and how it works, check out for example <a class="reference external" href="https://www.pinecone.io/learn/vector-database/">this</a> great post by the Pinecone team.</p>
+</section>
+<section id="changing-prompt">
+<h2>Changing prompt<a class="headerlink" href="#changing-prompt" title="Link to this heading"></a></h2>
+<p>Using the retrieved information from the vector database, the information is concatenated to a string and along with the question passed into the <code class="docutils literal notranslate"><span class="pre">PromptGenerator</span></code> in <code class="docutils literal notranslate"><span class="pre">models/prompt_model.py</span></code>. This prompt can be changed and it might be worth to experiment with variations.</p>
+</section>
+<section id="further-changes">
+<h2>Further changes<a class="headerlink" href="#further-changes" title="Link to this heading"></a></h2>
+<p>The changes described so far swap out existing components. Further optimization could for example include changing the similarity measure used to retrieve vectors from the database, or using a different text splitting method in <code class="docutils literal notranslate"><span class="pre">TextSplitterService</span></code> in <code class="docutils literal notranslate"><span class="pre">services/text_splitter_service.py</span></code> (currently langchain’s <code class="docutils literal notranslate"><span class="pre">RecursiveCharacterTextSplitter</span></code> is used).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="develop.html" class="btn btn-neutral float-left" title="Development setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_reference.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, David Kirchhoff.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
