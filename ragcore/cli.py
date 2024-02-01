@@ -2,7 +2,7 @@ import argparse
 from typing import Optional
 
 from ragcore.shared.constants import AppConstants
-from ragcore.app.app import RAGCore
+from ragcore.app import RAGCore
 
 
 SEPARATOR_LINE = "--" * 64

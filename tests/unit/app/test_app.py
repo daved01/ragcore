@@ -1,6 +1,6 @@
 import pytest
 
-from ragcore.app.app import RAGCore
+from ragcore.app import RAGCore
 from ragcore.shared.constants import ConfigurationConstants
 from tests import BaseTest
 
@@ -8,8 +8,8 @@ from tests import BaseTest
 class TestRAGCore(BaseTest):
     @pytest.fixture
     def mock_method_inits(self, mocker):
-        mocker.patch("ragcore.app.app.RAGCore._init_database_service", mocker.Mock())
-        mocker.patch("ragcore.app.app.RAGCore._init_llm_service", mocker.Mock())
+        mocker.patch("ragcore.app.RAGCore._init_database_service", mocker.Mock())
+        mocker.patch("ragcore.app.RAGCore._init_llm_service", mocker.Mock())
 
     def test_get_config_verify_config(self, mock_method_inits):
         app = RAGCore(config="./tests/unit/mock/mock_config_no_llms.yaml")
