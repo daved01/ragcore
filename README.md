@@ -28,7 +28,7 @@ cd ragcore
 pip install .
 ```
 
-If everything worked running
+If everything worked, running
 
 ```bash
 ragcore -h
@@ -38,7 +38,7 @@ should show you some information about `ragcore`.
 
 # A Simple Example
 
-To have build an application with OpenAI or AzureOpenAI LLMs and embeddings, and a local database, first set your API key
+To build an application with OpenAI or AzureOpenAI LLMs and embeddings, and a local database, first set your OpenAI [API key](https://platform.openai.com/api-keys) as described [here](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key):
 
 ```bash
 export OPENAI_API_KEY=[your token]
@@ -74,7 +74,7 @@ llm:
 #   api_version: ""
 ```
 
-And finally, create your application using this config file create your application:
+And finally, create your application using this config file:
 
 ```python
 from ragcore import RAGCore

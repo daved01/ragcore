@@ -54,7 +54,7 @@ setup(
     project_urls={
         "Bug Reports": "https://github.com/daved01/ragcore/issues",
         "Funding": "https://github.com/sponsors/daved01",
-        "Say Thanks!": "https://www.paypal.com/donate/?hosted_button_id=23YUGLRRTNDMS",
+        "Say Thanks!": "https://www.paypal.com/donate/?hosted_button_id=JH7HXP6VE5U3S",
         "Source": "https://github.com/daved01/ragcore",
         "Documentation": "https://daved01.github.io/ragcore/",
     },
