@@ -1,1 +1,1 @@
-from ragcore.app.app import RAGCore
+from ragcore.app import RAGCore
