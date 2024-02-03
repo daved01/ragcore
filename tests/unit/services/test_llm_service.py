@@ -2,7 +2,7 @@ import os
 import pytest
 
 from ragcore.shared.errors import PromptError, LLMError, UserConfigurationError
-from ragcore.models.llm_model import LLMModel
+from ragcore.models.llm_model import BaseLLMModel
 from ragcore.services.llm_service import LLMService
 from tests import BaseTest
 from tests.unit.services import RAGCoreTestSetup
@@ -16,7 +16,7 @@ class TestLLMService(BaseTest, RAGCoreTestSetup):
         assert llm_service.llm is None
 
         llm_service.initialize_llm()
-        assert isinstance(llm_service.llm, LLMModel)
+        assert isinstance(llm_service.llm, BaseLLMModel)
 
     def test_create_prompt(self, mock_logger, mock_documents):
         llm_service = LLMService(mock_logger, "openai", "great-model")

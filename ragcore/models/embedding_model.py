@@ -7,15 +7,37 @@ from ragcore.shared.constants import EmbeddingConstants
 
 
 class BaseEmbedding(ABC):
-    """ABC for embeddings."""
+    """Abstract Base Class for embeddings.
+
+    The BaseEmbedding defines the interface for embedding models, serving as a base class for
+    concrete implementations. Subclasses must implement the abstract method to provide functionality for embedding a
+    list of strings.
+
+    """
 
     @abstractmethod
-    def embed_queries(self, queries: list[str]) -> list[list[float]]:
-        """Creates a list of embeddings for a list of queries."""
+    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+        """Creates a list of embedding vectors for a list of text strings.
+
+        Args:
+            texts: A list of strings to create embeddings from.
+
+        Returns:
+            A list of embedding vectors.
+
+        """
 
 
 class BaseOpenAIEmbeddings(BaseEmbedding):
-    """Class for OpenAI and AzureOpenAI embeddings."""
+    """Base class for OpenAI and AzureOpenAI embeddings.
+
+    A class to implement the embedding method ``embed_texts`` which is the same for
+    both OpenAI embedding models and AzureOpenAI models.
+
+    Attributes:
+        client: The client for the embedding provider, either OpenAI or AzureOpenAI.
+
+    """
 
     client: OpenAI | AzureOpenAI
     model: str
@@ -23,10 +45,19 @@ class BaseOpenAIEmbeddings(BaseEmbedding):
     def __init__(self, client: OpenAI | AzureOpenAI) -> None:
         self.client = client
 
-    def embed_queries(self, queries: list[str]) -> list[list[float]]:
+    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+        """Create embedding vectors using the selected client.
+
+        Args:
+            texts: A list of text strings.
+
+        Returns:
+            A list of embedding vectors, one vector for each text element.
+
+        """
         embedding_vectors = []
 
-        query_slices: list[list[str]] = slice_list(queries, 200)
+        query_slices: list[list[str]] = slice_list(texts, 200)
 
         for query_slice in query_slices:
             response = self.client.embeddings.create(
@@ -39,6 +70,17 @@ class BaseOpenAIEmbeddings(BaseEmbedding):
 
 
 class OpenAIEmbedding(BaseOpenAIEmbeddings):
+    """Class for OpenAI embedding models.
+
+    Note that you must have your API key for OpenAI ``OPENAI_API_KEY`` set.
+
+    For more information see: https://platform.openai.com/docs/guides/embeddings
+
+    Attributes:
+        model: The string for the model which should be used, as specified by OpenAI.
+
+    """
+
     def __init__(self, model: str):
         self.model = model
         client = OpenAI()  # Openai api key env variable must be set.
@@ -46,6 +88,21 @@ class OpenAIEmbedding(BaseOpenAIEmbeddings):
 
 
 class AzureOpenAIEmbedding(BaseOpenAIEmbeddings):
+    """Class for Azure OpenAI embedding models.
+
+    Note that you must have your API key for OpenAI ``AZURE_OPENAI_API_KEY`` set.
+
+    For more information see: https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models
+
+    Attributes:
+        model: The string for the model which should be used, as specified by Azure OpenAI.
+
+        api_version: The version string of the deployment.
+
+        endpoint: The endpoint of the deployment.
+
+    """
+
     def __init__(self, model: str, api_version: str, endpoint: str):
         self.model = model
         client = AzureOpenAI(

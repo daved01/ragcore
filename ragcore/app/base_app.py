@@ -7,6 +7,12 @@ LOGGER_FILENAME = "app.log"
 
 
 class AbstractApp(metaclass=ABCMeta):
+    """Abstract base app for RAG Core.
+
+    Defines the required methods and sets up the logger.
+
+    """
+
     logger: Logger
 
     def __init__(self, log_level="DEBUG", file_logging=False):
@@ -14,8 +20,18 @@ class AbstractApp(metaclass=ABCMeta):
         self.file_logging = file_logging
         self.logger = self.initialize_logger(log_level)
 
-    def initialize_logger(self, log_level) -> Logger:
-        """Creates and configures a logger instance for console and file logging."""
+    def initialize_logger(self, log_level: str) -> Logger:
+        """Creates and configures a logger instance for console and file logging.
+
+        Sets the log level and defines the format of the log statements.
+
+        Args:
+            log_level: A string to set the log level.
+
+        Returns:
+            Logger: The logger instance for the app.
+
+        """
         logger = logging.getLogger(__name__)
         logger.setLevel(log_level)
         console_handler = logging.StreamHandler()
@@ -40,7 +56,7 @@ class AbstractApp(metaclass=ABCMeta):
 
     @abstractmethod
     def query(self, query: str) -> Optional[str]:
-        """Run a query against a database."""
+        """Runs a query against a database."""
 
     @abstractmethod
     def add(self, path: str) -> None:
