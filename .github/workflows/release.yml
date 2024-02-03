@@ -28,7 +28,7 @@ jobs:
         id: get_latest_tag
         run: |
             git fetch --tags
-            latest_tag=$(git describe --tags --abbrev=0)
+            latest_tag=$(git describe --tags --abbrev=0 --always origin/main)
             echo "::set-output name=tag::$latest_tag"
 
       - name: Get current version from tag
