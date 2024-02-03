@@ -7,7 +7,13 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
-from ragcore.version import __version__
+
+
+def get_version():
+    with open("../../ragcore/version.py") as fh:
+        exec(fh.read(), globals())
+    return globals()["__version__"]
+
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -15,8 +21,8 @@ from ragcore.version import __version__
 project = "RAG Core"
 copyright = "2024, David Kirchhoff"
 author = "David Kirchhoff"
-version = __version__
-release = __version__
+version = get_version()
+release = get_version()
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
