@@ -7,6 +7,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
+from ragcore.version import __version__
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -14,8 +15,8 @@ sys.path.insert(0, os.path.abspath(".."))
 project = "RAG Core"
 copyright = "2024, David Kirchhoff"
 author = "David Kirchhoff"
-version = "0.0.6"
-release = "0.0.6"
+version = __version__
+release = __version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
