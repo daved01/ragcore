@@ -37,17 +37,23 @@ jobs:
             current_version=$(echo ${{ steps.get_latest_tag.outputs.tag }} | sed 's/v//')
             echo "::set-output name=version::$current_version"
 
-
       - name: Check if version has increased
         id: check_version
         run: |
-          current_version=$(echo ${{steps.get_current_version_from_tag.outputs.version}})
-          new_version="$(python -c "from ragcore.version import __version__; print(__version__)")"
+            current_version=$(echo ${{steps.get_current_version_from_tag.outputs.version}})
+            new_version="$(python -c "from ragcore.version import __version__; print(__version__)")"
 
-          if [[ "$current_version" == "$new_version" ]]; then
-            echo "No version change detected. Skipping release."
-            exit 0
-          fi
+            if [[ "$current_version" == "$new_version" ]]; then
+                echo "No version change detected. Skipping release."
+                exit 0
+            fi
+        
+      - name: Create new tag
+        id: create_tag
+        run: |
+            git tag -a v${{ steps.get_current_version.outputs.version }} -m "Version ${{ steps.get_current_version.outputs.version }}"
+            git push origin v${{ steps.get_current_version.outputs.version }}
+
 
     #   - name: Create release
     #     env:
