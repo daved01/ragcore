@@ -38,21 +38,17 @@ jobs:
                 exit 0
             fi
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create new tag
+        id: create_tag
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-            tag_name: v${{ steps.check_version.outputs.new_version }}
-            release_name: Release ${{ steps.check_version.outputs.new_version }}
-            # body: |
-            #     Changes in this Release
-            #     - First Change
-            #     - Second Change
-            draft: false
-            prerelease: false
+        run: |
+            git config user.name "GitHub Actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git tag -a v${{ steps.check_version.outputs.new_version }} -m "Version ${{ steps.check_version.outputs.new_version }}"
+            git push origin v${{ steps.check_version.outputs.new_version }}
 
+   
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -64,13 +60,7 @@ jobs:
           pip install -r requirements.txt
 
       
-    #   - name: Create new tag
-    #     id: create_tag
-    #     run: |
-    #         git config user.name "GitHub Actions"
-    #         git config user.email "github-actions@users.noreply.github.com"
-    #         git tag -a v${{ steps.check_version.outputs.new_version }} -m "Version ${{ steps.check_version.outputs.new_version }}"
-    #         git push origin v${{ steps.check_version.outputs.new_version }}
+      
       
 
 
