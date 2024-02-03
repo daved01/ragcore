@@ -1,4 +1,4 @@
-name: Release on Version Bump
+name: Release
 
 on:
   push:
@@ -50,16 +50,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      
-      
-      
+      - name: Create release on PyPi
+        env:
+            TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
 
-
-    #   - name: Create release
-    #     env:
-    #         TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-    #         TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-
-    #     run: |
-    #         python -m build
-    #         twine upload --repository testpypi dist/*
+        run: |
+            python -m build
+            twine upload --repository https://test.pypi.org/legacy/ dist/*
