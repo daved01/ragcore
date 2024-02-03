@@ -49,8 +49,8 @@ class TestUtils(RAGCoreTestSetup):
     def test_document_to_str(self, mock_documents):
         string = utils.document_to_str(mock_documents)
         assert isinstance(string, str)
-        assert mock_documents[0].page_content in string
-        assert mock_documents[1].page_content in string
+        assert mock_documents[0].content in string
+        assert mock_documents[1].content in string
         assert "\n" in string
 
     def test_document_to_str_no_docs(self):

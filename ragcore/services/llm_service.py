@@ -103,6 +103,6 @@ class LLMService:
             raise LLMError("Tried to make a request, but the llm is not initialized.")
 
         self.logger.info(f"Sending request to llm of type {self.llm_provider} ...")
-        response: str = self.llm.predict(text=prompt)
+        response: str = self.llm.request(text=prompt)
         self.logger.info("Received response from llm.")
         return response

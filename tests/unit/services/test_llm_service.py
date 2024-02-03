@@ -23,8 +23,8 @@ class TestLLMService(BaseTest, RAGCoreTestSetup):
         question = "What question is that?"
         prompt = llm_service.create_prompt(question, mock_documents)
         assert isinstance(prompt, str)
-        assert mock_documents[0].page_content in prompt
-        assert mock_documents[1].page_content in prompt
+        assert mock_documents[0].content in prompt
+        assert mock_documents[1].content in prompt
         assert question in prompt
 
     def test_create_prompt_no_question(self, mock_logger, mock_documents):

@@ -90,12 +90,13 @@ class DatabaseService:
         If the base path does not exist it is created.
 
         """
+        if not self.name or not self.base_path:
+            raise DatabaseError(
+                "Tried to initialize a local database, but no name and/or path for it is given."
+            )
+
         # Create base path if it does not exist
-        if not (
-            self.base_path
-            and os.path.exists(self.base_path)
-            and os.path.isdir(self.base_path)
-        ):
+        if not (os.path.exists(self.base_path) and os.path.isdir(self.base_path)):
             self._create_base_dir()
 
         if self.name and DatabaseConstants.PROVIDER_CHROMA in self.name:
@@ -131,7 +132,7 @@ class DatabaseService:
         # Check if database exists on disk. If not exit.
         if not self.database:
             raise DatabaseError(
-                f"Tried to add documents to database `{self.base_path + '/' + self.name if self.name else ''}`, "
+                f"Tried to add documents to database `{self.base_path if self.base_path else ''+ '/' + self.name if self.name else ''}`, "
                 "but this database does not exist."
             )
 
@@ -143,7 +144,7 @@ class DatabaseService:
 
         # Add the documents.
         self.logger.info(
-            f"Trying to add {len(documents)} documents to database at `{self.base_path + '/' + self.name if self.name else ''}`..."
+            f"Trying to add {len(documents)} documents to database at `{self.base_path if self.base_path else '' + '/' + self.name if self.name else ''}`..."
         )
 
         if self.database.add_documents(documents=documents):
@@ -215,6 +216,8 @@ class DatabaseService:
         """
         Helper to make sure database base dir exists.
         """
+        if not self.base_path:
+            return
         self.logger.info(f"Creating base dir for database `{self.base_path}` ...")
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
