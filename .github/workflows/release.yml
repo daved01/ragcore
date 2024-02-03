@@ -1,12 +1,14 @@
-name: Release
+# To create a release, push a new tag to main.
+# The tag must match the version in ragcore/version.py.
+# For example, if the new version in the code is 0.0.6,
+# the tag must be v0.0.6 for the release to pass.
+
+name: Release version
 
 on:
   push:
     tags:
       - 'v*'
-    branches:
-      - chore/version
-
 
 jobs:
   release:
@@ -54,7 +56,6 @@ jobs:
         env:
             TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
             TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-
         run: |
             python -m build
-            twine upload -r testpypi dist/*
+            twine upload dist/*
