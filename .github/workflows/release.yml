@@ -31,7 +31,7 @@ jobs:
         id: check_version
         run: |
             current_version=$(echo ${{steps.get_current_version_from_tag.outputs.version}})
-            new_version="v$(python -c "from ragcore.version import __version__; print(__version__)")"
+            new_version="$(python -c "from ragcore.version import __version__; print(__version__)")"
 
             if [[ "$current_version" == "$new_version" ]]; then
                 echo "No version change detected. Skipping release."
@@ -44,7 +44,7 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-            tag_name: ${{ steps.check_version.outputs.new_version }}
+            tag_name: v${{ steps.check_version.outputs.new_version }}
             release_name: Release ${{ steps.check_version.outputs.new_version }}
             # body: |
             #     Changes in this Release
