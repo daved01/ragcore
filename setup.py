@@ -1,7 +1,12 @@
 import pathlib
 from setuptools import setup, find_packages
 
-VERSION = "0.0.6"
+
+def get_version():
+    with open("ragcore/version.py") as fh:
+        exec(fh.read(), globals())
+    return globals()["__version__"]
+
 
 with open("requirements.txt", encoding="utf-8") as fh:
     requirements = [
@@ -16,7 +21,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="ragcore",
-    version=VERSION,
+    version=get_version(),
     description="A library to build Retrieval-Augmented Generation applications with only a few lines of code.",
     long_description=long_description,
     long_description_content_type="text/markdown",
