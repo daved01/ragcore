@@ -6,8 +6,22 @@ from openai import OpenAI, AzureOpenAI
 from ragcore.shared.constants import ConfigurationConstants, LLMProviderConstants
 
 
-class LLMModel(ABC):
-    """Wrapper for llms."""
+class BaseLLMModel(ABC):
+    """Abstract Base Class for Large Language Model models.
+
+    The BaseLLMModel defines the interface for LLM models, serving as a base class for
+    concrete implementations. Subclasses must implement the abstract method to provide functionality for
+    generating responses for a given text input.
+
+
+    Attributes:
+        llm_provider: The provider of the LLM model.
+
+        llm_model: The llm from the provder as a string, as specified by the provider.
+
+        llm_config: Configuration for the LLM.
+
+    """
 
     def __init__(
         self,
@@ -25,17 +39,40 @@ class LLMModel(ABC):
         """Initializes the LLM."""
 
     @abstractmethod
-    def predict(self, text: str) -> str:
-        """Make a request to an LLM and return the response."""
+    def request(self, text: str) -> str:
+        """Perform a request to an LLM and return the response.
+
+        Args:
+            text: A string with the request for the LLM.
+
+        Returns:
+            A response from the llm as a string.
+
+        """
 
 
-class OpenAIModel(LLMModel):
-    """OpenAI model"""
+class OpenAIModel(BaseLLMModel):
+    """Class to interact with OpenAI LLMs.
+
+    Make sure to have your API key set in the environment as ``OPENAI_API_KEY``.
+
+    For more information, see: https://platform.openai.com/docs/guides/text-generation
+
+    """
 
     def _get_llm(self):
         return OpenAI(api_key=os.getenv(LLMProviderConstants.KEY_OPENAI_API_KEY))
 
-    def predict(self, text: str) -> str:
+    def request(self, text: str) -> str:
+        """Perform a request with an OpenAI LLM.
+
+        Args:
+            text: The text string for the request.
+
+        Returns:
+            The response string from the LLM.
+
+        """
         response = self.llm.chat.completions.create(
             model=self.llm_model,
             messages=[{"role": "user", "content": text}],
@@ -43,8 +80,14 @@ class OpenAIModel(LLMModel):
         return response.choices[0].message.content
 
 
-class AzureOpenAIModel(LLMModel):
-    """Azure OpenAI model"""
+class AzureOpenAIModel(BaseLLMModel):
+    """Class to interact with Azure OpenAI LLMs.
+
+    Make sure to have your API key set in the environment as ``AZURE_OPENAI_API_KEY``.
+
+    For more information, see: https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models
+
+    """
 
     def _get_llm(self):
         return AzureOpenAI(
@@ -57,7 +100,16 @@ class AzureOpenAIModel(LLMModel):
             ),
         )
 
-    def predict(self, text: str) -> str:
+    def request(self, text: str) -> str:
+        """Perform a request with an Azure OpenAI LLM.
+
+        Args:
+            text: The text string for the request.
+
+        Returns:
+            The response string from the LLM.
+
+        """
         response = self.llm.chat.completions.create(
             model=self.llm_model,
             messages=[{"role": "user", "content": text}],

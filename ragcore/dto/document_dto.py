@@ -5,32 +5,51 @@ from ragcore.models.document_model import Document
 
 
 class DocumentDTO:
-    def __init__(self, page_content: str, metadata: Mapping[str, Any]):
-        self.page_content = page_content
+    """Class for Document Data Transfer Objects to convert to RAG Core documents.
+
+    Example:
+        .. code-block:: python
+
+            # Instantiate a DTO
+            dto = DocumentDTO(content="This is my text", metadata={"title": "Great text", "page": "1"})
+
+            # Now you can create a ragcore document
+            doc = dto.to_ragcore()
+
+    Attributes:
+        content: A string for the page content.
+
+        metadata: A mapping for metadata.
+
+    """
+
+    def __init__(self, content: str, metadata: Mapping[str, Any]):
+        self.content = content
         self.metadata = metadata
 
     def to_ragcore(self):
-        return Document(page_content=self.page_content, metadata=self.metadata)
+        """Converts to a RAG Core document type."""
+        return Document(content=self.content, metadata=self.metadata)
 
     def to_langchain(self):
-        return LangDocument(page_content=self.page_content, metadata=self.metadata)
-
-    @staticmethod
-    def to_langchain_list(documents: list[LangDocument]) -> list[Document]:
-        lang_documents = []
-        for document in documents:
-            doc_dto = DocumentDTO(
-                page_content=document.page_content, metadata=document.metadata
-            )
-            lang_documents.append(doc_dto.to_ragcore())
-        return lang_documents
+        """Converts to a LangChain document type."""
+        return LangDocument(page_content=self.content, metadata=self.metadata)
 
     @staticmethod
     def to_ragcore_list(lang_documents: list[LangDocument]) -> list[Document]:
+        """Converts to a list of RAG Core documents.
+
+        Args:
+            lang_documents: A list of LangChain documents.
+
+        Returns:
+            A list of documents.
+
+        """
         documents = []
         for lang_document in lang_documents:
             doc_dto = DocumentDTO(
-                page_content=lang_document.page_content, metadata=lang_document.metadata
+                content=lang_document.page_content, metadata=lang_document.metadata
             )
             documents.append(doc_dto.to_ragcore())
         return documents

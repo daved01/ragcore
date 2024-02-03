@@ -21,7 +21,7 @@ class TestOpenAIEmbeddingModels(BaseTest, RAGCoreTestSetup):
         )
 
         queries = ["First query", "second query"]
-        result = embedding.embed_queries(queries=queries)
+        result = embedding.embed_texts(texts=queries)
 
         # Assert
         expected_result = [[0.1, 0.2, 0.3], [0.6, 0.5, 0.4]]
@@ -47,7 +47,7 @@ class TestAzureOpenAIEmbeddingModels(BaseTest, RAGCoreTestSetup):
         )
 
         queries = ["First query", "second query"]
-        result = embedding.embed_queries(queries=queries)
+        result = embedding.embed_texts(texts=queries)
 
         # Assert
         expected_result = [[0.1, 0.2, 0.3], [0.6, 0.5, 0.4]]

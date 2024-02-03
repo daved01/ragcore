@@ -10,12 +10,23 @@ PDF_PATTERN = r"\.pdf$"
 
 
 class DocumentService:
-    """
-    Document service base class for handling documents.
-    Handles uploading, and splitting of documents.
+    """Handles document interactions.
 
-    Pages: pages from the source document
-    Documents: split pages from the source document
+    The DocumentService class provides methods for creating and processing documents so that
+    they can be stored in the database.
+
+    There are two properties related to documents. When a text is first loaded into the system, for
+    example from a pdf file, it is parsed into ``pages``, which has one ``Document`` per page. This list
+    should then be split into overlapping chunks using the method ``split_pages``. The resulting splits
+    are then available in the ``documents`` property.
+
+    Attributes:
+        logger: A logger instance.
+
+        pages: A list of ``Document``, representing text which has not been split into chunks.
+
+        documents: A list of ``Document`` of overlapping chunks.
+
     """
 
     def __init__(self, logger: Logger) -> None:
@@ -23,10 +34,17 @@ class DocumentService:
         self.pages: list[Document] = []
         self.documents: list[Document] = []
 
-    def load_document(self, path: str) -> None:
-        """Loads a document into memory.
-        Accepts:
-        - path: Relative path to document to be uploaded
+    def load_texts(self, path: str) -> None:
+        """Loads text from a file into memory so it can be processed further.
+
+        Usually, you load text from a file so that it can split into chunks and ingested
+        into the database.
+
+        Currently supported file formats are:
+            - PDF
+
+        Args:
+            path: The string path to a file to be loaded into the service as ``pages``.
         """
 
         filename = path.split("/")[-1]
@@ -47,8 +65,16 @@ class DocumentService:
             f"`{title}` from path `{path}`."
         )
 
-    def split_document(self, chunk_size: int, chunk_overlap: int) -> None:
-        """Splits a document."""
+    def split_pages(self, chunk_size: int, chunk_overlap: int) -> None:
+        """Splits pages into overlapping chunks and stores them in documents.
+
+        Must have loaded text with the ``load_texts`` method prior to splitting it.
+
+        Args:
+            chunk_size: The size of the chunks.
+            chunk_overlap: The overlap of the chunks.
+
+        """
         if not self.pages:
             raise UserConfigurationError(
                 "No pages to split found. Please upload a document and try again."

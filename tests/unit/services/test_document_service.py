@@ -23,7 +23,7 @@ class TestDocumentService(BaseTest, RAGCoreTestSetup):
         assert not document_service.pages
         assert not document_service.documents
 
-        document_service.load_document("some_path/Greatest_Book.pdf")
+        document_service.load_texts("some_path/Greatest_Book.pdf")
 
         assert len(document_service.pages) == 2
         assert document_service.pages[0] == mock_pages[0]
@@ -45,7 +45,7 @@ class TestDocumentService(BaseTest, RAGCoreTestSetup):
         assert not document_service.pages
         assert not document_service.documents
 
-        document_service.load_document("some_path/Greatest_Book.pdf")
+        document_service.load_texts("some_path/Greatest_Book.pdf")
 
         assert len(document_service.pages) == 0
 
@@ -68,10 +68,10 @@ class TestDocumentService(BaseTest, RAGCoreTestSetup):
         assert len(document_service.documents) == 0
 
         # Split documents
-        document_service.split_document(split[0], split[1])
+        document_service.split_pages(split[0], split[1])
         assert len(document_service.documents) == expected_num_docs
 
     def test_split_document_no_docs(self, mock_logger):
         document_service = DocumentService(mock_logger)
         with pytest.raises(UserConfigurationError):
-            document_service.split_document(10, 10)
+            document_service.split_pages(10, 10)

@@ -4,5 +4,13 @@ from typing import Any, Mapping
 
 @dataclass
 class Document:
-    page_content: str
+    """Model for documents.
+
+    Attributes:
+        content: The content of document, as string.
+
+        metadata: A mapping for the metadata.
+    """
+
+    content: str
     metadata: Mapping[str, Any]

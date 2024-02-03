@@ -9,11 +9,11 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def mock_pages(self):
         page1 = Document(
-            page_content="Hello, this is the first page.",
+            content="Hello, this is the first page.",
             metadata={"source": "some_path/file.pdf", "page": 1},
         )
         page2 = Document(
-            page_content="This is the second page.",
+            content="This is the second page.",
             metadata={"source": "some_path/file.pdf", "page": 2},
         )
         return [page1, page2]
@@ -21,13 +21,13 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def mock_documents(self):
         page1 = Document(
-            page_content="""Very useful text. It also contains a new sentence.
+            content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
             metadata={"page": 1, "title": "Greatest book"},
         )
         page2 = Document(
-            page_content="""Another day, another sentence.
+            content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
             metadata={"page": 2, "title": "Greatest book"},
         )
@@ -36,13 +36,13 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def mock_documents_missing_metadata(self):
         page1 = Document(
-            page_content="""Very useful text. It also contains a new sentence.
+            content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
             metadata={},
         )
         page2 = Document(
-            page_content="""Another day, another sentence.
+            content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
             metadata=None,
         )
@@ -51,13 +51,13 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def mock_documents_metadata_title_missing(self):
         page1 = Document(
-            page_content="""Very useful text. It also contains a new sentence.
+            content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
             metadata={"page": 1},
         )
         page2 = Document(
-            page_content="""Another day, another sentence.
+            content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
             metadata={"page": 2},
         )
@@ -95,7 +95,7 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def mock_documents_best_book(self):
         page3 = Document(
-            page_content="""Hi there, this is the best book.
+            content="""Hi there, this is the best book.
 
             We talk about books and text books and all good things book. Oh, did
             I mention book before? Another topic is best, the best. This is
@@ -108,7 +108,7 @@ class RAGCoreTestSetup:
     @pytest.fixture
     def expected_document(self):
         return Document(
-            page_content="""Very useful text. It also contains a new sentence.
+            content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
             metadata={"page": 1, "title": "Greatest book"},
