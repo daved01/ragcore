@@ -9,8 +9,6 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - fix/workflow
 
 jobs:
   release:
