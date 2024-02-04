@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API reference &mdash; RAG Core 0.0.7 documentation</title>
+  <title>API reference &mdash; RAG Core 0.0.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=bbaf98b3"></script>
+        <script src="../_static/documentation_options.js?v=53b53b71"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -36,7 +36,7 @@
             RAG Core
           </a>
               <div class="version">
-                0.0.7
+                0.0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -66,6 +66,12 @@
 <li class="toctree-l1"><a class="reference internal" href="adding_components.html">Adding components</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ragcore.app">App</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.app.RAGCore"><code class="docutils literal notranslate"><span class="pre">RAGCore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.add"><code class="docutils literal notranslate"><span class="pre">RAGCore.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.delete"><code class="docutils literal notranslate"><span class="pre">RAGCore.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.query"><code class="docutils literal notranslate"><span class="pre">RAGCore.query()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp"><code class="docutils literal notranslate"><span class="pre">AbstractApp</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.add"><code class="docutils literal notranslate"><span class="pre">AbstractApp.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.delete"><code class="docutils literal notranslate"><span class="pre">AbstractApp.delete()</span></code></a></li>
@@ -86,8 +92,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.services.document_service.DocumentService"><code class="docutils literal notranslate"><span class="pre">DocumentService</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.services.document_service.DocumentService.load_document"><code class="docutils literal notranslate"><span class="pre">DocumentService.load_document()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.services.document_service.DocumentService.split_document"><code class="docutils literal notranslate"><span class="pre">DocumentService.split_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.services.document_service.DocumentService.load_texts"><code class="docutils literal notranslate"><span class="pre">DocumentService.load_texts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.services.document_service.DocumentService.split_pages"><code class="docutils literal notranslate"><span class="pre">DocumentService.split_pages()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.services.llm_service.LLMService"><code class="docutils literal notranslate"><span class="pre">LLMService</span></code></a><ul>
@@ -120,8 +126,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.document_model.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.content"><code class="docutils literal notranslate"><span class="pre">Document.content</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.metadata"><code class="docutils literal notranslate"><span class="pre">Document.metadata</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.page_content"><code class="docutils literal notranslate"><span class="pre">Document.page_content</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.document_loader_model.PDFLoader"><code class="docutils literal notranslate"><span class="pre">PDFLoader</span></code></a><ul>
@@ -129,23 +135,27 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding"><code class="docutils literal notranslate"><span class="pre">BaseEmbedding</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding.embed_queries"><code class="docutils literal notranslate"><span class="pre">BaseEmbedding.embed_queries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding.embed_texts"><code class="docutils literal notranslate"><span class="pre">BaseEmbedding.embed_texts()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings"><code class="docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.client"><code class="docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings.client</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_queries"><code class="docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings.embed_queries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_texts"><code class="docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings.embed_texts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.model"><code class="docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings.model</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.embedding_model.AzureOpenAIEmbedding"><code class="docutils literal notranslate"><span class="pre">AzureOpenAIEmbedding</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.embedding_model.OpenAIEmbedding"><code class="docutils literal notranslate"><span class="pre">OpenAIEmbedding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.models.llm_model.BaseLLMModel"><code class="docutils literal notranslate"><span class="pre">BaseLLMModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.llm_model.BaseLLMModel.request"><code class="docutils literal notranslate"><span class="pre">BaseLLMModel.request()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.llm_model.AzureOpenAIModel"><code class="docutils literal notranslate"><span class="pre">AzureOpenAIModel</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.llm_model.AzureOpenAIModel.predict"><code class="docutils literal notranslate"><span class="pre">AzureOpenAIModel.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.llm_model.AzureOpenAIModel.request"><code class="docutils literal notranslate"><span class="pre">AzureOpenAIModel.request()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.llm_model.OpenAIModel"><code class="docutils literal notranslate"><span class="pre">OpenAIModel</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.llm_model.OpenAIModel.predict"><code class="docutils literal notranslate"><span class="pre">OpenAIModel.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.llm_model.OpenAIModel.request"><code class="docutils literal notranslate"><span class="pre">OpenAIModel.request()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.prompt_model.PromptGenerator"><code class="docutils literal notranslate"><span class="pre">PromptGenerator</span></code></a><ul>
@@ -157,7 +167,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-ragcore.dto.document_dto">Data Transfer Objects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.dto.document_dto.DocumentDTO"><code class="docutils literal notranslate"><span class="pre">DocumentDTO</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.dto.document_dto.DocumentDTO.to_langchain"><code class="docutils literal notranslate"><span class="pre">DocumentDTO.to_langchain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.dto.document_dto.DocumentDTO.to_langchain_list"><code class="docutils literal notranslate"><span class="pre">DocumentDTO.to_langchain_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.dto.document_dto.DocumentDTO.to_ragcore"><code class="docutils literal notranslate"><span class="pre">DocumentDTO.to_ragcore()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.dto.document_dto.DocumentDTO.to_ragcore_list"><code class="docutils literal notranslate"><span class="pre">DocumentDTO.to_ragcore_list()</span></code></a></li>
 </ul>
@@ -271,10 +280,99 @@
 <p>Documentation of the different classes, starting from the app layer down to the model layer.</p>
 <section id="module-ragcore.app">
 <span id="app"></span><h2>App<a class="headerlink" href="#module-ragcore.app" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ragcore.app.RAGCore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.app.</span></span><span class="sig-name descname"><span class="pre">RAGCore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DEBUG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.app.RAGCore" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ragcore.app.base_app.AbstractApp" title="ragcore.app.base_app.AbstractApp"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractApp</span></code></a></p>
+<p>Retrieval-Augmented Generation Core lets you create RAG applications with a configuration and a few lines of code.</p>
+<p>RAGCore is a library that simplifies the implementation of Retrieval-Augmented Generation (RAG) applications.
+It combines a large language model with a knowledge store, allowing users to generate responses based on
+retrieved information.</p>
+<dl>
+<dt>Usage:</dt><dd><ul class="simple">
+<li><p>Create an instance of RAGCore with the desired configuration.</p></li>
+<li><p>Add documents to the knowledge store using the <code class="docutils literal notranslate"><span class="pre">add_document</span></code> method.</p></li>
+<li><p>Query the system with natural language using the <code class="docutils literal notranslate"><span class="pre">query</span></code> method.</p></li>
+<li><p>Retrieve generated responses.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate RAGCore</span>
+<span class="n">rag_instance</span> <span class="o">=</span> <span class="n">RAGCore</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s1">&#39;path/to/config.yaml&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add a document to the knowledge store</span>
+<span class="n">rag_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;path/to/my_book.pdf&#39;</span><span class="p">)</span>
+
+<span class="c1"># Query the system</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;Tell me about the topic.&#39;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">rag_instance</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># Print the generated response</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="c1"># Remove the document</span>
+<span class="n">rag_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;my_book&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Configuration:</dt><dd><p>RAGCore relies on a configuration file (default name <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>) to customize its behavior.
+For more information, refer to the <cite>Configuration</cite> section of the documentation at <a class="reference external" href="https://daved01.github.io/ragcore">https://daved01.github.io/ragcore</a>.</p>
+</dd>
+<dt>Attributes:</dt><dd><p>database_service: The service for handling database interactions.</p>
+<p>document_service: The service for handling document interactions.</p>
+<p>llm_service: The service for handling large language model interactions.</p>
+<p>configuration: A dict containing the configuration.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.app.RAGCore.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.add" title="Link to this definition"></a></dt>
+<dd><p>Adds a document to the database.</p>
+<p>Adds the document in the path to the database. The filename, without the
+file extension, becomes the document title. For example, the path
+<code class="docutils literal notranslate"><span class="pre">data/documents/my_book.pdf</span></code> adds the book to the database with the title
+<code class="docutils literal notranslate"><span class="pre">my_book</span></code>. Before it is added, the document is split into overlapping chunks
+as specified in the config file. Then, using the embedding model, vector
+representations are created which are then added to the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path: A string to the file location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.app.RAGCore.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.delete" title="Link to this definition"></a></dt>
+<dd><p>Deletes a collection from the database.</p>
+<p>Given a title, all documents with that title, also called a collection, are
+deleted from the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>title: The title of the collection to remove from the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.app.RAGCore.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.query" title="Link to this definition"></a></dt>
+<dd><p>Queries the database with a query.</p>
+<p>Queries the database and makes an LLM request with the prompt and the context
+provided by the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>query: The query string to query the database with.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A string with the response, or None if no answer could be generated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class" id="module-ragcore.app.base_app">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.app.base_app.</span></span><span class="sig-name descname"><span class="pre">AbstractApp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DEBUG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract base app for RAG Core.</p>
+<p>Defines the required methods and sets up the logger.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.add">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.add" title="Link to this definition"></a></dt>
@@ -289,8 +387,15 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.initialize_logger">
-<span class="sig-name descname"><span class="pre">initialize_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.initialize_logger" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">initialize_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.initialize_logger" title="Link to this definition"></a></dt>
 <dd><p>Creates and configures a logger instance for console and file logging.</p>
+<p>Sets the log level and defines the format of the log statements.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>log_level: A string to set the log level.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Logger: The logger instance for the app.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -301,7 +406,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.query">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.query" title="Link to this definition"></a></dt>
-<dd><p>Run a query against a database.</p>
+<dd><p>Runs a query against a database.</p>
 </dd></dl>
 
 </dd></dl>
@@ -311,29 +416,49 @@
 <span id="services"></span><h2>Services<a class="headerlink" href="#module-ragcore.services.database_service" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.database_service.</span></span><span class="sig-name descname"><span class="pre">DatabaseService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_search_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.database_service.</span></span><span class="sig-name descname"><span class="pre">DatabaseService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_search_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Creates a DatabaseService.
-To initialize a service with a database in memory only, pass database_name=None to the
-initializer.</p>
+<p>Handles database interactions.</p>
+<p>The DatabaseService class provides methods for interacting with the database, allowing you to perform operations
+such as adding documents, querying information, and managing the knowledge store. Based on the configuration, either
+a local or a remote database is managed by the service. The interactions with the database are implemented in the model layer.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>logger: A logger instance</p>
+<p>base_path: The path to the local database as a string.</p>
+<p>name: The name of the database</p>
+<p>num_search_results: The number of results which are returned for a query.</p>
+<p>embedding_config: A configuration for the embedding, usually the embedding part of the config file.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.add_documents">
 <span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.add_documents" title="Link to this definition"></a></dt>
-<dd><p>Adds documents to an existing database.
-Documents must have metadata, and the metadata must have a <cite>title</cite> specified.
+<dd><p>Adds documents to an existing database.</p>
+<p>Documents must have metadata, and the metadata must have a <cite>title</cite> specified.
 Adding documents with the same title multiple times is not possible.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>documents: A list of documents of type <code class="docutils literal notranslate"><span class="pre">Document</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.delete_documents">
 <span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.delete_documents" title="Link to this definition"></a></dt>
-<dd><p>Deletes documents with the title <cite>title</cite> from the database.</p>
+<dd><p>Deletes all documents with the title <code class="docutils literal notranslate"><span class="pre">title</span></code> from the database.</p>
+<p>The title matching is case sensitive.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>title: The title of the documents to be deleted.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.initialize_local_database">
 <span class="sig-name descname"><span class="pre">initialize_local_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.initialize_local_database" title="Link to this definition"></a></dt>
 <dd><p>Initializes a local database.</p>
+<p>To initialize a local database, the DatabaseService must have the attributes <code class="docutils literal notranslate"><span class="pre">base_path</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> set.
+If the base path does not exist it is created.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -345,7 +470,15 @@ Adding documents with the same title multiple times is not possible.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.query">
 <span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.query" title="Link to this definition"></a></dt>
-<dd><p>Returns a list of documents for a query.</p>
+<dd><p>Query the database with a query.</p>
+<p>The instantiated database is queried with the given query string and returns
+a list of documents for a query.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>query: A query as a string.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of documents or None.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -354,22 +487,45 @@ Adding documents with the same title multiple times is not possible.</p>
 <dt class="sig sig-object py" id="ragcore.services.document_service.DocumentService">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.document_service.</span></span><span class="sig-name descname"><span class="pre">DocumentService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.document_service.DocumentService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Document service base class for handling documents.
-Handles uploading, and splitting of documents.</p>
-<p>Pages: pages from the source document
-Documents: split pages from the source document</p>
+<p>Handles document interactions.</p>
+<p>The DocumentService class provides methods for creating and processing documents so that
+they can be stored in the database.</p>
+<p>There are two properties related to documents. When a text is first loaded into the system, for
+example from a pdf file, it is parsed into <code class="docutils literal notranslate"><span class="pre">pages</span></code>, which has one <code class="docutils literal notranslate"><span class="pre">Document</span></code> per page. This list
+should then be split into overlapping chunks using the method <code class="docutils literal notranslate"><span class="pre">split_pages</span></code>. The resulting splits
+are then available in the <code class="docutils literal notranslate"><span class="pre">documents</span></code> property.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>logger: A logger instance.</p>
+<p>pages: A list of <code class="docutils literal notranslate"><span class="pre">Document</span></code>, representing text which has not been split into chunks.</p>
+<p>documents: A list of <code class="docutils literal notranslate"><span class="pre">Document</span></code> of overlapping chunks.</p>
+</dd>
+</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.services.document_service.DocumentService.load_document">
-<span class="sig-name descname"><span class="pre">load_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.document_service.DocumentService.load_document" title="Link to this definition"></a></dt>
-<dd><p>Loads a document into memory.
-Accepts:
-- path: Relative path to document to be uploaded</p>
+<dt class="sig sig-object py" id="ragcore.services.document_service.DocumentService.load_texts">
+<span class="sig-name descname"><span class="pre">load_texts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.document_service.DocumentService.load_texts" title="Link to this definition"></a></dt>
+<dd><p>Loads text from a file into memory so it can be processed further.</p>
+<p>Usually, you load text from a file so that it can split into chunks and ingested
+into the database.</p>
+<dl class="simple">
+<dt>Currently supported file formats are:</dt><dd><ul class="simple">
+<li><p>PDF</p></li>
+</ul>
+</dd>
+<dt>Args:</dt><dd><p>path: The string path to a file to be loaded into the service as <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.services.document_service.DocumentService.split_document">
-<span class="sig-name descname"><span class="pre">split_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.document_service.DocumentService.split_document" title="Link to this definition"></a></dt>
-<dd><p>Splits a document.</p>
+<dt class="sig sig-object py" id="ragcore.services.document_service.DocumentService.split_pages">
+<span class="sig-name descname"><span class="pre">split_pages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.document_service.DocumentService.split_pages" title="Link to this definition"></a></dt>
+<dd><p>Splits pages into overlapping chunks and stores them in documents.</p>
+<p>Must have loaded text with the <code class="docutils literal notranslate"><span class="pre">load_texts</span></code> method prior to splitting it.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>chunk_size: The size of the chunks.
+chunk_overlap: The overlap of the chunks.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -378,20 +534,59 @@ Accepts:
 <dt class="sig sig-object py" id="ragcore.services.llm_service.LLMService">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.llm_service.</span></span><span class="sig-name descname"><span class="pre">LLMService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.llm_service.LLMService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Initializes a Large Language Model and handles requests made to it.</p>
+<dl class="simple">
+<dt>Currently supported providers are:</dt><dd><ul class="simple">
+<li><p>OpenAI</p></li>
+<li><p>AzureOpenAI</p></li>
+</ul>
+</dd>
+<dt>Attributes:</dt><dd><p>logger: A logger instance.
+llm_provider: The provider for the LLM.
+llm_model: The name of the LLM, as specified by the provider.
+llm_config: A configuration for the LLM.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.llm_service.LLMService.create_prompt">
-<span class="sig-name descname"><span class="pre">create_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.services.llm_service.LLMService.create_prompt" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">create_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contexts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.services.llm_service.LLMService.create_prompt" title="Link to this definition"></a></dt>
+<dd><p>Creates the prompt which is used to make the request.</p>
+<p>The prompt is created from the prompt template and a concatenation of the document
+chunks as strings.</p>
+<dl>
+<dt>Args:</dt><dd><p>question: A question as string.</p>
+<p>contexts: List of <code class="docutils literal notranslate"><span class="pre">Document</span></code>. Typically the grounding information for the question from the database.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A prompt as a string.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.llm_service.LLMService.initialize_llm">
 <span class="sig-name descname"><span class="pre">initialize_llm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.llm_service.LLMService.initialize_llm" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the selected Large Language Model from the specified provider.</p>
+<p>Make sure to have environment variables set as required by the selected provider.</p>
+<dl class="simple">
+<dt>Examples:</dt><dd><ul class="simple">
+<li><p>OpenAI: <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code></p></li>
+<li><p>AzureOpenAI: <code class="docutils literal notranslate"><span class="pre">AZURE_OPENAI_API_KEY</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.llm_service.LLMService.make_llm_request">
 <span class="sig-name descname"><span class="pre">make_llm_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.llm_service.LLMService.make_llm_request" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Makes a request to the initialized Large Language Model.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>prompt: A prompt as a string for the request.</p>
+</dd>
+<dt>Returns:</dt><dd><p>The response from the LLM as a string or None if no response could be generated.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -399,11 +594,24 @@ Accepts:
 <dt class="sig sig-object py" id="ragcore.services.text_splitter_service.TextSplitterService">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.text_splitter_service.</span></span><span class="sig-name descname"><span class="pre">TextSplitterService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.text_splitter_service.TextSplitterService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Wrapper for text splitter.</p>
+<p>Handles splitting of text.</p>
+<p>To split the documents, a recursive text splitter is used.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>chunk_size: The size of the chunks.
+chunk_overlap: The overlap of the chunks.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.text_splitter_service.TextSplitterService.split_documents">
 <span class="sig-name descname"><span class="pre">split_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.services.text_splitter_service.TextSplitterService.split_documents" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Splits a list of documents into chunks.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>documents: A list of <code class="docutils literal notranslate"><span class="pre">Document</span></code>.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of split documents.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -414,32 +622,50 @@ Accepts:
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.database_model.</span></span><span class="sig-name descname"><span class="pre">BaseVectorDatabaseModel</span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>ABC for vector database.
-Collections - Groups of documents.
-Documents - Hold the data.</p>
+<p>Abstract Base Class for vector database models.</p>
+<p>The BaseVectorDatabaseModel defines the interface for vector database models, serving as a base class for
+concrete implementations. Subclasses must implement the abstract methods to provide functionality for adding,
+deleting, querying, and retrieving the number of documents in the database.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.add_documents">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.add_documents" title="Link to this definition"></a></dt>
-<dd><p>Adds documents to the database. Returns True if
-documents have been added, otherwise False.</p>
+<dd><p>Adds documents to the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>documents: A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code> to be added to the database.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if documents have been added, False otherwise.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents" title="Link to this definition"></a></dt>
 <dd><p>Deletes all documents with title <cite>title</cite> from the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if documents have been delete, False otherwise.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents" title="Link to this definition"></a></dt>
-<dd><p>Returns the number of documents in the database</p>
+<dd><p>Returns the total number of documents in the database.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.query">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.query" title="Link to this definition"></a></dt>
 <dd><p>Queries the database with a query using a similarity metric.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>query: A query as a string.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code>, or None if no documents could be retrieved.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -449,6 +675,11 @@ documents have been added, otherwise False.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.database_model.</span></span><span class="sig-name descname"><span class="pre">BaseLocalVectorDatabaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">persist_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding" title="ragcore.models.embedding_model.BaseEmbedding"><span class="pre">BaseEmbedding</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.database_model.BaseLocalVectorDatabaseModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel" title="ragcore.models.database_model.BaseVectorDatabaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel</span></code></a></p>
 <p>Base class for local databases.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>persist_directory: Path to a folder in which the local database should be created.</p>
+<p>embedding_function: Embedding of type <code class="docutils literal notranslate"><span class="pre">BaseEmbedding</span></code> to be used to create vector representations of inputs.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -462,48 +693,89 @@ documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.database_model.</span></span><span class="sig-name descname"><span class="pre">ChromaDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">persist_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_search_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding" title="ragcore.models.embedding_model.BaseEmbedding"><span class="pre">BaseEmbedding</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ragcore.models.database_model.BaseLocalVectorDatabaseModel" title="ragcore.models.database_model.BaseLocalVectorDatabaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLocalVectorDatabaseModel</span></code></a></p>
-<p>We use a single collection for all documents.</p>
+<p>Chroma database.</p>
+<p>Chroma allows to create collections, which are groups of documents. In this class, a single
+collection is used for all documents.</p>
+<p>For more information on Chroma, see: <a class="reference external" href="https://www.trychroma.com">https://www.trychroma.com</a>.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>persist_directory: Path to a folder in which the local database should be created.</p>
+<p>num_search_results: The number of results to be returned for a query.</p>
+<p>embedding_function: Embedding of type <code class="docutils literal notranslate"><span class="pre">BaseEmbedding</span></code> to be used to create vector representations of inputs.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.add_documents">
 <span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.add_documents" title="Link to this definition"></a></dt>
-<dd><p>Adds documents to the database. Each ID is unique in the database.
-Since we generate IDs here, we enforce uniqueness with
-the document title in the metadata.
-Returns True if the documents have been added, otherwise False.</p>
+<dd><p>Adds documents to the Chroma database.</p>
+<p>In the database, each ID must be unique.</p>
+<p>To prevent documents from the same source, say the same PDF file, from being added more than once,
+we check if a document with the same title already exists in the database. Only if it does not can the
+documents be added.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>documents: A list of documents.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if the document has been added, False otherwise.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.delete_documents">
 <span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.delete_documents" title="Link to this definition"></a></dt>
 <dd><p>Deletes all documents with the given title.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if documents have been deleted, False otherwise.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.get_number_of_documents">
 <span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.get_number_of_documents" title="Link to this definition"></a></dt>
 <dd><p>Returns the number of documents in the collection.</p>
+<p>We use only one collection, so getting all documents in the database is equal to
+getting all documenst in the main collection.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>The number of documents in the database.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.query">
 <span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.query" title="Link to this definition"></a></dt>
-<dd><p>Queries the database with a query using a similarity metric.</p>
+<dd><p>Queries the database with a query.</p>
+<p>To perform the query on the database, vector representations is created from the query first.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>query: A query to query the database with.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of results from the database, or None if no results could be retrieved.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class" id="module-ragcore.models.document_model">
 <dt class="sig sig-object py" id="ragcore.models.document_model.Document">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.document_model.</span></span><span class="sig-name descname"><span class="pre">Document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.document_model.Document" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.document_model.</span></span><span class="sig-name descname"><span class="pre">Document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.document_model.Document" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for documents.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>content: The content of document, as string.</p>
+<p>metadata: A mapping for the metadata.</p>
+</dd>
+</dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ragcore.models.document_model.Document.metadata">
-<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragcore.models.document_model.Document.metadata" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ragcore.models.document_model.Document.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragcore.models.document_model.Document.content" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ragcore.models.document_model.Document.page_content">
-<span class="sig-name descname"><span class="pre">page_content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragcore.models.document_model.Document.page_content" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ragcore.models.document_model.Document.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragcore.models.document_model.Document.metadata" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -512,11 +784,24 @@ Returns True if the documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.document_loader_model.PDFLoader">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.document_loader_model.</span></span><span class="sig-name descname"><span class="pre">PDFLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.document_loader_model.PDFLoader" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Wrapper for PDF loader.</p>
+<p>Class for the PDF loader.</p>
+<dl class="simple">
+<dt>Atrributes:</dt><dd><p>file_path: The path to the PDF file to be loaded.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.document_loader_model.PDFLoader.load_and_split">
 <span class="sig-name descname"><span class="pre">load_and_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.document_loader_model.PDFLoader.load_and_split" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Loads a PDF file with the specified title from the file path.</p>
+<p>The created metadata contains the field <code class="docutils literal notranslate"><span class="pre">title</span></code> which is taken from the arguments. Typically,
+the title is the file name without the file extension.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>title: The title of the documents.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of documents.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -524,11 +809,20 @@ Returns True if the documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseEmbedding">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.embedding_model.</span></span><span class="sig-name descname"><span class="pre">BaseEmbedding</span></span><a class="headerlink" href="#ragcore.models.embedding_model.BaseEmbedding" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>ABC for embeddings.</p>
+<p>Abstract Base Class for embeddings.</p>
+<p>The BaseEmbedding defines the interface for embedding models, serving as a base class for
+concrete implementations. Subclasses must implement the abstract method to provide functionality for embedding a
+list of strings.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseEmbedding.embed_queries">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">embed_queries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.embedding_model.BaseEmbedding.embed_queries" title="Link to this definition"></a></dt>
-<dd><p>Creates a list of embeddings for a list of queries.</p>
+<dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseEmbedding.embed_texts">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">embed_texts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.embedding_model.BaseEmbedding.embed_texts" title="Link to this definition"></a></dt>
+<dd><p>Creates a list of embedding vectors for a list of text strings.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>texts: A list of strings to create embeddings from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of embedding vectors.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -537,16 +831,28 @@ Returns True if the documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseOpenAIEmbeddings">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.embedding_model.</span></span><span class="sig-name descname"><span class="pre">BaseOpenAIEmbeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OpenAI</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AzureOpenAI</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding" title="ragcore.models.embedding_model.BaseEmbedding"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEmbedding</span></code></a></p>
-<p>Class for OpenAI and AzureOpenAI embeddings.</p>
+<p>Base class for OpenAI and AzureOpenAI embeddings.</p>
+<p>A class to implement the embedding method <code class="docutils literal notranslate"><span class="pre">embed_texts</span></code> which is the same for
+both OpenAI embedding models and AzureOpenAI models.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>client: The client for the embedding provider, either OpenAI or AzureOpenAI.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseOpenAIEmbeddings.client">
 <span class="sig-name descname"><span class="pre">client</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">OpenAI</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AzureOpenAI</span></em><a class="headerlink" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.client" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_queries">
-<span class="sig-name descname"><span class="pre">embed_queries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_queries" title="Link to this definition"></a></dt>
-<dd><p>Creates a list of embeddings for a list of queries.</p>
+<dt class="sig sig-object py" id="ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_texts">
+<span class="sig-name descname"><span class="pre">embed_texts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_texts" title="Link to this definition"></a></dt>
+<dd><p>Create embedding vectors using the selected client.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>texts: A list of text strings.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of embedding vectors, one vector for each text element.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -560,23 +866,75 @@ Returns True if the documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.embedding_model.AzureOpenAIEmbedding">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.embedding_model.</span></span><span class="sig-name descname"><span class="pre">AzureOpenAIEmbedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.embedding_model.AzureOpenAIEmbedding" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings" title="ragcore.models.embedding_model.BaseOpenAIEmbeddings"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings</span></code></a></p>
+<p>Class for Azure OpenAI embedding models.</p>
+<p>Note that you must have your API key for OpenAI <code class="docutils literal notranslate"><span class="pre">AZURE_OPENAI_API_KEY</span></code> set.</p>
+<p>For more information see: <a class="reference external" href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models">https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models</a></p>
+<dl>
+<dt>Attributes:</dt><dd><p>model: The string for the model which should be used, as specified by Azure OpenAI.</p>
+<p>api_version: The version string of the deployment.</p>
+<p>endpoint: The endpoint of the deployment.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.models.embedding_model.OpenAIEmbedding">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.embedding_model.</span></span><span class="sig-name descname"><span class="pre">OpenAIEmbedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.embedding_model.OpenAIEmbedding" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ragcore.models.embedding_model.BaseOpenAIEmbeddings" title="ragcore.models.embedding_model.BaseOpenAIEmbeddings"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOpenAIEmbeddings</span></code></a></p>
+<p>Class for OpenAI embedding models.</p>
+<p>Note that you must have your API key for OpenAI <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code> set.</p>
+<p>For more information see: <a class="reference external" href="https://platform.openai.com/docs/guides/embeddings">https://platform.openai.com/docs/guides/embeddings</a></p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>model: The string for the model which should be used, as specified by OpenAI.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ragcore.models.llm_model.BaseLLMModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.llm_model.</span></span><span class="sig-name descname"><span class="pre">BaseLLMModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.llm_model.BaseLLMModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract Base Class for Large Language Model models.</p>
+<p>The BaseLLMModel defines the interface for LLM models, serving as a base class for
+concrete implementations. Subclasses must implement the abstract method to provide functionality for
+generating responses for a given text input.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>llm_provider: The provider of the LLM model.</p>
+<p>llm_model: The llm from the provder as a string, as specified by the provider.</p>
+<p>llm_config: Configuration for the LLM.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.llm_model.BaseLLMModel.request">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.llm_model.BaseLLMModel.request" title="Link to this definition"></a></dt>
+<dd><p>Perform a request to an LLM and return the response.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: A string with the request for the LLM.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A response from the llm as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.models.llm_model.AzureOpenAIModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.llm_model.</span></span><span class="sig-name descname"><span class="pre">AzureOpenAIModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.llm_model.AzureOpenAIModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LLMModel</span></code></p>
-<p>Azure OpenAI model</p>
+<dd><p>Bases: <a class="reference internal" href="#ragcore.models.llm_model.BaseLLMModel" title="ragcore.models.llm_model.BaseLLMModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMModel</span></code></a></p>
+<p>Class to interact with Azure OpenAI LLMs.</p>
+<p>Make sure to have your API key set in the environment as <code class="docutils literal notranslate"><span class="pre">AZURE_OPENAI_API_KEY</span></code>.</p>
+<p>For more information, see: <a class="reference external" href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models">https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models</a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.models.llm_model.AzureOpenAIModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.llm_model.AzureOpenAIModel.predict" title="Link to this definition"></a></dt>
-<dd><p>Make a request to an LLM and return the response.</p>
+<dt class="sig sig-object py" id="ragcore.models.llm_model.AzureOpenAIModel.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.llm_model.AzureOpenAIModel.request" title="Link to this definition"></a></dt>
+<dd><p>Perform a request with an Azure OpenAI LLM.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: The text string for the request.</p>
+</dd>
+<dt>Returns:</dt><dd><p>The response string from the LLM.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -584,12 +942,20 @@ Returns True if the documents have been added, otherwise False.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.models.llm_model.OpenAIModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.llm_model.</span></span><span class="sig-name descname"><span class="pre">OpenAIModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.llm_model.OpenAIModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LLMModel</span></code></p>
-<p>OpenAI model</p>
+<dd><p>Bases: <a class="reference internal" href="#ragcore.models.llm_model.BaseLLMModel" title="ragcore.models.llm_model.BaseLLMModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMModel</span></code></a></p>
+<p>Class to interact with OpenAI LLMs.</p>
+<p>Make sure to have your API key set in the environment as <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code>.</p>
+<p>For more information, see: <a class="reference external" href="https://platform.openai.com/docs/guides/text-generation">https://platform.openai.com/docs/guides/text-generation</a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.models.llm_model.OpenAIModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.llm_model.OpenAIModel.predict" title="Link to this definition"></a></dt>
-<dd><p>Make a request to an LLM and return the response.</p>
+<dt class="sig sig-object py" id="ragcore.models.llm_model.OpenAIModel.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.llm_model.OpenAIModel.request" title="Link to this definition"></a></dt>
+<dd><p>Perform a request with an OpenAI LLM.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: The text string for the request.</p>
+</dd>
+<dt>Returns:</dt><dd><p>The response string from the LLM.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -598,11 +964,22 @@ Returns True if the documents have been added, otherwise False.</p>
 <dt class="sig sig-object py" id="ragcore.models.prompt_model.PromptGenerator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.prompt_model.</span></span><span class="sig-name descname"><span class="pre">PromptGenerator</span></span><a class="headerlink" href="#ragcore.models.prompt_model.PromptGenerator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to manage prompt templates and to generate prompts.</p>
+<p>A prompt is generated from a template and two inputs. One input is the <cite>question</cite>, for example
+a question about some content in a document. The second input is a context string, which is a
+concatenated string of context which should be used in the prompt.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.prompt_model.PromptGenerator.get_prompt">
 <span class="sig-name descname"><span class="pre">get_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.models.prompt_model.PromptGenerator.get_prompt" title="Link to this definition"></a></dt>
-<dd><p>Constructs a prompt based on the user input <cite>question</cite> and a set of context documents <cite>context_str</cite>.
-Typically, this context is retrieved from a vector database.</p>
+<dd><p>Creates a prompt from the template, the question, and the context.</p>
+<p>Typically, the question is the user input and the context is retrieved from a database.</p>
+<dl>
+<dt>Args:</dt><dd><p>question: A question as a string.</p>
+<p>context_str: A string with all context which should be part of the prompt.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A prompt as a string to be used for a LLM.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -612,27 +989,45 @@ Typically, this context is retrieved from a vector database.</p>
 <span id="data-transfer-objects"></span><h2>Data Transfer Objects<a class="headerlink" href="#module-ragcore.dto.document_dto" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.dto.document_dto.</span></span><span class="sig-name descname"><span class="pre">DocumentDTO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.dto.document_dto.</span></span><span class="sig-name descname"><span class="pre">DocumentDTO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for Document Data Transfer Objects to convert to RAG Core documents.</p>
+<dl>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a DTO</span>
+<span class="n">dto</span> <span class="o">=</span> <span class="n">DocumentDTO</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;This is my text&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Great text&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+
+<span class="c1"># Now you can create a ragcore document</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">dto</span><span class="o">.</span><span class="n">to_ragcore</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Attributes:</dt><dd><p>content: A string for the page content.</p>
+<p>metadata: A mapping for metadata.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO.to_langchain">
 <span class="sig-name descname"><span class="pre">to_langchain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO.to_langchain" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO.to_langchain_list">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_langchain_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Document</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO.to_langchain_list" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Converts to a LangChain document type.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO.to_ragcore">
 <span class="sig-name descname"><span class="pre">to_ragcore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO.to_ragcore" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Converts to a RAG Core document type.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO.to_ragcore_list">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_ragcore_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang_documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Document</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO.to_ragcore_list" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Converts to a list of RAG Core documents.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>lang_documents: A list of LangChain documents.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of documents.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -643,18 +1038,37 @@ Typically, this context is retrieved from a vector database.</p>
 <dt class="sig sig-object py" id="ragcore.shared.utils.document_to_str">
 <span class="sig-prename descclassname"><span class="pre">ragcore.shared.utils.</span></span><span class="sig-name descname"><span class="pre">document_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.shared.utils.document_to_str" title="Link to this definition"></a></dt>
 <dd><p>Extracts the content from a list of Documents into a line-separated string.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>docs: A list of documents.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A string with the document’s content.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ragcore.shared.utils.remove_file_extension">
 <span class="sig-prename descclassname"><span class="pre">ragcore.shared.utils.</span></span><span class="sig-name descname"><span class="pre">remove_file_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.shared.utils.remove_file_extension" title="Link to this definition"></a></dt>
-<dd><p>Removes selected file extensions.</p>
+<dd><p>Removes <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> file extensions from a string.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>string: A string, possibly with a file extension.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A string without a file extension.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ragcore.shared.utils.slice_list">
 <span class="sig-prename descclassname"><span class="pre">ragcore.shared.utils.</span></span><span class="sig-name descname"><span class="pre">slice_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.shared.utils.slice_list" title="Link to this definition"></a></dt>
-<dd><p>Slices a list into slices of size <cite>slice_size</cite>.</p>
+<dd><p>Slices a list into slices of size <code class="docutils literal notranslate"><span class="pre">slice_size</span></code>.</p>
+<dl>
+<dt>Args:</dt><dd><p>input_list: A list.</p>
+<p>slice_size: The size for a slice.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of sliced elements.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

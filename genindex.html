@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; RAG Core 0.0.7 documentation</title>
+  <title>Index &mdash; RAG Core 0.0.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=bbaf98b3"></script>
+        <script src="_static/documentation_options.js?v=53b53b71"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             RAG Core
           </a>
               <div class="version">
-                0.0.7
+                0.0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -117,7 +117,11 @@
       <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp">AbstractApp (class in ragcore.app.base_app)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp.add">add() (ragcore.app.base_app.AbstractApp method)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.app.RAGCore.add">(ragcore.app.RAGCore method)</a>
 </li>
+      </ul></li>
       <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.add_documents">add_documents() (ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
 
       <ul>
@@ -144,6 +148,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseEmbedding">BaseEmbedding (class in ragcore.models.embedding_model)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.models.llm_model.BaseLLMModel">BaseLLMModel (class in ragcore.models.llm_model)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseLocalVectorDatabaseModel">BaseLocalVectorDatabaseModel (class in ragcore.models.database_model)</a>
 </li>
   </ul></td>
@@ -168,6 +174,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants">ConfigurationConstants (class in ragcore.shared.constants)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.models.document_model.Document.content">content (ragcore.models.document_model.Document attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.services.llm_service.LLMService.create_prompt">create_prompt() (ragcore.services.llm_service.LLMService method)</a>
 </li>
   </ul></td>
@@ -187,7 +195,11 @@
       <li><a href="contents/api_reference.html#ragcore.shared.constants.AppConstants.DEFAULT_CONFIG_FILE_PATH">DEFAULT_CONFIG_FILE_PATH (ragcore.shared.constants.AppConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp.delete">delete() (ragcore.app.base_app.AbstractApp method)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.app.RAGCore.delete">(ragcore.app.RAGCore method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents">delete_documents() (ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
@@ -212,10 +224,10 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseEmbedding.embed_queries">embed_queries() (ragcore.models.embedding_model.BaseEmbedding method)</a>
+      <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseEmbedding.embed_texts">embed_texts() (ragcore.models.embedding_model.BaseEmbedding method)</a>
 
       <ul>
-        <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_queries">(ragcore.models.embedding_model.BaseOpenAIEmbeddings method)</a>
+        <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseOpenAIEmbeddings.embed_texts">(ragcore.models.embedding_model.BaseOpenAIEmbeddings method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -344,7 +356,7 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.models.document_loader_model.PDFLoader.load_and_split">load_and_split() (ragcore.models.document_loader_model.PDFLoader method)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.services.document_service.DocumentService.load_document">load_document() (ragcore.services.document_service.DocumentService method)</a>
+      <li><a href="contents/api_reference.html#ragcore.services.document_service.DocumentService.load_texts">load_texts() (ragcore.services.document_service.DocumentService method)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp.logger">logger (ragcore.app.base_app.AbstractApp attribute)</a>
 </li>
@@ -411,22 +423,14 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="contents/api_reference.html#ragcore.models.document_model.Document.page_content">page_content (ragcore.models.document_model.Document attribute)</a>
-</li>
       <li><a href="contents/api_reference.html#ragcore.models.document_loader_model.PDFLoader">PDFLoader (class in ragcore.models.document_loader_model)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.models.llm_model.AzureOpenAIModel.predict">predict() (ragcore.models.llm_model.AzureOpenAIModel method)</a>
-
-      <ul>
-        <li><a href="contents/api_reference.html#ragcore.models.llm_model.OpenAIModel.predict">(ragcore.models.llm_model.OpenAIModel method)</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.errors.PromptError">PromptError</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.models.prompt_model.PromptGenerator">PromptGenerator (class in ragcore.models.prompt_model)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.EmbeddingConstants.PROVIDER_AZURE_OPENAI">PROVIDER_AZURE_OPENAI (ragcore.shared.constants.EmbeddingConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.PROVIDER_CHROMA">PROVIDER_CHROMA (ragcore.shared.constants.DatabaseConstants attribute)</a>
@@ -442,6 +446,8 @@
       <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp.query">query() (ragcore.app.base_app.AbstractApp method)</a>
 
       <ul>
+        <li><a href="contents/api_reference.html#ragcore.app.RAGCore.query">(ragcore.app.RAGCore method)</a>
+</li>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.query">(ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
 </li>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.query">(ragcore.models.database_model.ChromaDatabase method)</a>
@@ -455,6 +461,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.app.RAGCore">RAGCore (class in ragcore.app)</a>
+</li>
       <li>
     ragcore.app
 
@@ -550,6 +558,14 @@
       </ul></li>
       <li><a href="contents/api_reference.html#ragcore.shared.utils.remove_file_extension">remove_file_extension() (in module ragcore.shared.utils)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.models.llm_model.AzureOpenAIModel.request">request() (ragcore.models.llm_model.AzureOpenAIModel method)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.models.llm_model.BaseLLMModel.request">(ragcore.models.llm_model.BaseLLMModel method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.models.llm_model.OpenAIModel.request">(ragcore.models.llm_model.OpenAIModel method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -560,9 +576,9 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="contents/api_reference.html#ragcore.services.document_service.DocumentService.split_document">split_document() (ragcore.services.document_service.DocumentService method)</a>
-</li>
       <li><a href="contents/api_reference.html#ragcore.services.text_splitter_service.TextSplitterService.split_documents">split_documents() (ragcore.services.text_splitter_service.TextSplitterService method)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.services.document_service.DocumentService.split_pages">split_pages() (ragcore.services.document_service.DocumentService method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -576,8 +592,6 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_langchain_list">to_langchain_list() (ragcore.dto.document_dto.DocumentDTO static method)</a>
-</li>
       <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_ragcore">to_ragcore() (ragcore.dto.document_dto.DocumentDTO method)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_ragcore_list">to_ragcore_list() (ragcore.dto.document_dto.DocumentDTO static method)</a>
