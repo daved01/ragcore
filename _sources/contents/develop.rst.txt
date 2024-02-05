@@ -12,7 +12,7 @@ First, clone the repo and navigate to it
 
 .. code-block:: bash
 
-    git clone
+    git clone https://github.com/daved01/ragcore.git
     cd ragcore
 
 Then, create and activate a virtual environment
@@ -27,6 +27,7 @@ or with ``pyenv-virtualenv`` and for example Python ``3.11.3``
 .. code-block:: bash
     
     pyenv virtualenv 3.11.3 venv
+    pyenv activate venv
 
 For more information on managing virtual environments with pyenv-virtualenv see `here <https://www.neuralception.com/pyenvvirtualenv/>`_.
 
