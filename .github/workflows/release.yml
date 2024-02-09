@@ -23,13 +23,15 @@ jobs:
         run: |
             git fetch --tags
             latest_tag=$(git describe --tags --abbrev=0 --always origin/main)
-            echo "::set-output name=tag::$latest_tag"
+            echo "tag=$latest_tag" >> $GITHUB_OUTPUT
+
+
 
       - name: Get current version from new tag
         id: get_current_version
         run: |
             current_version=$(echo ${{ steps.get_latest_tag.outputs.tag }} | sed 's/v//')
-            echo "::set-output name=version::$current_version"
+            echo "version=$current_version" >> $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v5
