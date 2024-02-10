@@ -18,20 +18,24 @@ Once you have selected the components that suit your needs with the config file,
 
 .. code-block:: python
 
-    from ragcore import RAGCore
+   from ragcore import RAGCore
 
-    app = RAGCore() # pass config=<path-to-config.yaml> if not in root
+   app = RAGCore() # pass config=<path-to-config.yaml> if not in root
 
-    # Upload a document "My_Book.pdf"
-    app.add(path="My_Book.pdf")
+   # Upload a document "My_Book.pdf"
+   app.add(path="My_Book.pdf")
 
-    # Now you can ask questions
-    answer = app.query(query="What did the elk say?")
+   # Now you can ask questions
+   answer = app.query(query="What did the elk say?")
 
-    print(answer)
+   print(answer.content)
 
-    # You can delete by title
-    app.delete(title="My_Book")
+   # List the document's title and content on which the answer is based
+   for doc in answer.documents:
+      print(doc.title, " | ", doc.content)
+
+   # You can delete by title
+   app.delete(title="My_Book")
 
 
 .. toctree::
