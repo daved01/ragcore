@@ -10,10 +10,12 @@ class RAGCoreTestSetup:
     def mock_pages(self):
         page1 = Document(
             content="Hello, this is the first page.",
+            title="file",
             metadata={"source": "some_path/file.pdf", "page": 1},
         )
         page2 = Document(
             content="This is the second page.",
+            title="file",
             metadata={"source": "some_path/file.pdf", "page": 2},
         )
         return [page1, page2]
@@ -24,11 +26,13 @@ class RAGCoreTestSetup:
             content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
+            title="Greatest book",
             metadata={"page": 1, "title": "Greatest book"},
         )
         page2 = Document(
             content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
+            title="Greatest book",
             metadata={"page": 2, "title": "Greatest book"},
         )
         return [page1, page2]
@@ -39,11 +43,13 @@ class RAGCoreTestSetup:
             content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
+            title="Greatest book",
             metadata={},
         )
         page2 = Document(
             content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
+            title="Greatest book",
             metadata=None,
         )
         return [page1, page2]
@@ -54,11 +60,13 @@ class RAGCoreTestSetup:
             content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
+            title=None,
             metadata={"page": 1},
         )
         page2 = Document(
             content="""Another day, another sentence.
                             We need them all for testing. Let's go!!!""",
+            title=None,
             metadata={"page": 2},
         )
         return [page1, page2]
@@ -101,6 +109,7 @@ class RAGCoreTestSetup:
             I mention book before? Another topic is best, the best. This is
             the best book. Not to be confused with the Greatest Book. This, is
             also available now.""",
+            title="Best book",
             metadata={"page": 1, "title": "Best book"},
         )
         return [page3]
@@ -111,6 +120,7 @@ class RAGCoreTestSetup:
             content="""Very useful text. It also contains a new sentence.
 
             And, as we can see here, even a separate paragraph! Life is crazy.""",
+            title="Greatest book",
             metadata={"page": 1, "title": "Greatest book"},
         )
 

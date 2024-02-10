@@ -1,8 +1,8 @@
 import argparse
-from typing import Optional
 
 from ragcore.shared.constants import AppConstants
 from ragcore.app import RAGCore
+from ragcore.models.app_model import QueryResponse
 
 
 SEPARATOR_LINE = "--" * 64
@@ -28,19 +28,21 @@ def run_app(app) -> None:
             title = input("Enter title to remove from database: ")
             app.delete(title=title)
         else:
-            response: Optional[str] = app.query(query=user_input)
-            if not response:
+            response: QueryResponse = app.query(query=user_input)
+            if not response.content:
                 continue
-            print(f"\n{SEPARATOR_LINE}\n{response}\n{SEPARATOR_LINE}\n")
+            print(f"\n{SEPARATOR_LINE}\n{response.content}\n{SEPARATOR_LINE}\n")
 
 
 def entrypoint():
     arguments: dict[str, str] = _parse_args()
     cli_app = RAGCore(
         config=arguments.get(AppConstants.KEY_CONFIGURATION_PATH),
-        log_level=LOGGER_LEVEL_DEBUG
-        if arguments.get(AppConstants.KEY_LOGGER_FLAG)
-        else LOGGER_LEVEL_WARN,
+        log_level=(
+            LOGGER_LEVEL_DEBUG
+            if arguments.get(AppConstants.KEY_LOGGER_FLAG)
+            else LOGGER_LEVEL_WARN
+        ),
     )
     run_app(cli_app)
 

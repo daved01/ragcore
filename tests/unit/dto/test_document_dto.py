@@ -7,7 +7,9 @@ class TestDocumentDTO(RAGCoreTestSetup):
         docs = []
         for lang_document in mock_lang_documents:
             dto = DocumentDTO(
-                content=lang_document.page_content, metadata=lang_document.metadata
+                content=lang_document.page_content,
+                title=lang_document.metadata.get("title", ""),
+                metadata=lang_document.metadata,
             )
             doc = dto.to_ragcore()
             docs.append(doc)
@@ -19,7 +21,11 @@ class TestDocumentDTO(RAGCoreTestSetup):
     def test_to_langchain(self, mock_documents):
         docs = []
         for document in mock_documents:
-            dto = DocumentDTO(content=document.content, metadata=document.metadata)
+            dto = DocumentDTO(
+                content=document.content,
+                title=document.title,
+                metadata=document.metadata,
+            )
             doc = dto.to_langchain()
             docs.append(doc)
 

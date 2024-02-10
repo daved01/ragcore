@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 import logging
 from logging import Logger
-from typing import Optional
+
+from ragcore.models.app_model import QueryResponse
 
 LOGGER_FILENAME = "app.log"
 
@@ -55,7 +56,7 @@ class AbstractApp(metaclass=ABCMeta):
         return logger
 
     @abstractmethod
-    def query(self, query: str) -> Optional[str]:
+    def query(self, query: str) -> QueryResponse:
         """Runs a query against a database."""
 
     @abstractmethod

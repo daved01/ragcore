@@ -206,7 +206,13 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         for doc, metadata in zip(response_docs, response_metadata):
             metadata_mapping: Mapping[str, Any] = metadata
-            documents.append(Document(content=doc, metadata=metadata_mapping))
+            documents.append(
+                Document(
+                    content=doc,
+                    title=str(metadata.get("title", "")),
+                    metadata=metadata_mapping,
+                )
+            )
 
         return documents
 

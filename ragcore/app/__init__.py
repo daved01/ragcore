@@ -3,6 +3,7 @@ import yaml
 
 from ragcore.app.base_app import AbstractApp
 from ragcore.shared.constants import AppConstants, ConfigurationConstants
+from ragcore.models.app_model import QueryResponse
 from ragcore.models.document_model import Document
 from ragcore.services.document_service import DocumentService
 from ragcore.services.database_service import DatabaseService
@@ -35,8 +36,12 @@ class RAGCore(AbstractApp):
             query = 'Tell me about the topic.'
             response = rag_instance.query(query=query)
 
-            # Print the generated response
-            print(response)
+            # Print the content string of the generated response
+            print(response.content)
+
+            # List the document's title and content on which response is based
+            for doc in response.documents:
+                print(doc.title, " | ", doc.content)
 
             # Remove the document
             rag_instance.delete(title="my_book")
@@ -76,7 +81,7 @@ class RAGCore(AbstractApp):
         self._init_database_service()
         self._init_llm_service()
 
-    def query(self, query: str) -> Optional[str]:
+    def query(self, query: str) -> QueryResponse:
         """Queries the database with a query.
 
         Queries the database and makes an LLM request with the prompt and the context
@@ -86,24 +91,26 @@ class RAGCore(AbstractApp):
             query: The query string to query the database with.
 
         Returns:
-            A string with the response, or None if no answer could be generated.
+            A ``QueryResponse`` object. The field `content` contains the string or None if a response could not be generated.
+            The field `documents` is a list with documents of type `Document` on which the response is based.
 
         """
         if not query or not self.database_service or not self.llm_service:
-            return None
+            return QueryResponse(content=None, documents=[])
 
         # Get relevant chunks from database.
         contexts: Optional[list[Document]] = self.database_service.query(query=query)
 
         if not contexts:
             print("Did not find documents in the database. Maybe it is empty?")
-            return None
+            return QueryResponse(content=None, documents=[])
 
         # Construct prompt from template and context.
         prompt: str = self.llm_service.create_prompt(query, contexts)
 
         # Query llm with prompt.
-        return self.llm_service.make_llm_request(prompt)
+        content = self.llm_service.make_llm_request(prompt)
+        return QueryResponse(content=content, documents=contexts)
 
     def add(self, path: str) -> None:
         """Adds a document to the database.
