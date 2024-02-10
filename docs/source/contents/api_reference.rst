@@ -48,6 +48,9 @@ Models
 
 .. automodule:: ragcore.models.document_model
     :members:
+
+.. automodule:: ragcore.models.app_model
+    :members:
     
 .. automodule:: ragcore.models.document_loader_model
     :members:

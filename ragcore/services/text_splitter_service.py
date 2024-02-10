@@ -33,7 +33,9 @@ class TextSplitterService:
 
         for document in documents:
             document_dto = DocumentDTO(
-                content=document.content, metadata=document.metadata
+                content=document.content,
+                title=document.title,
+                metadata=document.metadata,
             )
             documents_lang.append(document_dto.to_langchain())
 
@@ -42,7 +44,9 @@ class TextSplitterService:
         splits = []
         for split_lang in splits_lang:
             document_dto = DocumentDTO(
-                content=split_lang.page_content, metadata=split_lang.metadata
+                content=split_lang.page_content,
+                title=split_lang.metadata.get("title", ""),
+                metadata=split_lang.metadata,
             )
             splits.append(document_dto.to_ragcore())
 

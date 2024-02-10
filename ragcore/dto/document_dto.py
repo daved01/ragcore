@@ -11,7 +11,7 @@ class DocumentDTO:
         .. code-block:: python
 
             # Instantiate a DTO
-            dto = DocumentDTO(content="This is my text", metadata={"title": "Great text", "page": "1"})
+            dto = DocumentDTO(content="This is my text", title="Great text", metadata={"title": "Great text", "page": "1"})
 
             # Now you can create a ragcore document
             doc = dto.to_ragcore()
@@ -19,17 +19,20 @@ class DocumentDTO:
     Attributes:
         content: A string for the page content.
 
+        title: The title of the document as a string.
+
         metadata: A mapping for metadata.
 
     """
 
-    def __init__(self, content: str, metadata: Mapping[str, Any]):
+    def __init__(self, content: str, title: str, metadata: Mapping[str, Any]):
         self.content = content
+        self.title = title
         self.metadata = metadata
 
     def to_ragcore(self):
         """Converts to a RAG Core document type."""
-        return Document(content=self.content, metadata=self.metadata)
+        return Document(content=self.content, title=self.title, metadata=self.metadata)
 
     def to_langchain(self):
         """Converts to a LangChain document type."""
@@ -49,7 +52,9 @@ class DocumentDTO:
         documents = []
         for lang_document in lang_documents:
             doc_dto = DocumentDTO(
-                content=lang_document.page_content, metadata=lang_document.metadata
+                content=lang_document.page_content,
+                title=lang_document.metadata.get("title", ""),
+                metadata=lang_document.metadata,
             )
             documents.append(doc_dto.to_ragcore())
         return documents
