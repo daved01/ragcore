@@ -39,7 +39,7 @@ class RAGCore(AbstractApp):
             # Print the content string of the generated response
             print(response.content)
 
-            # List the document's title and content on which response is based
+            # List the document's title and content on which the response is based
             for doc in response.documents:
                 print(doc.title, " | ", doc.content)
 
