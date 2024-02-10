@@ -88,7 +88,11 @@ app.add(path="My_Book.pdf")
 # Now you can ask questions
 answer = app.query(query="What did the elk say?")
 
-print(answer)
+print(answer.content)
+
+# List the document's title and content on which the response is based
+for doc in answer.documents:
+  print(doc.title, " | ", doc.content)
 
 # You can delete by title
 app.delete(title="My_Book")
