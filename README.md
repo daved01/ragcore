@@ -94,6 +94,9 @@ print(answer.content)
 for doc in answer.documents:
   print(doc.title, " | ", doc.content)
 
+# List all documents in the database
+print(app.get_titles())
+
 # You can delete by title
 app.delete(title="My_Book")
 ```
