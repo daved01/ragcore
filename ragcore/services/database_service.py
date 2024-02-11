@@ -119,14 +119,18 @@ class DatabaseService:
         """Initializes a remote database."""
         raise NotImplementedError("Remote database is not implemented yet.")
 
-    def add_documents(self, documents: list[Document]) -> None:
+    def add_documents(
+        self, documents: list[Document], user: Optional[str] = None
+    ) -> None:
         """Adds documents to an existing database.
 
         Documents must have metadata, and the metadata must have a `title` specified.
         Adding documents with the same title multiple times is not possible.
 
-        Attributes:
+        Args:
             documents: A list of documents of type ``Document``.
+
+            user: An optional string to identify a user.
 
         """
         # Check if database exists on disk. If not exit.
@@ -148,7 +152,7 @@ class DatabaseService:
             f"`{self.base_path if self.base_path else '' + '/' + self.name if self.name else ''}`..."
         )
 
-        if self.database.add_documents(documents=documents):
+        if self.database.add_documents(documents, user):
             self.logger.info(
                 "Added all documents to database. "
                 f"Total number of documents in database: {self.database.get_number_of_documents()}",
@@ -161,13 +165,15 @@ class DatabaseService:
                 )
             )
 
-    def delete_documents(self, title: str) -> None:
+    def delete_documents(self, title: str, user: Optional[str] = None) -> None:
         """Deletes all documents with the title ``title`` from the database.
 
         The title matching is case sensitive.
 
-        Attributes:
+        Args:
             title: The title of the documents to be deleted.
+
+            user: An optional string to identify a user.
 
         """
         if not self.database:
@@ -177,19 +183,21 @@ class DatabaseService:
 
         title = utils.remove_file_extension(title)
 
-        if self.database.delete_documents(title=title):
+        if self.database.delete_documents(title, user):
             self.logger.info(f"Deleted documents with title `{title}` from database.")
         else:
             self.logger.info("Did not delete documents.")
 
-    def query(self, query: str) -> Optional[list[Document]]:
+    def query(self, query: str, user: Optional[str] = None) -> Optional[list[Document]]:
         """Query the database with a query.
 
         The instantiated database is queried with the given query string and returns
         a list of documents for a query.
 
-        Attributes:
+        Args:
             query: A query as a string.
+
+            user: An optional string to identify a user.
 
         Returns:
             A list of documents or None.
@@ -200,7 +208,7 @@ class DatabaseService:
                 "Database does not exist. Please create it before running a query."
             )
 
-        return self.database.query(query)
+        return self.database.query(query, user)
 
     def _validate_documents_metadata(self, documents: list[Document]) -> bool:
         """Validate if document metadata exists and has the title key."""

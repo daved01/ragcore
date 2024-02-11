@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import logging
 from logging import Logger
+from typing import Optional
 
 from ragcore.models.app_model import QueryResponse
 
@@ -56,13 +57,13 @@ class AbstractApp(metaclass=ABCMeta):
         return logger
 
     @abstractmethod
-    def query(self, query: str) -> QueryResponse:
+    def query(self, query: str, user: Optional[str] = None) -> QueryResponse:
         """Runs a query against a database."""
 
     @abstractmethod
-    def add(self, path: str) -> None:
+    def add(self, path: str, user: Optional[str] = None) -> None:
         """Adds a document to the database."""
 
     @abstractmethod
-    def delete(self, title: str) -> None:
+    def delete(self, title: str, user: Optional[str] = None) -> None:
         """Removes a document from the database."""

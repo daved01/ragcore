@@ -81,7 +81,7 @@ class RAGCore(AbstractApp):
         self._init_database_service()
         self._init_llm_service()
 
-    def query(self, query: str) -> QueryResponse:
+    def query(self, query: str, user: Optional[str] = None) -> QueryResponse:
         """Queries the database with a query.
 
         Queries the database and makes an LLM request with the prompt and the context
@@ -90,29 +90,31 @@ class RAGCore(AbstractApp):
         Args:
             query: The query string to query the database with.
 
+            user: An optional string to identify a user.
+
         Returns:
             A ``QueryResponse`` object. The field `content` contains the string or None if a response could not be generated.
             The field `documents` is a list with documents of type `Document` on which the response is based.
 
         """
         if not query or not self.database_service or not self.llm_service:
-            return QueryResponse(content=None, documents=[])
+            return QueryResponse(content=None, documents=[], user=user)
 
         # Get relevant chunks from database.
-        contexts: Optional[list[Document]] = self.database_service.query(query=query)
+        contexts: Optional[list[Document]] = self.database_service.query(query, user)
 
         if not contexts:
             print("Did not find documents in the database. Maybe it is empty?")
-            return QueryResponse(content=None, documents=[])
+            return QueryResponse(content=None, documents=[], user=user)
 
         # Construct prompt from template and context.
         prompt: str = self.llm_service.create_prompt(query, contexts)
 
         # Query llm with prompt.
         content = self.llm_service.make_llm_request(prompt)
-        return QueryResponse(content=content, documents=contexts)
+        return QueryResponse(content=content, documents=contexts, user=user)
 
-    def add(self, path: str) -> None:
+    def add(self, path: str, user: Optional[str] = None) -> None:
         """Adds a document to the database.
 
         Adds the document in the path to the database. The filename, without the
@@ -124,6 +126,8 @@ class RAGCore(AbstractApp):
 
         Args:
             path: A string to the file location.
+
+            user: An optional string to identify a user.
 
         """
         if not self.database_service:
@@ -139,9 +143,9 @@ class RAGCore(AbstractApp):
                 ConfigurationConstants.KEY_CHUNK_OVERLAP
             ],
         )
-        self.database_service.add_documents(self.document_service.documents)
+        self.database_service.add_documents(self.document_service.documents, user)
 
-    def delete(self, title: str) -> None:
+    def delete(self, title: str, user: Optional[str] = None) -> None:
         """Deletes a collection from the database.
 
         Given a title, all documents with that title, also called a collection, are
@@ -150,11 +154,13 @@ class RAGCore(AbstractApp):
         Args:
             title: The title of the collection to remove from the database.
 
+            user: An optional string to identify a user.
+
         """
         if not title or not self.database_service:
             return
 
-        self.database_service.delete_documents(title=title)
+        self.database_service.delete_documents(title, user)
 
     def _init_llm_service(self):
         """Initialize LLM service."""
