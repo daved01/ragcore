@@ -111,8 +111,7 @@ class DatabaseService:
             )
 
         self.logger.info(
-            f"Initialized database `{self.base_path + '/' + self.name if self.name else ''}` with "
-            f"{self.database.get_number_of_documents()} indexed documents."
+            f"Initialized database `{self.base_path + '/' + self.name if self.name else ''}`."
         )
 
     def initialize_remote_database(self) -> None:
@@ -155,10 +154,10 @@ class DatabaseService:
         if self.database.add_documents(documents, user):
             self.logger.info(
                 "Added all documents to database. "
-                f"Total number of documents in database: {self.database.get_number_of_documents()}",
+                f"Total number of documents for user `{user}` in database: {self.database.get_number_of_documents(user)}",
             )
         else:
-            self.logger.info(
+            self.logger.warn(
                 (
                     "Did not add documents to database, because documents with the title you "
                     "are trying to add already exist in the database."
@@ -184,9 +183,11 @@ class DatabaseService:
         title = utils.remove_file_extension(title)
 
         if self.database.delete_documents(title, user):
-            self.logger.info(f"Deleted documents with title `{title}` from database.")
+            self.logger.info(
+                f"Deleted documents for user `{user}` with title `{title}` from database."
+            )
         else:
-            self.logger.info("Did not delete documents.")
+            self.logger.warn(f"Did not delete documents for user `{user}`.")
 
     def query(self, query: str, user: Optional[str] = None) -> Optional[list[Document]]:
         """Query the database with a query.
