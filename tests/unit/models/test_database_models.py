@@ -69,10 +69,16 @@ class TestChromaDatabaseModel(BaseTest, RAGCoreTestSetup):
 
     def test_get_number_of_documents_by_title(self, mocker, chromadb_client):
         titles = {"metadatas": [{"title": "A"}, {"title": "B"}]}
-        mocker.patch.object(chromadb_client.collection, "get", return_value=titles)
-        res = chromadb_client._get_number_of_documents_by_title("Existing title")
+
+        collection = mocker.Mock()
+        mocker.patch.object(collection, "get", return_value=titles)
+
+        res = chromadb_client._get_number_of_documents_by_title(
+            collection, "Existing title"
+        )
         assert res == 2
 
     def test_get_number_of_documents_by_title_no_results(self, mocker, chromadb_client):
-        res = chromadb_client._get_number_of_documents_by_title(None)
+        collection = mocker.Mock()
+        res = chromadb_client._get_number_of_documents_by_title(collection, None)
         assert res == 0

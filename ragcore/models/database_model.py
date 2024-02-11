@@ -21,11 +21,15 @@ class BaseVectorDatabaseModel(ABC):
     """
 
     @abstractmethod
-    def add_documents(self, documents: list[Document]) -> bool:
+    def add_documents(
+        self, documents: list[Document], user: Optional[str] = None
+    ) -> bool:
         """Adds documents to the database.
 
         Args:
             documents: A list of documents ``Document`` to be added to the database.
+
+            user: An optional string to identify a user.
 
         Returns:
             True if documents have been added, False otherwise.
@@ -33,11 +37,13 @@ class BaseVectorDatabaseModel(ABC):
         """
 
     @abstractmethod
-    def delete_documents(self, title: str) -> bool:
+    def delete_documents(self, title: str, user: Optional[str] = None) -> bool:
         """Deletes all documents with title `title` from the database.
 
         Args:
             title: The title of the documents to be deleted.
+
+            user: An optional string to identify a user.
 
         Returns:
             True if documents have been delete, False otherwise.
@@ -45,11 +51,13 @@ class BaseVectorDatabaseModel(ABC):
         """
 
     @abstractmethod
-    def query(self, query: str) -> Optional[list[Document]]:
+    def query(self, query: str, user: Optional[str] = None) -> Optional[list[Document]]:
         """Queries the database with a query using a similarity metric.
 
         Args:
             query: A query as a string.
+
+            user: An optional string to identify a user.
 
         Returns:
             A list of documents ``Document``, or None if no documents could be retrieved.
@@ -57,7 +65,7 @@ class BaseVectorDatabaseModel(ABC):
         """
 
     @abstractmethod
-    def get_number_of_documents(self) -> int:
+    def get_number_of_documents(self, user: Optional[str] = None) -> int:
         """Returns the total number of documents in the database."""
 
 
@@ -116,7 +124,9 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         )
         self.collection: chromadb.Collection = self._init_collection()
 
-    def add_documents(self, documents: list[Document]) -> bool:
+    def add_documents(
+        self, documents: list[Document], user: Optional[str] = None
+    ) -> bool:
         """Adds documents to the Chroma database.
 
         In the database, each ID must be unique.
@@ -128,6 +138,8 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         Args:
             documents: A list of documents.
 
+            user: An optional string to identify a user.
+
         Returns:
             True if the document has been added, False otherwise.
 
@@ -137,14 +149,20 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         embeddings: Any = self.embedding.embed_texts(docs)
         ids = [str(uuid.uuid1()) for _ in range(len(documents))]
 
+        # Get the collection.
+        if not user:
+            collection = self.collection
+        else:
+            collection = self._init_collection(user)
+
         # Check if the documents already exist in database.
         if self._get_number_of_documents_by_title(
-            metadatas[0].get(DataConstants.KEY_TITLE)
+            collection, metadatas[0].get(DataConstants.KEY_TITLE)
         ):
             return False
 
         # Add documents to database.
-        self.collection.add(
+        collection.add(
             documents=docs,
             embeddings=embeddings,
             metadatas=metadatas,
@@ -153,24 +171,32 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         return True
 
-    def delete_documents(self, title: str) -> bool:
+    def delete_documents(self, title: str, user: Optional[str] = None) -> bool:
         """Deletes all documents with the given title.
 
         Args:
             title: The title of the documents to be deleted.
+
+            user: An optional string to identify a user.
 
         Returns:
             True if documents have been deleted, False otherwise.
 
         """
 
-        num_docs_before = self._get_number_of_documents_by_title(title)
-        self.collection.delete(where={DataConstants.KEY_TITLE: title})
-        num_docs_after = self._get_number_of_documents_by_title(title)
+        # Get the collection
+        if not user:
+            collection = self.collection
+        else:
+            collection = self.client.get_collection(user)
+
+        num_docs_before = self._get_number_of_documents_by_title(collection, title)
+        collection.delete(where={DataConstants.KEY_TITLE: title})
+        num_docs_after = self._get_number_of_documents_by_title(collection, title)
 
         return not num_docs_before == num_docs_after
 
-    def query(self, query: str) -> Optional[list[Document]]:
+    def query(self, query: str, user: Optional[str] = None) -> Optional[list[Document]]:
         """Queries the database with a query.
 
         To perform the query on the database, vector representations is created from the query first.
@@ -178,12 +204,20 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         Args:
             query: A query to query the database with.
 
+            user: An optional string to identify a user.
+
         Returns:
             A list of results from the database, or None if no results could be retrieved.
 
         """
+        # Get the collection
+        if not user:
+            collection = self.collection
+        else:
+            collection = self.client.get_collection(user)
+
         embeddings: Any = self.embedding.embed_texts([query])
-        response = self.collection.query(
+        response = collection.query(
             query_embeddings=embeddings, n_results=self.num_search_results
         )
 
@@ -216,26 +250,40 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         return documents
 
-    def get_number_of_documents(self) -> int:
+    def get_number_of_documents(self, user: Optional[str] = None) -> int:
         """Returns the number of documents in the collection.
 
         We use only one collection, so getting all documents in the database is equal to
         getting all documenst in the main collection.
 
+        Args:
+            user: An optional string to identify a user.
+
         Returns:
             The number of documents in the database.
 
         """
-        return self.collection.count()
+        # Get the collection
+        if not user:
+            collection = self.collection
+        else:
+            collection = self.client.get_collection(user)
 
-    def _init_collection(self) -> chromadb.Collection:
-        """Gets the main collection or creates it."""
+        return collection.count()
+
+    def _init_collection(self, user: Optional[str] = None) -> chromadb.Collection:
+        """Gets the main or the user's collection, or creates one."""
+        name = NAME_MAIN_COLLECTION if not user else user
+
         try:
-            return self.client.get_collection(name=NAME_MAIN_COLLECTION)
+            return self.client.get_collection(name)
         except ValueError:
-            return self.client.create_collection(name=NAME_MAIN_COLLECTION)
+            return self.client.create_collection(name)
 
-    def _get_number_of_documents_by_title(self, title: Optional[str]) -> int:
+    @staticmethod
+    def _get_number_of_documents_by_title(
+        collection: chromadb.Collection, title: Optional[str]
+    ) -> int:
         """Returns the number of documents with the title `title`.
 
         If no title is given, returns 0.
@@ -244,7 +292,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         if not title:
             return 0
 
-        metadata = self.collection.get(
+        metadata = collection.get(
             where={DataConstants.KEY_TITLE: title},
             include=["metadatas"],
         ).get(DatabaseConstants.KEY_CHROMA_METADATAS, [])

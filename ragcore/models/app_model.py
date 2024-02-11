@@ -13,7 +13,10 @@ class QueryResponse:
 
         documents: Sequence of documents on which the response is based on. Empty list if response is None.
 
+        user: An optional string to identify a user.
+
     """
 
     content: Optional[str]
     documents: Sequence[Optional[Document]]
+    user: Optional[str]

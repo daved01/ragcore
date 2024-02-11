@@ -23,10 +23,12 @@ def run_app(app) -> None:
         if user_input.lower() == "n":
             path = input("Enter relative path to new document: ")
             app.add(path=path)
+            print("Added documents!")
 
         elif user_input.lower() == "d":
             title = input("Enter title to remove from database: ")
             app.delete(title=title)
+            print("Deleted documents!")
         else:
             response: QueryResponse = app.query(query=user_input)
             if not response.content:
