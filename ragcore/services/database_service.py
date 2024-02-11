@@ -211,6 +211,26 @@ class DatabaseService:
 
         return self.database.query(query, user)
 
+    def get_titles(self, user: Optional[str] = None) -> list[Optional[str]]:
+        """Get the document titles for the user in the database, sorted in alphabetical order.
+
+        Args:
+            user: An optional string to identify a user.
+
+        Returns:
+            A list of alphabetically sorted strings with the titles, or an empty list.
+        """
+        if not self.database:
+            raise DatabaseError(
+                "Database does not exist. Please create it before running a query."
+            )
+
+        titles = self.database.get_titles(user)
+
+        if titles:
+            return sorted(titles, key=utils.custom_key_comparator)
+        return []
+
     def _validate_documents_metadata(self, documents: list[Document]) -> bool:
         """Validate if document metadata exists and has the title key."""
         for document in documents:

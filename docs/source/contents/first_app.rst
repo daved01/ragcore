@@ -68,7 +68,10 @@ Finally, in the ``app.py`` file, we can implement our application using the comp
     print(doc.title, " | ", doc.content)
 
   # Get the user identifier
-  print(answer.user) 
+  print(answer.user)
+
+  # List all documents in the database
+  print(rag_instance.get_titles(user=USER))
 
   # You can delete by title
   app.delete(title="My_Book", user=USER)

@@ -3,7 +3,7 @@ import logging
 from logging import Logger
 from typing import Optional
 
-from ragcore.models.app_model import QueryResponse
+from ragcore.models.app_model import QueryResponse, TitlesResponse
 
 LOGGER_FILENAME = "app.log"
 
@@ -67,3 +67,7 @@ class AbstractApp(metaclass=ABCMeta):
     @abstractmethod
     def delete(self, title: str, user: Optional[str] = None) -> None:
         """Removes a document from the database."""
+
+    @abstractmethod
+    def get_titles(self, user: Optional[str] = None) -> TitlesResponse:
+        """Lists all titles owned by the user in the database, sorted in alphabetical order."""

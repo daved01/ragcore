@@ -1,5 +1,6 @@
-from ragcore.shared import utils
+import pytest
 
+from ragcore.shared import utils
 from tests.unit.services import RAGCoreTestSetup
 
 
@@ -65,3 +66,18 @@ class TestUtils(RAGCoreTestSetup):
         ]
         for case, expected in cases:
             assert utils.remove_file_extension(case) == expected
+
+    @pytest.mark.parametrize(
+        "input, expected",
+        [
+            ("Hello", "hello"),
+            ("", ""),
+            ("HeLLo", "hello"),
+            ("!@#$%^&*()", "!@#$%^&*()"),
+            ("12345", "12345"),
+            ("   None   ", "   none   "),
+            (None, ""),
+        ],
+    )
+    def test_custom_key_comparator(self, input, expected):
+        assert utils.custom_key_comparator(input) == expected

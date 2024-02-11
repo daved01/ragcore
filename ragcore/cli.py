@@ -15,20 +15,22 @@ def run_app(app) -> None:
 
     while True:
         user_input = input(
-            "\nEnter:\n(n/N) add new document\n(d/D) delete a document\n(q/Q) exit\nor a question to run a search:\n"
+            "\nEnter:\n(a/A) add new document\n(d/D) delete a document\n(l/L) list all titles\n(q/Q) exit\nor a question to run a search:\n"
         )
         if user_input.lower() == "q":
             print("Exiting ...")
             break
-        if user_input.lower() == "n":
+        if user_input.lower() == "a":
             path = input("Enter relative path to new document: ")
             app.add(path=path)
             print("Added documents!")
-
         elif user_input.lower() == "d":
             title = input("Enter title to remove from database: ")
             app.delete(title=title)
             print("Deleted documents!")
+        elif user_input.lower() == "l":
+            titles = app.get_titles()
+            print(f"Following titles are in database: {titles.contents}")
         else:
             response: QueryResponse = app.query(query=user_input)
             if not response.content:

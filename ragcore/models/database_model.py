@@ -65,6 +65,18 @@ class BaseVectorDatabaseModel(ABC):
         """
 
     @abstractmethod
+    def get_titles(self, user: Optional[str] = None) -> list[Optional[str]]:
+        """Returns the titles owned by the user.
+
+        Args:
+            user: An optional string to identify a user.
+
+        Returns:
+            A list of strings with the titles, or an empty list.
+
+        """
+
+    @abstractmethod
     def get_number_of_documents(self, user: Optional[str] = None) -> int:
         """Returns the total number of documents in the database."""
 
@@ -149,11 +161,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         embeddings: Any = self.embedding.embed_texts(docs)
         ids = [str(uuid.uuid1()) for _ in range(len(documents))]
 
-        # Get the collection.
-        if not user:
-            collection = self.collection
-        else:
-            collection = self._init_collection(user)
+        collection = self._get_collection(user)
 
         # Check if the documents already exist in database.
         if self._get_number_of_documents_by_title(
@@ -183,12 +191,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
             True if documents have been deleted, False otherwise.
 
         """
-
-        # Get the collection
-        if not user:
-            collection = self.collection
-        else:
-            collection = self.client.get_collection(user)
+        collection = self._get_collection(user)
 
         num_docs_before = self._get_number_of_documents_by_title(collection, title)
         collection.delete(where={DataConstants.KEY_TITLE: title})
@@ -210,11 +213,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
             A list of results from the database, or None if no results could be retrieved.
 
         """
-        # Get the collection
-        if not user:
-            collection = self.collection
-        else:
-            collection = self.client.get_collection(user)
+        collection = self._get_collection(user)
 
         embeddings: Any = self.embedding.embed_texts([query])
         response = collection.query(
@@ -250,6 +249,23 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         return documents
 
+    def get_titles(self, user: Optional[str] = None) -> list[Optional[str]]:
+        """Returns the titles which are owned by the user."""
+        collection = self._get_collection(user)
+
+        # Get all metadata items
+        metadatas: Any = collection.get(
+            include=["metadatas"],
+        ).get(DatabaseConstants.KEY_CHROMA_METADATAS, [])
+
+        titles = set()
+        for metadata in metadatas:
+            title = metadata.get(DataConstants.KEY_TITLE)
+            if title:
+                titles.add(title)
+
+        return list(titles) if titles else []
+
     def get_number_of_documents(self, user: Optional[str] = None) -> int:
         """Returns the number of documents in the collection.
 
@@ -263,11 +279,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
             The number of documents in the database.
 
         """
-        # Get the collection
-        if not user:
-            collection = self.collection
-        else:
-            collection = self.client.get_collection(user)
+        collection = self._get_collection(user)
 
         return collection.count()
 
@@ -279,6 +291,22 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
             return self.client.get_collection(name)
         except ValueError:
             return self.client.create_collection(name)
+
+    def _get_collection(self, user: Optional[str] = None) -> chromadb.Collection:
+        """Returns the collection owned by the user, or the default collection.
+
+        If the collection for a user does not exist, a ValueError is raised by the client.
+
+        Args:
+            user: An optional string to identify a user.
+
+        Returns:
+            A ChromaDB ``Collection``.
+
+        """
+        if not user:
+            return self.collection
+        return self.client.get_collection(user)
 
     @staticmethod
     def _get_number_of_documents_by_title(
