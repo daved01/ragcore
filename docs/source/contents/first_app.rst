@@ -51,13 +51,15 @@ Finally, in the ``app.py`` file, we can implement our application using the comp
 
   from ragcore import RAGCore
 
+  USER = "01" # Optionally use a string to identify a user
+
   app = RAGCore() # pass config=<path-to-config.yaml> if not in root
 
   # Upload a document "My_Book.pdf"
-  app.add(path="My_Book.pdf")
+  app.add(path="My_Book.pdf", user=USER)
 
   # Now you can ask questions
-  answer = app.query(query="What did the elk say?")
+  answer = app.query(query="What did the elk say?", user=USER)
 
   print(answer.content)
 
@@ -65,7 +67,12 @@ Finally, in the ``app.py`` file, we can implement our application using the comp
   for doc in answer.documents:
     print(doc.title, " | ", doc.content)
 
+  # Get the user identifier
+  print(answer.user) 
+
   # You can delete by title
-  app.delete(title="My_Book")
+  app.delete(title="My_Book", user=USER)
+
+If your app should support more than one user with separate data for each, you can pass in a string ``user`` to identify a user.
 
 And that's it! For more details on configuration options, please refer to the :ref:`configuration` section.
