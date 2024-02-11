@@ -128,13 +128,15 @@
 <p>Finally, in the <code class="docutils literal notranslate"><span class="pre">app.py</span></code> file, we can implement our application using the components specified in the configuration. The following demonstrates the main methods:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragcore</span> <span class="kn">import</span> <span class="n">RAGCore</span>
 
+<span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;01&quot;</span> <span class="c1"># Optionally use a string to identify a user</span>
+
 <span class="n">app</span> <span class="o">=</span> <span class="n">RAGCore</span><span class="p">()</span> <span class="c1"># pass config=&lt;path-to-config.yaml&gt; if not in root</span>
 
 <span class="c1"># Upload a document &quot;My_Book.pdf&quot;</span>
-<span class="n">app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;My_Book.pdf&quot;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;My_Book.pdf&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">USER</span><span class="p">)</span>
 
 <span class="c1"># Now you can ask questions</span>
-<span class="n">answer</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;What did the elk say?&quot;</span><span class="p">)</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;What did the elk say?&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">USER</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
@@ -142,10 +144,14 @@
 <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">answer</span><span class="o">.</span><span class="n">documents</span><span class="p">:</span>
   <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
+<span class="c1"># Get the user identifier</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
 <span class="c1"># You can delete by title</span>
-<span class="n">app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My_Book&quot;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My_Book&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">USER</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>If your app should support more than one user with separate data for each, you can pass in a string <code class="docutils literal notranslate"><span class="pre">user</span></code> to identify a user.</p>
 <p>And that’s it! For more details on configuration options, please refer to the <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> section.</p>
 </section>
 
