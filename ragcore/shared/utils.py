@@ -1,5 +1,5 @@
 import re
-from typing import Any
+from typing import Any, Optional
 
 from ragcore.models.document_model import Document
 
@@ -51,3 +51,8 @@ def remove_file_extension(string: str) -> str:
 
     """
     return FILE_EXTENSION_PATTERN.sub("", string)
+
+
+def custom_key_comparator(item: Optional[str]) -> str:
+    """Returns a lowercase string or an empty string if no item is given."""
+    return item.lower() if item is not None else ""

@@ -3,7 +3,7 @@ import yaml
 
 from ragcore.app.base_app import AbstractApp
 from ragcore.shared.constants import AppConstants, ConfigurationConstants
-from ragcore.models.app_model import QueryResponse
+from ragcore.models.app_model import QueryResponse, TitlesResponse
 from ragcore.models.document_model import Document
 from ragcore.services.document_service import DocumentService
 from ragcore.services.database_service import DatabaseService
@@ -39,9 +39,12 @@ class RAGCore(AbstractApp):
             # Print the content string of the generated response
             print(response.content)
 
-            # List the document's title and content on which the response is based
+            # List the document's titles and contents on which the response is based
             for doc in response.documents:
                 print(doc.title, " | ", doc.content)
+
+            # List all documents in the database
+            print(rag_instance.get_titles())
 
             # Remove the document
             rag_instance.delete(title="my_book")
@@ -161,6 +164,27 @@ class RAGCore(AbstractApp):
             return
 
         self.database_service.delete_documents(title, user)
+
+    def get_titles(self, user: Optional[str] = None) -> TitlesResponse:
+        """Gets the document titles in the database.
+
+        If a user identifier is given, the titles owned by this user are returned.
+        If no user is given, the titles of the main collection are returned.
+        The titles are sorted in alphabetical order.
+
+        Args:
+            user: An optional string to identify the owner.
+
+        Returns:
+            TitlesResponse: Object with an optional list of alphabetically sorted string titles and an optional user.
+
+        """
+        if not self.database_service:
+            return TitlesResponse(user, [])
+
+        titles = self.database_service.get_titles(user)
+
+        return TitlesResponse(user=user, contents=titles)
 
     def _init_llm_service(self):
         """Initialize LLM service."""

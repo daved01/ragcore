@@ -223,7 +223,7 @@ class TestDatabaseService(BaseTest, RAGCoreTestSetup):
 
         assert response == "Hello"
 
-    def test_query_fail(self, mocker, mock_logger, mock_config, mock_documents):
+    def test_query_fail(self, mocker, mock_logger, mock_config):
         mock_database = mocker.Mock()
         mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
         mock_makedirs = mocker.patch("os.makedirs")
@@ -239,6 +239,47 @@ class TestDatabaseService(BaseTest, RAGCoreTestSetup):
 
         with pytest.raises(DatabaseError):
             database_service.query("my_query")
+
+    @pytest.mark.parametrize("user", [None, "user1"])
+    def test_get_titles(self, mocker, mock_logger, mock_config, user):
+        mock_database = mocker.Mock()
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mocker.patch(
+            "ragcore.services.database_service.DatabaseService.get_titles",
+            return_value=sorted(["Paper A", "Book A", "book_b"], key=str.lower),
+        )
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
+        )
+
+        database_service.initialize_local_database()
+        response = database_service.get_titles(user=user)
+
+        assert response == ["Book A", "book_b", "Paper A"]
+
+    def test_get_titles_no_database(self, mocker, mock_logger, mock_config):
+        mock_database = mocker.Mock()
+        mocker.patch("ragcore.models.database_model.ChromaDatabase", mock_database)
+        mock_makedirs = mocker.patch("os.makedirs")
+        mock_chroma_db_client = mocker.patch("chromadb.PersistentClient")
+
+        database_service = DatabaseService(
+            logger=mock_logger,
+            base_path=mock_config["database"]["base_dir"],
+            name=mock_config["database"]["provider"] + "_256_64",
+            num_search_results=mock_config["database"]["num_search_res"],
+            embedding_config=mock_config["embedding"],
+        )
+
+        with pytest.raises(DatabaseError):
+            database_service.get_titles()
 
     def test_create_base_dir(self, mocker, mock_logger, mock_config):
         base_path = "/path/to/base"

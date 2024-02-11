@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - New `query` response object `QueryResponse` contains information about the sources on which the response is based on. You can now extract the titles as well as the document chunks from the response.
+- The option to specify an identifier for a `user` with all app-level requests, to support multiple users.
+- A `get_titles()` method on the app level to get a string list of all titles owned by a user in the database.
 
 ### Changed
 

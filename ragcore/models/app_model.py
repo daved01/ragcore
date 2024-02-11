@@ -20,3 +20,17 @@ class QueryResponse:
     content: Optional[str]
     documents: Sequence[Optional[Document]]
     user: Optional[str]
+
+
+@dataclass
+class TitlesResponse:
+    """Model for document title responses.
+
+    Attributes:
+        user: The owner of the titles.
+
+        contents: The list of title strings.
+    """
+
+    user: Optional[str]
+    contents: list[Optional[str]]
