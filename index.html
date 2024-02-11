@@ -115,6 +115,9 @@
 <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">answer</span><span class="o">.</span><span class="n">documents</span><span class="p">:</span>
    <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
+<span class="c1"># List all documents in the database</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rag_instance</span><span class="o">.</span><span class="n">get_titles</span><span class="p">())</span>
+
 <span class="c1"># You can delete by title</span>
 <span class="n">app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My_Book&quot;</span><span class="p">)</span>
 </pre></div>

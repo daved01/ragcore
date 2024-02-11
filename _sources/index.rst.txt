@@ -8,7 +8,7 @@ RAG Core documentation
 
 RAG Core is a library designed to reduce the implementation of Retrieval-Augmented Generation applications to a configuration file and a few lines of code.
 
-To get started, run 
+To get started, run
 
 .. code-block:: bash
 
@@ -34,6 +34,9 @@ Once you have selected the components that suit your needs with the config file,
    for doc in answer.documents:
       print(doc.title, " | ", doc.content)
 
+   # List all documents in the database
+   print(rag_instance.get_titles())
+
    # You can delete by title
    app.delete(title="My_Book")
 
@@ -41,27 +44,27 @@ Once you have selected the components that suit your needs with the config file,
 .. toctree::
    :maxdepth: 2
    :caption: About RAG
-   
+
    contents/about
 
 .. toctree::
    :maxdepth: 2
    :caption: Getting started
-   
+
    contents/installation
    contents/first_app
 
 .. toctree::
    :maxdepth: 2
    :caption: Usage guide
-   
+
    contents/configuration
    contents/supported_components
 
 .. toctree::
    :maxdepth: 2
    :caption: Developer guide
-   
+
    contents/develop
    contents/adding_components
    contents/api_reference
