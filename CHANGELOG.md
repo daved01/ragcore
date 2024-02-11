@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0] - 2024-02-11
+
 ### Added
 
 - New `query` response object `QueryResponse` contains information about the sources on which the response is based on. You can now extract the titles as well as the document chunks from the response.
