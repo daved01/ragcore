@@ -69,12 +69,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.app.RAGCore"><code class="docutils literal notranslate"><span class="pre">RAGCore</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.add"><code class="docutils literal notranslate"><span class="pre">RAGCore.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.delete"><code class="docutils literal notranslate"><span class="pre">RAGCore.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.get_titles"><code class="docutils literal notranslate"><span class="pre">RAGCore.get_titles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.RAGCore.query"><code class="docutils literal notranslate"><span class="pre">RAGCore.query()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp"><code class="docutils literal notranslate"><span class="pre">AbstractApp</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.add"><code class="docutils literal notranslate"><span class="pre">AbstractApp.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.delete"><code class="docutils literal notranslate"><span class="pre">AbstractApp.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.get_titles"><code class="docutils literal notranslate"><span class="pre">AbstractApp.get_titles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.initialize_logger"><code class="docutils literal notranslate"><span class="pre">AbstractApp.initialize_logger()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.logger"><code class="docutils literal notranslate"><span class="pre">AbstractApp.logger</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.app.base_app.AbstractApp.query"><code class="docutils literal notranslate"><span class="pre">AbstractApp.query()</span></code></a></li>
@@ -86,6 +88,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService"><code class="docutils literal notranslate"><span class="pre">DatabaseService</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.add_documents"><code class="docutils literal notranslate"><span class="pre">DatabaseService.add_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.delete_documents"><code class="docutils literal notranslate"><span class="pre">DatabaseService.delete_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.get_titles"><code class="docutils literal notranslate"><span class="pre">DatabaseService.get_titles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.initialize_local_database"><code class="docutils literal notranslate"><span class="pre">DatabaseService.initialize_local_database()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.initialize_remote_database"><code class="docutils literal notranslate"><span class="pre">DatabaseService.initialize_remote_database()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.services.database_service.DatabaseService.query"><code class="docutils literal notranslate"><span class="pre">DatabaseService.query()</span></code></a></li>
@@ -113,6 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel.add_documents"><code class="docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel.add_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents"><code class="docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel.delete_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents"><code class="docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel.get_number_of_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_titles"><code class="docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel.get_titles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel.query"><code class="docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel.query()</span></code></a></li>
 </ul>
 </li>
@@ -122,12 +126,25 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.add_documents"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.add_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.delete_documents"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.delete_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.get_number_of_documents"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.get_number_of_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.get_titles"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.get_titles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.query"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.query()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.document_model.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.content"><code class="docutils literal notranslate"><span class="pre">Document.content</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.metadata"><code class="docutils literal notranslate"><span class="pre">Document.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.title"><code class="docutils literal notranslate"><span class="pre">Document.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse"><code class="docutils literal notranslate"><span class="pre">QueryResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse.content"><code class="docutils literal notranslate"><span class="pre">QueryResponse.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse.documents"><code class="docutils literal notranslate"><span class="pre">QueryResponse.documents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse.user"><code class="docutils literal notranslate"><span class="pre">QueryResponse.user</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.models.app_model.TitlesResponse"><code class="docutils literal notranslate"><span class="pre">TitlesResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.app_model.TitlesResponse.contents"><code class="docutils literal notranslate"><span class="pre">TitlesResponse.contents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.app_model.TitlesResponse.user"><code class="docutils literal notranslate"><span class="pre">TitlesResponse.user</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.document_loader_model.PDFLoader"><code class="docutils literal notranslate"><span class="pre">PDFLoader</span></code></a><ul>
@@ -174,6 +191,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ragcore.shared.utils">Shared</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.utils.custom_key_comparator"><code class="docutils literal notranslate"><span class="pre">custom_key_comparator()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.utils.document_to_str"><code class="docutils literal notranslate"><span class="pre">document_to_str()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.utils.remove_file_extension"><code class="docutils literal notranslate"><span class="pre">remove_file_extension()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.utils.slice_list"><code class="docutils literal notranslate"><span class="pre">slice_list()</span></code></a></li>
@@ -306,8 +324,15 @@ retrieved information.</p>
 <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;Tell me about the topic.&#39;</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">rag_instance</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
 
-<span class="c1"># Print the generated response</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="c1"># Print the content string of the generated response</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># List the document&#39;s titles and contents on which the response is based</span>
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">documents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># List all documents in the database</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rag_instance</span><span class="o">.</span><span class="n">get_titles</span><span class="p">())</span>
 
 <span class="c1"># Remove the document</span>
 <span class="n">rag_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;my_book&quot;</span><span class="p">)</span>
@@ -325,7 +350,7 @@ For more information, refer to the <cite>Configuration</cite> section of the doc
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.RAGCore.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.add" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.add" title="Link to this definition"></a></dt>
 <dd><p>Adds a document to the database.</p>
 <p>Adds the document in the path to the database. The filename, without the
 file extension, becomes the document title. For example, the path
@@ -333,34 +358,53 @@ file extension, becomes the document title. For example, the path
 <code class="docutils literal notranslate"><span class="pre">my_book</span></code>. Before it is added, the document is split into overlapping chunks
 as specified in the config file. Then, using the embedding model, vector
 representations are created which are then added to the database.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>path: A string to the file location.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.RAGCore.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.delete" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.delete" title="Link to this definition"></a></dt>
 <dd><p>Deletes a collection from the database.</p>
 <p>Given a title, all documents with that title, also called a collection, are
 deleted from the database.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>title: The title of the collection to remove from the database.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.app.RAGCore.get_titles">
+<span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragcore.models.app_model.TitlesResponse" title="ragcore.models.app_model.TitlesResponse"><span class="pre">TitlesResponse</span></a></span></span><a class="headerlink" href="#ragcore.app.RAGCore.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Gets the document titles in the database.</p>
+<p>If a user identifier is given, the titles owned by this user are returned.
+If no user is given, the titles of the main collection are returned.
+The titles are sorted in alphabetical order.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>user: An optional string to identify the owner.</p>
+</dd>
+<dt>Returns:</dt><dd><p>TitlesResponse: Object with an optional list of alphabetically sorted string titles and an optional user.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.RAGCore.query">
-<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.RAGCore.query" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse" title="ragcore.models.app_model.QueryResponse"><span class="pre">QueryResponse</span></a></span></span><a class="headerlink" href="#ragcore.app.RAGCore.query" title="Link to this definition"></a></dt>
 <dd><p>Queries the database with a query.</p>
 <p>Queries the database and makes an LLM request with the prompt and the context
 provided by the database.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>query: The query string to query the database with.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
-<dt>Returns:</dt><dd><p>A string with the response, or None if no answer could be generated.</p>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">QueryResponse</span></code> object. The field <cite>content</cite> contains the string or None if a response could not be generated.
+The field <cite>documents</cite> is a list with documents of type <cite>Document</cite> on which the response is based.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,14 +419,20 @@ provided by the database.</p>
 <p>Defines the required methods and sets up the logger.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.add">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.add" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.add" title="Link to this definition"></a></dt>
 <dd><p>Adds a document to the database.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.delete">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.delete" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.delete" title="Link to this definition"></a></dt>
 <dd><p>Removes a document from the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.get_titles">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragcore.models.app_model.TitlesResponse" title="ragcore.models.app_model.TitlesResponse"><span class="pre">TitlesResponse</span></a></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Lists all titles owned by the user in the database, sorted in alphabetical order.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -405,7 +455,7 @@ provided by the database.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.app.base_app.AbstractApp.query">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.query" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragcore.models.app_model.QueryResponse" title="ragcore.models.app_model.QueryResponse"><span class="pre">QueryResponse</span></a></span></span><a class="headerlink" href="#ragcore.app.base_app.AbstractApp.query" title="Link to this definition"></a></dt>
 <dd><p>Runs a query against a database.</p>
 </dd></dl>
 
@@ -432,23 +482,37 @@ a local or a remote database is managed by the service. The interactions with th
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.add_documents">
-<span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.add_documents" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.add_documents" title="Link to this definition"></a></dt>
 <dd><p>Adds documents to an existing database.</p>
 <p>Documents must have metadata, and the metadata must have a <cite>title</cite> specified.
 Adding documents with the same title multiple times is not possible.</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>documents: A list of documents of type <code class="docutils literal notranslate"><span class="pre">Document</span></code>.</p>
+<dl>
+<dt>Args:</dt><dd><p>documents: A list of documents of type <code class="docutils literal notranslate"><span class="pre">Document</span></code>.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.delete_documents">
-<span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.delete_documents" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.delete_documents" title="Link to this definition"></a></dt>
 <dd><p>Deletes all documents with the title <code class="docutils literal notranslate"><span class="pre">title</span></code> from the database.</p>
 <p>The title matching is case sensitive.</p>
+<dl>
+<dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.get_titles">
+<span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Get the document titles for the user in the database, sorted in alphabetical order.</p>
 <dl class="simple">
-<dt>Attributes:</dt><dd><p>title: The title of the documents to be deleted.</p>
+<dt>Args:</dt><dd><p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of alphabetically sorted strings with the titles, or an empty list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -469,12 +533,13 @@ If the base path does not exist it is created.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.query">
-<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.query" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.query" title="Link to this definition"></a></dt>
 <dd><p>Query the database with a query.</p>
 <p>The instantiated database is queried with the given query string and returns
 a list of documents for a query.</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>query: A query as a string.</p>
+<dl>
+<dt>Args:</dt><dd><p>query: A query as a string.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>A list of documents or None.</p>
 </dd>
@@ -628,10 +693,11 @@ concrete implementations. Subclasses must implement the abstract methods to prov
 deleting, querying, and retrieving the number of documents in the database.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.add_documents">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.add_documents" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.add_documents" title="Link to this definition"></a></dt>
 <dd><p>Adds documents to the database.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>documents: A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code> to be added to the database.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>True if documents have been added, False otherwise.</p>
 </dd>
@@ -640,10 +706,11 @@ deleting, querying, and retrieving the number of documents in the database.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents" title="Link to this definition"></a></dt>
 <dd><p>Deletes all documents with title <cite>title</cite> from the database.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>True if documents have been delete, False otherwise.</p>
 </dd>
@@ -652,16 +719,29 @@ deleting, querying, and retrieving the number of documents in the database.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_number_of_documents" title="Link to this definition"></a></dt>
 <dd><p>Returns the total number of documents in the database.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.query">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.query" title="Link to this definition"></a></dt>
-<dd><p>Queries the database with a query using a similarity metric.</p>
+<dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.get_titles">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Returns the titles owned by the user.</p>
 <dl class="simple">
+<dt>Args:</dt><dd><p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of strings with the titles, or an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.BaseVectorDatabaseModel.query">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.BaseVectorDatabaseModel.query" title="Link to this definition"></a></dt>
+<dd><p>Queries the database with a query using a similarity metric.</p>
+<dl>
 <dt>Args:</dt><dd><p>query: A query as a string.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code>, or None if no documents could be retrieved.</p>
 </dd>
@@ -705,14 +785,15 @@ collection is used for all documents.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.add_documents">
-<span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.add_documents" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.add_documents" title="Link to this definition"></a></dt>
 <dd><p>Adds documents to the Chroma database.</p>
 <p>In the database, each ID must be unique.</p>
 <p>To prevent documents from the same source, say the same PDF file, from being added more than once,
 we check if a document with the same title already exists in the database. Only if it does not can the
 documents be added.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>documents: A list of documents.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>True if the document has been added, False otherwise.</p>
 </dd>
@@ -721,10 +802,11 @@ documents be added.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.delete_documents">
-<span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.delete_documents" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.delete_documents" title="Link to this definition"></a></dt>
 <dd><p>Deletes all documents with the given title.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>True if documents have been deleted, False otherwise.</p>
 </dd>
@@ -733,23 +815,32 @@ documents be added.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.get_number_of_documents">
-<span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.get_number_of_documents" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.get_number_of_documents" title="Link to this definition"></a></dt>
 <dd><p>Returns the number of documents in the collection.</p>
 <p>We use only one collection, so getting all documents in the database is equal to
 getting all documenst in the main collection.</p>
 <dl class="simple">
+<dt>Args:</dt><dd><p>user: An optional string to identify a user.</p>
+</dd>
 <dt>Returns:</dt><dd><p>The number of documents in the database.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.get_titles">
+<span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Returns the titles which are owned by the user.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ragcore.models.database_model.ChromaDatabase.query">
-<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.query" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.ChromaDatabase.query" title="Link to this definition"></a></dt>
 <dd><p>Queries the database with a query.</p>
 <p>To perform the query on the database, vector representations is created from the query first.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>query: A query to query the database with.</p>
+<p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>A list of results from the database, or None if no results could be retrieved.</p>
 </dd>
@@ -760,11 +851,12 @@ getting all documenst in the main collection.</p>
 
 <dl class="py class" id="module-ragcore.models.document_model">
 <dt class="sig sig-object py" id="ragcore.models.document_model.Document">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.document_model.</span></span><span class="sig-name descname"><span class="pre">Document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.document_model.Document" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.document_model.</span></span><span class="sig-name descname"><span class="pre">Document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.document_model.Document" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model for documents.</p>
 <dl>
 <dt>Attributes:</dt><dd><p>content: The content of document, as string.</p>
+<p>title: The title of the document.</p>
 <p>metadata: A mapping for the metadata.</p>
 </dd>
 </dl>
@@ -776,6 +868,61 @@ getting all documenst in the main collection.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ragcore.models.document_model.Document.metadata">
 <span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragcore.models.document_model.Document.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.document_model.Document.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragcore.models.document_model.Document.title" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-ragcore.models.app_model">
+<dt class="sig sig-object py" id="ragcore.models.app_model.QueryResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.app_model.</span></span><span class="sig-name descname"><span class="pre">QueryResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.app_model.QueryResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for query responses.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>content: String with the response, None if no response could be generated.</p>
+<p>documents: Sequence of documents on which the response is based on. Empty list if response is None.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.app_model.QueryResponse.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ragcore.models.app_model.QueryResponse.content" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.app_model.QueryResponse.documents">
+<span class="sig-name descname"><span class="pre">documents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragcore.models.app_model.QueryResponse.documents" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.app_model.QueryResponse.user">
+<span class="sig-name descname"><span class="pre">user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ragcore.models.app_model.QueryResponse.user" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ragcore.models.app_model.TitlesResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.app_model.</span></span><span class="sig-name descname"><span class="pre">TitlesResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.app_model.TitlesResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for document title responses.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>user: The owner of the titles.</p>
+<p>contents: The list of title strings.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.app_model.TitlesResponse.contents">
+<span class="sig-name descname"><span class="pre">contents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragcore.models.app_model.TitlesResponse.contents" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.models.app_model.TitlesResponse.user">
+<span class="sig-name descname"><span class="pre">user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ragcore.models.app_model.TitlesResponse.user" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -989,12 +1136,12 @@ concatenated string of context which should be used in the prompt.</p>
 <span id="data-transfer-objects"></span><h2>Data Transfer Objects<a class="headerlink" href="#module-ragcore.dto.document_dto" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.dto.document_dto.DocumentDTO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.dto.document_dto.</span></span><span class="sig-name descname"><span class="pre">DocumentDTO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.dto.document_dto.</span></span><span class="sig-name descname"><span class="pre">DocumentDTO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.dto.document_dto.DocumentDTO" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for Document Data Transfer Objects to convert to RAG Core documents.</p>
 <dl>
 <dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a DTO</span>
-<span class="n">dto</span> <span class="o">=</span> <span class="n">DocumentDTO</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;This is my text&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Great text&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+<span class="n">dto</span> <span class="o">=</span> <span class="n">DocumentDTO</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;This is my text&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Great text&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Great text&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
 
 <span class="c1"># Now you can create a ragcore document</span>
 <span class="n">doc</span> <span class="o">=</span> <span class="n">dto</span><span class="o">.</span><span class="n">to_ragcore</span><span class="p">()</span>
@@ -1002,6 +1149,7 @@ concatenated string of context which should be used in the prompt.</p>
 </div>
 </dd>
 <dt>Attributes:</dt><dd><p>content: A string for the page content.</p>
+<p>title: The title of the document as a string.</p>
 <p>metadata: A mapping for metadata.</p>
 </dd>
 </dl>
@@ -1034,6 +1182,12 @@ concatenated string of context which should be used in the prompt.</p>
 </section>
 <section id="module-ragcore.shared.utils">
 <span id="shared"></span><h2>Shared<a class="headerlink" href="#module-ragcore.shared.utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ragcore.shared.utils.custom_key_comparator">
+<span class="sig-prename descclassname"><span class="pre">ragcore.shared.utils.</span></span><span class="sig-name descname"><span class="pre">custom_key_comparator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.shared.utils.custom_key_comparator" title="Link to this definition"></a></dt>
+<dd><p>Returns a lowercase string or an empty string if no item is given.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="ragcore.shared.utils.document_to_str">
 <span class="sig-prename descclassname"><span class="pre">ragcore.shared.utils.</span></span><span class="sig-name descname"><span class="pre">document_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ragcore.shared.utils.document_to_str" title="Link to this definition"></a></dt>

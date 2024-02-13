@@ -170,13 +170,21 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.models.embedding_model.BaseOpenAIEmbeddings.client">client (ragcore.models.embedding_model.BaseOpenAIEmbeddings attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants">ConfigurationConstants (class in ragcore.shared.constants)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.models.document_model.Document.content">content (ragcore.models.document_model.Document attribute)</a>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.QueryResponse.content">content (ragcore.models.app_model.QueryResponse attribute)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.models.document_model.Document.content">(ragcore.models.document_model.Document attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.TitlesResponse.contents">contents (ragcore.models.app_model.TitlesResponse attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.services.llm_service.LLMService.create_prompt">create_prompt() (ragcore.services.llm_service.LLMService method)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.utils.custom_key_comparator">custom_key_comparator() (in module ragcore.shared.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -216,6 +224,8 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO">DocumentDTO (class in ragcore.dto.document_dto)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.QueryResponse.documents">documents (ragcore.models.app_model.QueryResponse attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.services.document_service.DocumentService">DocumentService (class in ragcore.services.document_service)</a>
 </li>
   </ul></td>
@@ -252,10 +262,22 @@
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.get_number_of_documents">(ragcore.models.database_model.ChromaDatabase method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.prompt_model.PromptGenerator.get_prompt">get_prompt() (ragcore.models.prompt_model.PromptGenerator method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.app.base_app.AbstractApp.get_titles">get_titles() (ragcore.app.base_app.AbstractApp method)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.app.RAGCore.get_titles">(ragcore.app.RAGCore method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.get_titles">(ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.get_titles">(ragcore.models.database_model.ChromaDatabase method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.services.database_service.DatabaseService.get_titles">(ragcore.services.database_service.DatabaseService method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -384,6 +406,8 @@
 </li>
         <li><a href="contents/api_reference.html#module-ragcore.dto.document_dto">ragcore.dto.document_dto</a>
 </li>
+        <li><a href="contents/api_reference.html#module-ragcore.models.app_model">ragcore.models.app_model</a>
+</li>
         <li><a href="contents/api_reference.html#module-ragcore.models.document_loader_model">ragcore.models.document_loader_model</a>
 </li>
         <li><a href="contents/api_reference.html#module-ragcore.models.document_model">ragcore.models.document_model</a>
@@ -456,6 +480,10 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.QueryResponse">QueryResponse (class in ragcore.models.app_model)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
@@ -482,6 +510,13 @@
 
       <ul>
         <li><a href="contents/api_reference.html#module-ragcore.dto.document_dto">module</a>
+</li>
+      </ul></li>
+      <li>
+    ragcore.models.app_model
+
+      <ul>
+        <li><a href="contents/api_reference.html#module-ragcore.models.app_model">module</a>
 </li>
       </ul></li>
       <li>
@@ -588,10 +623,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.services.text_splitter_service.TextSplitterService">TextSplitterService (class in ragcore.services.text_splitter_service)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_langchain">to_langchain() (ragcore.dto.document_dto.DocumentDTO method)</a>
+      <li><a href="contents/api_reference.html#ragcore.models.document_model.Document.title">title (ragcore.models.document_model.Document attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.TitlesResponse">TitlesResponse (class in ragcore.models.app_model)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_langchain">to_langchain() (ragcore.dto.document_dto.DocumentDTO method)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_ragcore">to_ragcore() (ragcore.dto.document_dto.DocumentDTO method)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.dto.document_dto.DocumentDTO.to_ragcore_list">to_ragcore_list() (ragcore.dto.document_dto.DocumentDTO static method)</a>
@@ -601,6 +640,14 @@
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.models.app_model.QueryResponse.user">user (ragcore.models.app_model.QueryResponse attribute)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.models.app_model.TitlesResponse.user">(ragcore.models.app_model.TitlesResponse attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.errors.UserConfigurationError">UserConfigurationError</a>
 </li>
