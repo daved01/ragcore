@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-02-13
+
+### Fixed
+
+- When trying to access a Chroma collection which does not exist, the collection is now automatically created.
+
 ## [1.0.0] - 2024-02-11
 
 ### Added
