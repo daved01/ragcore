@@ -306,7 +306,10 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
         """
         if not user:
             return self.collection
-        return self.client.get_collection(user)
+        try:
+            return self.client.get_collection(user)
+        except ValueError:
+            return self.client.create_collection(user)
 
     @staticmethod
     def _get_number_of_documents_by_title(
