@@ -1,3 +1,9 @@
+class APIConstants:
+    """Constants for the API client."""
+
+    PINECONE_LIST_VECTORS = "/vectors/list"
+
+
 class AppConstants:
     """Constants for the app."""
 
@@ -43,14 +49,28 @@ class DataConstants:
 
     KEY_TITLE = "title"
     KEY_PAGE = "page"
+    KEY_DOC = "doc"
 
 
 class DatabaseConstants:
     """Constants for database models and service."""
 
     PROVIDER_CHROMA = "chroma"
-    KEY_CHROMA_DOCUMENTS = "documents"
-    KEY_CHROMA_METADATAS = "metadatas"
+    PROVIDER_PINECONE = "pinecone"
+    KEY_DOC = "doc"
+    KEY_DOCUMENTS = "documents"
+    KEY_HEADERS_ACCEPT = "accept"
+    KEY_METADATAS = "metadatas"
+    KEY_METADATA = "metadata"
+    KEY_TITLE = "title"
+    KEY_PINECONE_DEFAULT_INDEX = "main"
+    KEY_PINECONE_NAMESPACE = "namespace"
+    KEY_PINECONE_VECTORS = "vectors"
+    KEY_PINECONE_ID = "id"
+    KEY_PINECONE_PREFIX = "prefix"
+    KEY_PINECONE_HEADERS_API_KEY = "Api-Key"
+    KEY_PINECONE_MATCHES = "matches"
+    VALUE_PINECONE_API_KEY = "PINECONE_API_KEY"
 
 
 class EmbeddingConstants:

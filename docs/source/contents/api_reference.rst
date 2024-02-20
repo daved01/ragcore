@@ -40,10 +40,10 @@ Models
 .. autoclass:: ragcore.models.database_model.BaseLocalVectorDatabaseModel
     :members:
 
-.. autoclass:: ragcore.models.database_model.BaseRemoteVectorDatabaseModel
+.. autoclass:: ragcore.models.database_model.ChromaDatabase
     :members:
 
-.. autoclass:: ragcore.models.database_model.ChromaDatabase
+.. autoclass:: ragcore.models.database_model.PineconeDatabase
     :members:
 
 .. automodule:: ragcore.models.document_model
@@ -51,7 +51,7 @@ Models
 
 .. automodule:: ragcore.models.app_model
     :members:
-    
+
 .. automodule:: ragcore.models.document_loader_model
     :members:
 

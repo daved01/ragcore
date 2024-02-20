@@ -216,9 +216,9 @@ class RAGCore(AbstractApp):
         """
         self.database_service = DatabaseService(
             logger=self.logger,
-            base_path=self.configuration[ConfigurationConstants.KEY_DATABASE][
+            base_path=self.configuration[ConfigurationConstants.KEY_DATABASE].get(
                 ConfigurationConstants.KEY_DATABASE_BASE_PATH
-            ],
+            ),
             name=self.configuration[ConfigurationConstants.KEY_DATABASE][
                 ConfigurationConstants.KEY_DATABASE_PROVIDER
             ]

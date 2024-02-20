@@ -15,7 +15,11 @@ from ragcore.models.embedding_model import (
     OpenAIEmbedding,
     AzureOpenAIEmbedding,
 )
-from ragcore.models.database_model import BaseVectorDatabaseModel, ChromaDatabase
+from ragcore.models.database_model import (
+    BaseVectorDatabaseModel,
+    ChromaDatabase,
+    PineconeDatabase,
+)
 from ragcore.shared import utils
 
 Metadata = dict[str, str]
@@ -115,8 +119,30 @@ class DatabaseService:
         )
 
     def initialize_remote_database(self) -> None:
-        """Initializes a remote database."""
-        raise NotImplementedError("Remote database is not implemented yet.")
+        """Initializes a remote database.
+
+        To initialize a remote database, the DatabaseService must have the attribute ``name`` set.
+        If the base path does not exist it is created.
+
+        """
+        if not self.name:
+            raise DatabaseError(
+                "Tried to initialize a local database, but no name and/or path for it is given."
+            )
+
+        if self.name and DatabaseConstants.PROVIDER_PINECONE in self.name:
+            self.database = PineconeDatabase(
+                num_search_results=self.number_search_results,
+                embedding_function=self.embedding,
+            )
+        else:
+            raise DatabaseError(
+                f"Specified database {self.name.split('_')[0] if self.name else '<no-name>'} is not supported."
+            )
+
+        self.logger.info(
+            f"Initialized database `{self.base_path if self.base_path else '' + '/' + self.name if self.name else ''}`."
+        )
 
     def add_documents(
         self, documents: list[Document], user: Optional[str] = None

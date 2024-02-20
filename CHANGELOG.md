@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Pinecone database is now supported. To use it, select `pinecone` in the config file, add your Pinecone base url, and done!
+
+#### Changed
+
+- Internally, a model is now used for the config file, replacing the dict.
+
 ## [1.0.1] - 2024-02-13
 
 ### Fixed
