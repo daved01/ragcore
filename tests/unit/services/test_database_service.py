@@ -4,7 +4,6 @@ from ragcore.shared.errors import EmbeddingError, DatabaseError, MetadataError
 from ragcore.models.database_model import ChromaDatabase
 from ragcore.models.embedding_model import BaseEmbedding
 from ragcore.services.database_service import DatabaseService
-from ragcore.models.config_model import DatabaseConfiguration
 
 from tests import BaseTest
 from tests.unit.services import RAGCoreTestSetup
