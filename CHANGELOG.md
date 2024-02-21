@@ -4,13 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.2] - 2024-02-21
+
 ### Added
 
-- Pinecone database is now supported. To use it, select `pinecone` in the config file, add your Pinecone base url, and done!
+- Pinecone database is now supported. To use it, select `pinecone` in the config file, add your Pinecone `base_url`, and done!
 
 #### Changed
 
-- Internally, a model is now used for the config file, replacing the dict.
+- Internally, a model is now used for the configuration of the app, replacing the dictionaries.
 
 ## [1.0.1] - 2024-02-13
 
