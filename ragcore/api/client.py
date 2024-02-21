@@ -1,5 +1,5 @@
 import re
-from typing import Optional
+from typing import Optional, Any
 import requests
 
 from ragcore.shared.constants import DatabaseConstants
@@ -53,7 +53,7 @@ class APIClient:
 class PineconeAPIClient(APIClient):
     """API client for Pinecone.
 
-    To make Pinecone requests, you must pass your API key in the header under
+    To make Pinecone requests, the API key must be passed in the header under
     ``Api-Key``.
 
     """
@@ -85,20 +85,26 @@ class PineconeAPIClient(APIClient):
 
         response = self.get(endpoint=endpoint, params=params)
         # Field `pagination` exists if there is a next page.
-        pagination = response.get("pagination")
+        pagination: Any = response.get(DatabaseConstants.KEY_PINECONE_PAGINATION)
         if not pagination:
             return response
 
         # Response has next page.
-        vectors = response.get("vectors", [])
-        namespace = response.get("namespace")
+        vectors: Any = response.get(DatabaseConstants.KEY_PINECONE_VECTORS, [])
 
         while pagination:
-            pagination_token = pagination.get("next")
-            params.update({"paginationToken": pagination_token})
+            pagination_token: str = pagination.get(
+                DatabaseConstants.KEY_PINECONE_NEXT, ""
+            )
+            params.update(
+                {DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN: pagination_token}
+            )
             response = self.get(endpoint=endpoint, params=params)
-            vectors.extend(response.get("vectors", []))
-            pagination = response.get("pagination")
+            vectors.extend(response.get(DatabaseConstants.KEY_PINECONE_VECTORS, []))
+            pagination = response.get(DatabaseConstants.KEY_PINECONE_PAGINATION)
 
         # Construct response with all vectors
-        return {"vectors": vectors, "namespace": namespace}
+        return {
+            DatabaseConstants.KEY_PINECONE_VECTORS: vectors,
+            DatabaseConstants.KEY_PINECONE_NAMESPACE: namespace,
+        }

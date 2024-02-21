@@ -10,8 +10,10 @@ from ragcore.api.client import PineconeAPIClient
 from ragcore.models.embedding_model import BaseEmbedding
 from ragcore.models.document_model import Document
 from ragcore.shared.constants import DataConstants, DatabaseConstants, APIConstants
+from ragcore.shared.errors import DatabaseError
 
 
+# A default collection to be used when no user is given.
 NAME_MAIN_COLLECTION = "main_collection"
 
 
@@ -337,11 +339,13 @@ class PineconeDatabase(BaseVectorDatabaseModel):
     as environment variable.
 
     This implementation uses the Pinecone SDK and the REST API. There is also a gRPC version of the Python client
-    with potential for higher upsert speeds, which could be investigated: https://docs.pinecone.io/docs/upsert-data
+    with potential for higher upsert speeds, which could be investigated: https://docs.pinecone.io/docs/upsert-data.
 
     For more information on Pinecone, see: https://www.pinecone.io.
 
     Attributes:
+        base_url: The url pointing to your Pinecone instance.
+
         num_search_results: The number of results to be returned for a query.
 
         embedding_function: Embedding of type ``BaseEmbedding`` to be used to create vector representations of inputs.
@@ -350,6 +354,7 @@ class PineconeDatabase(BaseVectorDatabaseModel):
 
     def __init__(
         self,
+        base_url: str,
         num_search_results: int,
         embedding_function: BaseEmbedding,
     ):
@@ -359,14 +364,11 @@ class PineconeDatabase(BaseVectorDatabaseModel):
         self.index: Type[Pinecone.Index] = self.client.Index(
             DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX
         )
-        # TODO: Add URL from config object
         self.api_client = PineconeAPIClient(
-            base_url=None,
+            base_url=base_url,
             headers={
                 DatabaseConstants.KEY_HEADERS_ACCEPT: "application/json",
-                DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY: os.getenv(
-                    DatabaseConstants.VALUE_PINECONE_API_KEY
-                ),
+                DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY: self._get_api_key(),
             },
         )
 
@@ -388,13 +390,14 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             True if documents have been added, False otherwise.
 
         """
-
         docs = [doc.content for doc in documents]
         metadatas: Any = [data.metadata for data in documents]
         title = metadatas[0].get(DataConstants.KEY_TITLE)
 
         # Check if the documents already exist in database.
-        if self._get_ids_by_title(user=user, title=title):
+        if self._get_ids_by_title(
+            user=user if user else NAME_MAIN_COLLECTION, title=title
+        ):
             return False
 
         embeddings: Any = self.embedding.embed_texts(docs)
@@ -404,7 +407,7 @@ class PineconeDatabase(BaseVectorDatabaseModel):
 
         # Construct vectors so they can be inserted. We don't have a field `doc` in Pinecone, so we
         # add this content to metadata as a new field. However, as we don't expect this in metadata
-        # in ragcore, we remove `doc` from metadata on retrieval and return Documents as expected.
+        # in ragcore, we remove `doc` from metadata on retrieval and return a Document as expected.
         vectors = []
 
         for ind, embedding in enumerate(embeddings):
@@ -420,7 +423,9 @@ class PineconeDatabase(BaseVectorDatabaseModel):
 
         # Add to database
         try:
-            self.index.upsert(namespace=user, vectors=vectors)
+            self.index.upsert(
+                namespace=user if user else NAME_MAIN_COLLECTION, vectors=vectors
+            )
         except HTTPError:
             return False
         return True
@@ -434,12 +439,18 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             user: An optional string to identify a user.
 
         Returns:
-            True if documents have been delete, False otherwise.
+            True if documents have been deleted, False otherwise.
 
         """
+        if not title:
+            return False
         try:
-            ids_to_delete = self._get_ids_by_title(user=user, title=title)
-            self.index.delete(namespace=user, ids=ids_to_delete)
+            ids_to_delete = self._get_ids_by_title(
+                user=user if user else NAME_MAIN_COLLECTION, title=title
+            )
+            self.index.delete(
+                namespace=user if user else NAME_MAIN_COLLECTION, ids=ids_to_delete
+            )
         except HTTPError:
             return False
         return True
@@ -456,10 +467,11 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             A list of documents ``Document``, or None if no documents could be retrieved.
 
         """
+
         embeddings: Any = self.embedding.embed_texts([query])
 
         response = self.index.query(
-            namespace=user,
+            namespace=user if user else NAME_MAIN_COLLECTION,
             top_k=self.num_search_results,
             include_metadata=True,
             vector=embeddings[0],
@@ -506,13 +518,19 @@ class PineconeDatabase(BaseVectorDatabaseModel):
         try:
             response = self.api_client.get_paginated(
                 endpoint=APIConstants.PINECONE_LIST_VECTORS,
-                namespace=user if user else "",
+                namespace=user if user else NAME_MAIN_COLLECTION,
             )
         except HTTPError:
             return []
 
+        if not response:
+            return []
+
         # Extract the titles from the IDs in the response
-        vectors = response.get(DatabaseConstants.KEY_PINECONE_VECTORS)
+        vectors: Any = response.get(DatabaseConstants.KEY_PINECONE_VECTORS)
+
+        if not vectors:
+            return []
 
         titles = set()
         for vector in vectors:
@@ -532,7 +550,7 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             The number of documents owned by the user.
 
         """
-        return len(self.get_titles(user=user))
+        return len(self.get_titles(user=user if user else NAME_MAIN_COLLECTION))
 
     def _get_ids_by_title(self, user: str, title: str) -> list[Optional[str]]:
         """Returns a list of IDs given a title."""
@@ -547,7 +565,12 @@ class PineconeDatabase(BaseVectorDatabaseModel):
         except HTTPError:
             return []
 
-        vectors = response.get(DatabaseConstants.KEY_PINECONE_VECTORS)
+        if not response:
+            return []
+
+        vectors: Any = response.get(DatabaseConstants.KEY_PINECONE_VECTORS)
+        if not vectors:
+            return []
         ids = set()
 
         for vector in vectors:
@@ -557,3 +580,11 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             ids.add(curr_id)
 
         return list(ids)
+
+    def _get_api_key(self) -> str:
+        key = os.getenv(DatabaseConstants.VALUE_PINECONE_API_KEY)
+        if not key:
+            raise DatabaseError(
+                "Could not find API key `PINECONE_API_KEY` in the environment."
+            )
+        return key

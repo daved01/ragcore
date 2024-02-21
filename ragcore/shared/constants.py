@@ -18,6 +18,7 @@ class ConfigurationConstants:
     # Database
     KEY_DATABASE = "database"
     KEY_DATABASE_BASE_PATH = "base_dir"
+    KEY_DATABASE_BASE_URL = "base_url"
     KEY_DATABASE_PROVIDER = "provider"
     KEY_DATABASE_TYPE = "type"
     KEY_NUMBER_SEARCH_RESULTS = "number_search_results"
@@ -70,6 +71,9 @@ class DatabaseConstants:
     KEY_PINECONE_PREFIX = "prefix"
     KEY_PINECONE_HEADERS_API_KEY = "Api-Key"
     KEY_PINECONE_MATCHES = "matches"
+    KEY_PINECONE_PAGINATION = "pagination"
+    KEY_PINECONE_PAGINATION_TOKEN = "paginationToken"
+    KEY_PINECONE_NEXT = "next"
     VALUE_PINECONE_API_KEY = "PINECONE_API_KEY"
 
 

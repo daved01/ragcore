@@ -1,9 +1,8 @@
 from logging import Logger
 import os
-from typing import Optional, Mapping
+from typing import Optional
 
 from ragcore.shared.constants import (
-    ConfigurationConstants,
     DatabaseConstants,
     DataConstants,
     EmbeddingConstants,
@@ -15,6 +14,7 @@ from ragcore.models.embedding_model import (
     OpenAIEmbedding,
     AzureOpenAIEmbedding,
 )
+from ragcore.models.config_model import DatabaseConfiguration, EmbeddingConfiguration
 from ragcore.models.database_model import (
     BaseVectorDatabaseModel,
     ChromaDatabase,
@@ -48,28 +48,23 @@ class DatabaseService:
     def __init__(
         self,
         logger: Logger,
-        base_path: Optional[str],
-        name: Optional[str],
-        num_search_results: int,
-        embedding_config: Mapping[str, str],
+        config: DatabaseConfiguration,
+        embedding_config: EmbeddingConfiguration,
     ) -> None:
         self.logger: Logger = logger
-        self.base_path: Optional[str] = base_path
-        self.name: Optional[str] = name if name else None
-        self.number_search_results: int = num_search_results
+        self.base_path: Optional[str] = config.base_path
+        self.base_url: Optional[str] = config.base_url
+        self.provider: str = config.provider
+        self.number_search_results: int = config.number_search_results
         self.embedding: BaseEmbedding = self._init_embedding(config=embedding_config)
         self.database: Optional[BaseVectorDatabaseModel] = None
 
-    def _init_embedding(self, config: Mapping[str, str]) -> BaseEmbedding:
+    def _init_embedding(self, config: EmbeddingConfiguration) -> BaseEmbedding:
         """Initializes an embedding model."""
-        provider = config.get(ConfigurationConstants.KEY_EMBEDDING_PROVIDER)
-        model = config.get(ConfigurationConstants.KEY_EMBEDDING_MODEL)
-        api_version = config.get(
-            ConfigurationConstants.KEY_EMBEDDING_AZURE_OPENAI_API_VERSION, ""
-        )
-        endpoint = config.get(
-            ConfigurationConstants.KEY_EMBEDDING_AZURE_OPENAI_AZURE_ENDPOINT, ""
-        )
+        provider = config.provider
+        model = config.model
+        api_version = config.api_version
+        endpoint = config.endpoint
         if not provider or not model:
             raise EmbeddingError("Provider or model missing in the configuration.")
 
@@ -78,7 +73,11 @@ class DatabaseService:
                 f"Using embedding model {model}, provider `{EmbeddingConstants.PROVIDER_OPENAI}`."
             )
             return OpenAIEmbedding(model=model)
-        if provider == EmbeddingConstants.PROVIDER_AZURE_OPENAI:
+        if (
+            provider == EmbeddingConstants.PROVIDER_AZURE_OPENAI
+            and api_version
+            and endpoint
+        ):
             self.logger.info(
                 f"Using embedding model {model}, provider `{EmbeddingConstants.PROVIDER_AZURE_OPENAI}`."
             )
@@ -90,59 +89,57 @@ class DatabaseService:
     def initialize_local_database(self) -> None:
         """Initializes a local database.
 
-        To initialize a local database, the DatabaseService must have the attributes ``base_path`` and ``name`` set.
+        To initialize a local database, the DatabaseService must have the attributes ``base_path`` and ``provider`` set.
         If the base path does not exist it is created.
 
         """
-        if not self.name or not self.base_path:
+        if not self.provider or not self.base_path:
             raise DatabaseError(
-                "Tried to initialize a local database, but no name and/or path for it is given."
+                "Tried to initialize a local database, but no provider and/or path for it is given."
             )
 
         # Create base path if it does not exist
         if not (os.path.exists(self.base_path) and os.path.isdir(self.base_path)):
             self._create_base_dir()
 
-        if self.name and DatabaseConstants.PROVIDER_CHROMA in self.name:
+        if self.provider and DatabaseConstants.PROVIDER_CHROMA == self.provider:
             self.database = ChromaDatabase(
-                persist_directory=self.base_path + "/" + self.name,
+                persist_directory=self.base_path + "/" + self.provider,
                 num_search_results=self.number_search_results,
                 embedding_function=self.embedding,
             )
         else:
             raise DatabaseError(
-                f"Specified database {self.name.split('_')[0] if self.name else '<no-name>'} is not supported."
+                f"Specified database {self.provider if self.provider else '<no-name>'} is not supported."
             )
 
         self.logger.info(
-            f"Initialized database `{self.base_path + '/' + self.name if self.name else ''}`."
+            f"Initialized database `{self.base_path + '/' + self.provider if self.provider else ''}`."
         )
 
     def initialize_remote_database(self) -> None:
         """Initializes a remote database.
 
-        To initialize a remote database, the DatabaseService must have the attribute ``name`` set.
-        If the base path does not exist it is created.
+        A remote database often requires that a ``base_url`` is set.
 
         """
-        if not self.name:
+        if not self.provider or not self.base_url:
             raise DatabaseError(
-                "Tried to initialize a local database, but no name and/or path for it is given."
+                "Tried to initialize a remote database, but provider and/or base_url for it is missing."
             )
 
-        if self.name and DatabaseConstants.PROVIDER_PINECONE in self.name:
+        if self.provider and DatabaseConstants.PROVIDER_PINECONE == self.provider:
             self.database = PineconeDatabase(
+                base_url=self.base_url,
                 num_search_results=self.number_search_results,
                 embedding_function=self.embedding,
             )
         else:
             raise DatabaseError(
-                f"Specified database {self.name.split('_')[0] if self.name else '<no-name>'} is not supported."
+                f"Specified database {self.provider if self.provider else '<no-name>'} is not supported."
             )
 
-        self.logger.info(
-            f"Initialized database `{self.base_path if self.base_path else '' + '/' + self.name if self.name else ''}`."
-        )
+        self.logger.info(f"Initialized remote database `{self.provider}`.")
 
     def add_documents(
         self, documents: list[Document], user: Optional[str] = None
@@ -161,8 +158,7 @@ class DatabaseService:
         # Check if database exists on disk. If not exit.
         if not self.database:
             raise DatabaseError(
-                f"Tried to add documents to database `{self.base_path if self.base_path else ''+ '/' + self.name if self.name else ''}`, "
-                "but this database does not exist."
+                f"Tried to add documents to database `{self.provider}`, but this database does not exist."
             )
 
         # Validate metadata.
@@ -173,8 +169,8 @@ class DatabaseService:
 
         # Add the documents.
         self.logger.info(
-            f"Trying to add {len(documents)} documents to database at "
-            f"`{self.base_path if self.base_path else '' + '/' + self.name if self.name else ''}`..."
+            f"Trying to add {len(documents)} documents to database `{self.provider}` at "
+            f"`{self.base_path if self.base_path else self.base_url}` ..."
         )
 
         if self.database.add_documents(documents, user):

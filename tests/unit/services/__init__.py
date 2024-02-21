@@ -2,6 +2,13 @@ import pytest
 from langchain.schema import Document as LangDocument
 
 from ragcore.models.document_model import Document
+from ragcore.models.config_model import (
+    AppConfiguration,
+    DatabaseConfiguration,
+    LLMConfiguration,
+    EmbeddingConfiguration,
+    SplitterConfiguration,
+)
 from ragcore.models.embedding_model import OpenAIEmbedding
 
 
@@ -154,20 +161,27 @@ class RAGCoreTestSetup:
         return mock_openai
 
     @pytest.fixture
-    def mock_config(self):
-        return {
-            "database": {
-                "provider": "chroma",
-                "num_search_res": 2,
-                "base_dir": "database-base-dir",
-                "document_base_path": "database-document-path",
-            },
-            "splitter": {},
-            "embedding": {
-                "provider": "openai",
-                "model": "embedding-model",
-                "endpoint": "embedding-endpoint",
-                "api_version": "embedding-api-version",
-            },
-            "llm": {},
-        }
+    def mock_config_localdb(self):
+        database_config = DatabaseConfiguration(
+            provider="chroma",
+            number_search_results=2,
+            base_path="database-base-dir",
+            base_url=None,
+        )
+        llm_config = LLMConfiguration(
+            provider="openai", model="model", endpoint=None, api_version=None
+        )
+        embedding_config = EmbeddingConfiguration(
+            provider="openai",
+            model="embedding-model",
+            endpoint="embedding-endpoint",
+            api_version="embedding-api-version",
+        )
+        splitter_config = SplitterConfiguration(chunk_overlap=256, chunk_size=1024)
+
+        return AppConfiguration(
+            database_config=database_config,
+            splitter_config=splitter_config,
+            llm_config=llm_config,
+            embedding_config=embedding_config,
+        )
