@@ -125,8 +125,10 @@
 <section id="database">
 <h2>Database<a class="headerlink" href="#database" title="Link to this heading"></a></h2>
 <p><strong>Key</strong> <code class="docutils literal notranslate"><span class="pre">database</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">provider</span></code> - The provider of the database, for example <code class="docutils literal notranslate"><span class="pre">&quot;chroma&quot;</span></code>. Depending on the selection, a local or remote database is used. Consequently, you must provide either a <code class="docutils literal notranslate"><span class="pre">base_dir</span></code> or <code class="docutils literal notranslate"><span class="pre">base_url</span></code>. See <a class="reference internal" href="supported_components.html#supported-components"><span class="std std-ref">Supported components</span></a> for more information about supported configurations.</p>
 <p><code class="docutils literal notranslate"><span class="pre">number_search_results</span></code> - The number of chunks which are returned by the database and passed to the LLM in the prompt. A higher number can lead to more detailed answers, since more context is available, but the risk is that more irrelevant documents are retrieved, which reduces the quality of the answer.</p>
-<p><code class="docutils literal notranslate"><span class="pre">base_dir</span></code> - The directory in which the local database will be persisted. If this directory does not exist it will be created.</p>
+<p><code class="docutils literal notranslate"><span class="pre">base_dir</span></code> - For local databases such as Chroma. The directory in which the local database will be persisted. If this directory does not exist it will be created.</p>
+<p><code class="docutils literal notranslate"><span class="pre">base_url</span></code> - For remote databases such as Pinecone. The URL to your Pinecone instance.</p>
 </section>
 <section id="splitter">
 <h2>Splitter<a class="headerlink" href="#splitter" title="Link to this heading"></a></h2>
