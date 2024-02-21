@@ -28,7 +28,7 @@ As demonstrated in :ref:`first_app`, an example configuration file ``config.yaml
       provider: "openai"
       model: "gpt-model"
 
-The top-level keys correspond to component families, while the lower-level keys allow you to select a specific component or set values for that component. Let's walk through the keys step-by-step. 
+The top-level keys correspond to component families, while the lower-level keys allow you to select a specific component or set values for that component. Let's walk through the keys step-by-step.
 
 For a list of supported components, refer to the section :ref:`supported_components`.
 
@@ -37,9 +37,13 @@ Database
 =================
 **Key** ``database``
 
+``provider`` - The provider of the database, for example ``"chroma"``. Depending on the selection, a local or remote database is used. Consequently, you must provide either a ``base_dir`` or ``base_url``. See :ref:`supported_components` for more information about supported configurations.
+
 ``number_search_results`` - The number of chunks which are returned by the database and passed to the LLM in the prompt. A higher number can lead to more detailed answers, since more context is available, but the risk is that more irrelevant documents are retrieved, which reduces the quality of the answer.
 
-``base_dir`` - The directory in which the local database will be persisted. If this directory does not exist it will be created.
+``base_dir`` - For local databases such as Chroma. The directory in which the local database will be persisted. If this directory does not exist it will be created.
+
+``base_url`` - For remote databases such as Pinecone. The URL to your Pinecone instance.
 
 
 Splitter

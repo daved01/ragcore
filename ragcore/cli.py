@@ -27,7 +27,7 @@ def run_app(app) -> None:
         elif user_input.lower() == "d":
             title = input("Enter title to remove from database: ")
             app.delete(title=title)
-            print("Deleted documents!")
+            print("Done!")
         elif user_input.lower() == "l":
             titles = app.get_titles()
             print(f"Following titles are in database: {titles.contents}")

@@ -7,6 +7,7 @@ from ragcore.models.llm_model import OpenAIModel, AzureOpenAIModel
 from ragcore.shared.constants import ConfigurationConstants
 from ragcore.shared.errors import LLMError, PromptError, UserConfigurationError
 from ragcore.shared.utils import document_to_str
+from ragcore.models.config_model import LLMConfiguration
 
 
 class LLMService:
@@ -27,14 +28,15 @@ class LLMService:
     def __init__(
         self,
         logger: Logger,
-        llm_provider: str,
-        llm_model: str,
-        llm_config: Optional[dict[str, str]] = None,
+        config: LLMConfiguration,
     ) -> None:
         self.logger = logger
-        self.llm_provider = llm_provider
-        self.llm_model = llm_model
-        self.llm_config = llm_config
+        self.llm_provider = config.provider
+        self.llm_model = config.model
+        self.llm_config = {
+            ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: config.endpoint,
+            ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: config.api_version,
+        }
         self.llm = None
 
     def initialize_llm(self):
@@ -56,7 +58,9 @@ class LLMService:
         if model_class:
             self.llm = model_class(self.llm_provider, self.llm_model, self.llm_config)
         else:
-            raise UserConfigurationError(f"Unsupported model name: {self.llm_provider}")
+            raise UserConfigurationError(
+                f"Unsupported model provider: {self.llm_provider}"
+            )
         self.logger.info(
             f"Initialized LLM of type `{self.llm_provider}` with model `{self.llm_model}`."
         )

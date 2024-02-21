@@ -10,6 +10,13 @@
 
 A Retrieval-Augmented Generation library with a CLI interface. Build RAG applications with just a few commands and a configuration file.
 
+## Supported setups
+
+| Databases               | LLMs           | Embeddings     | Document types  |
+| ----------------------- | -------------- | -------------- | --------------- |
+| Chroma (local)          | OpenAI         | OpenAI         | PDF             |
+| Pinecone (remote)       | AzureOpenAI    | AzureOpenAI    |                 |
+
 For more details see the [documentation](https://daved01.github.io/ragcore/).
 
 # Installation
@@ -50,7 +57,6 @@ Then, create a config file `config.yaml` like this in the root of your project:
 database:
   provider: "chroma"
   number_search_results: 5
-  # For local databases
   base_dir: "data/database"
 
 splitter:
@@ -61,17 +67,10 @@ embedding:
   provider: "openai"
   model: "text-embedding-model"
 
-# OpenAI
 llm:
   provider: "openai"
   model: "gpt-model"
 
-# Uncomment for AzureOpenAI
-# llm:
-#   provider: "azure"
-#   model: "gpt-model"
-#   endpoint: ""
-#   api_version: ""
 ```
 
 And finally, create your application using this config file:

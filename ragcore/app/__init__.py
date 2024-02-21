@@ -4,9 +4,17 @@ import yaml
 from ragcore.app.base_app import AbstractApp
 from ragcore.shared.constants import AppConstants, ConfigurationConstants
 from ragcore.models.app_model import QueryResponse, TitlesResponse
+from ragcore.models.config_model import (
+    AppConfiguration,
+    DatabaseConfiguration,
+    EmbeddingConfiguration,
+    SplitterConfiguration,
+    LLMConfiguration,
+)
 from ragcore.models.document_model import Document
 from ragcore.services.document_service import DocumentService
 from ragcore.services.database_service import DatabaseService
+from ragcore.shared.errors import DatabaseError
 from ragcore.services.llm_service import LLMService
 
 
@@ -60,7 +68,7 @@ class RAGCore(AbstractApp):
 
        llm_service: The service for handling large language model interactions.
 
-       configuration: A dict containing the configuration.
+       configuration: An ``AppConfig`` containing the configuration.
 
     """
 
@@ -78,7 +86,7 @@ class RAGCore(AbstractApp):
         self.database_service: Optional[DatabaseService] = None
         self.document_service: Optional[DocumentService] = None
         self.llm_service: Optional[LLMService] = None
-        self.configuration: dict[str, dict[str, Any]] = self._get_config(
+        self.configuration: AppConfiguration = self._get_config(
             config_file_path=config if config else AppConstants.DEFAULT_CONFIG_FILE_PATH
         )
         self._init_database_service()
@@ -139,12 +147,8 @@ class RAGCore(AbstractApp):
         self.document_service = DocumentService(self.logger)
         self.document_service.load_texts(path=path)
         self.document_service.split_pages(
-            self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                ConfigurationConstants.KEY_CHUNK_SIZE
-            ],
-            self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                ConfigurationConstants.KEY_CHUNK_OVERLAP
-            ],
+            chunk_size=self.configuration.splitter_config.chunk_size,
+            chunk_overlap=self.configuration.splitter_config.chunk_overlap,
         )
         self.database_service.add_documents(self.document_service.documents, user)
 
@@ -188,89 +192,103 @@ class RAGCore(AbstractApp):
 
     def _init_llm_service(self):
         """Initialize LLM service."""
-        self.llm_service = LLMService(
-            self.logger,
-            llm_provider=self.configuration[ConfigurationConstants.KEY_LLM][
-                ConfigurationConstants.KEY_LLM_PROVIDER
-            ],
-            llm_model=self.configuration[ConfigurationConstants.KEY_LLM][
-                ConfigurationConstants.KEY_LLM_MODEL
-            ],
-            llm_config={
-                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION: self.configuration[
-                    ConfigurationConstants.KEY_LLM
-                ].get(ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION, ""),
-                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT: self.configuration[
-                    ConfigurationConstants.KEY_LLM
-                ].get(
-                    ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT, ""
-                ),
-            },
-        )
+        self.llm_service = LLMService(self.logger, config=self.configuration.llm_config)
         self.llm_service.initialize_llm()
 
     def _init_database_service(self) -> None:
         """Creates a database or loads an existing one.
 
-        The database name must be in the format <name>_<chunk_size>_<chunk_overlap>.
+        The database service requires both the database and embedding configurations, so that it can
+        create embedding vectors.
         """
         self.database_service = DatabaseService(
             logger=self.logger,
-            base_path=self.configuration[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DATABASE_BASE_PATH
-            ],
-            name=self.configuration[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_DATABASE_PROVIDER
-            ]
-            + "_"
-            + str(
-                self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                    ConfigurationConstants.KEY_CHUNK_SIZE
-                ]
-            )
-            + "_"
-            + str(
-                self.configuration[ConfigurationConstants.KEY_SPLITTER][
-                    ConfigurationConstants.KEY_CHUNK_OVERLAP
-                ]
-            ),
-            num_search_results=self.configuration[ConfigurationConstants.KEY_DATABASE][
-                ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS
-            ],
-            embedding_config=self.configuration[ConfigurationConstants.KEY_EMBEDDING],
+            config=self.configuration.database_config,
+            embedding_config=self.configuration.embedding_config,
         )
 
-        # Initialize the database. If a base path is given in the configuration, we use a local
-        # database. Otherwise, we initialize a remote database.
-        if self.configuration[ConfigurationConstants.KEY_DATABASE].get(
-            ConfigurationConstants.KEY_DATABASE_BASE_PATH
-        ):
+        # Initialize the database.
+        if self.configuration.database_config.base_path:
             self.database_service.initialize_local_database()
-        else:
+        elif self.configuration.database_config.base_url:
             self.database_service.initialize_remote_database()
+        else:
+            raise DatabaseError(
+                "Provide either a `base_dir` for a local database, or a `base_url` for a remote database."
+            )
 
-    def _get_config(self, config_file_path: str) -> dict[str, dict[str, str | int]]:
+    def _get_config(self, config_file_path: str) -> AppConfiguration:
         """Gets the configuration from the ``config.yaml`` file.
 
         Loads the configuration from the file.
 
         Args:
             config_file_path: A string with the path to the config file.
+
+        Returns:
+            config: ``AppConfig`` with the configuration.
         """
 
         with open(config_file_path, "r", encoding="utf-8") as filehandler:
             config = yaml.load(filehandler, yaml.FullLoader)
 
-        database_config = config.get(ConfigurationConstants.KEY_DATABASE, {})
-        splitter_config = config.get(ConfigurationConstants.KEY_SPLITTER, {})
-        embedding_config = config.get(ConfigurationConstants.KEY_EMBEDDING, {})
-        llm_config = config.get(ConfigurationConstants.KEY_LLM, {})
+        database_config_dict = config.get(ConfigurationConstants.KEY_DATABASE, {})
+        splitter_config_dict = config.get(ConfigurationConstants.KEY_SPLITTER, {})
+        embedding_config_dict = config.get(ConfigurationConstants.KEY_EMBEDDING, {})
+        llm_config_dict = config.get(ConfigurationConstants.KEY_LLM, {})
+
+        database_config = DatabaseConfiguration(
+            provider=database_config_dict.get(
+                ConfigurationConstants.KEY_DATABASE_PROVIDER, ""
+            ),
+            number_search_results=database_config_dict.get(
+                ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS, -1
+            ),
+            base_path=database_config_dict.get(
+                ConfigurationConstants.KEY_DATABASE_BASE_PATH
+            ),
+            base_url=database_config_dict.get(
+                ConfigurationConstants.KEY_DATABASE_BASE_URL
+            ),
+        )
+        splitter_config = SplitterConfiguration(
+            chunk_overlap=splitter_config_dict.get(
+                ConfigurationConstants.KEY_CHUNK_OVERLAP, -1
+            ),
+            chunk_size=splitter_config_dict.get(
+                ConfigurationConstants.KEY_CHUNK_SIZE, -1
+            ),
+        )
+        embedding_config = EmbeddingConfiguration(
+            provider=embedding_config_dict.get(
+                ConfigurationConstants.KEY_EMBEDDING_PROVIDER, ""
+            ),
+            model=embedding_config_dict.get(
+                ConfigurationConstants.KEY_EMBEDDING_MODEL, ""
+            ),
+            endpoint=embedding_config_dict.get(
+                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
+            ),
+            api_version=embedding_config_dict.get(
+                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION
+            ),
+        )
+        llm_config = LLMConfiguration(
+            provider=llm_config_dict.get(ConfigurationConstants.KEY_LLM_PROVIDER, ""),
+            model=llm_config_dict.get(ConfigurationConstants.KEY_LLM_MODEL, ""),
+            endpoint=llm_config_dict.get(
+                ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT
+            ),
+            api_version=llm_config_dict.get(
+                ConfigurationConstants.KEY_AZURE_OPENAI_API_VERSION
+            ),
+        )
 
         self.logger.info(f"Loaded config \n{config}\nfrom file `{config_file_path}`.")
 
-        return {
-            ConfigurationConstants.KEY_DATABASE: database_config,
-            ConfigurationConstants.KEY_SPLITTER: splitter_config,
-            ConfigurationConstants.KEY_EMBEDDING: embedding_config,
-            ConfigurationConstants.KEY_LLM: llm_config,
-        }
+        return AppConfiguration(
+            database_config=database_config,
+            splitter_config=splitter_config,
+            embedding_config=embedding_config,
+            llm_config=llm_config,
+        )
