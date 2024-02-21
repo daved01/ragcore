@@ -1,7 +1,6 @@
 import pytest
 
 from ragcore.app import RAGCore
-from ragcore.shared.constants import ConfigurationConstants
 from tests import BaseTest
 
 
