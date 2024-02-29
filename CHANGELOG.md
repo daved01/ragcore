@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+#### Removed
+
+- Document titles have been removed from log outputs for increased privacy.
+
 ## [1.0.2] - 2024-02-21
 
 ### Added
