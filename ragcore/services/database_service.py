@@ -205,9 +205,7 @@ class DatabaseService:
         title = utils.remove_file_extension(title)
 
         if self.database.delete_documents(title, user):
-            self.logger.info(
-                f"Deleted documents for user `{user}` with title `{title}` from database."
-            )
+            self.logger.info(f"Deleted documents for user `{user}` from database.")
         else:
             self.logger.warn(f"Did not delete documents for user `{user}`.")
 

@@ -60,10 +60,7 @@ class DocumentService:
         loader = PDFLoader(path)
         self.pages = loader.load_and_split(title)
 
-        self.logger.info(
-            f"Loaded {len(self.pages)} pages from PDF file with title "
-            f"`{title}` from path `{path}`."
-        )
+        self.logger.info(f"Loaded {len(self.pages)} pages from PDF from path `{path}`.")
 
     def split_pages(self, chunk_size: int, chunk_overlap: int) -> None:
         """Splits pages into overlapping chunks and stores them in documents.
