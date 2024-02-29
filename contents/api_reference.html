@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API reference &mdash; RAG Core 1.0.1 documentation</title>
+  <title>API reference &mdash; RAG Core 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=292eb321"></script>
+        <script src="../_static/documentation_options.js?v=1ed6394b"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -36,7 +36,7 @@
             RAG Core
           </a>
               <div class="version">
-                1.0.1
+                1.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -129,6 +129,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.ChromaDatabase.query"><code class="docutils literal notranslate"><span class="pre">ChromaDatabase.query()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase.add_documents"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase.add_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase.delete_documents"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase.delete_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase.get_number_of_documents"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase.get_number_of_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase.get_titles"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase.get_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.models.database_model.PineconeDatabase.query"><code class="docutils literal notranslate"><span class="pre">PineconeDatabase.query()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.models.document_model.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.content"><code class="docutils literal notranslate"><span class="pre">Document.content</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.models.document_model.Document.metadata"><code class="docutils literal notranslate"><span class="pre">Document.metadata</span></code></a></li>
@@ -197,6 +205,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ragcore.shared.constants">Constants</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.constants.APIConstants"><code class="docutils literal notranslate"><span class="pre">APIConstants</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.APIConstants.PINECONE_LIST_VECTORS"><code class="docutils literal notranslate"><span class="pre">APIConstants.PINECONE_LIST_VECTORS</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.constants.AppConstants"><code class="docutils literal notranslate"><span class="pre">AppConstants</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.AppConstants.DEFAULT_CONFIG_FILE_PATH"><code class="docutils literal notranslate"><span class="pre">AppConstants.DEFAULT_CONFIG_FILE_PATH</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.AppConstants.KEY_CONFIGURATION_PATH"><code class="docutils literal notranslate"><span class="pre">AppConstants.KEY_CONFIGURATION_PATH</span></code></a></li>
@@ -210,6 +222,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_CHUNK_SIZE"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_CHUNK_SIZE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_DATABASE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_PATH"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_DATABASE_BASE_PATH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_URL"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_DATABASE_BASE_URL</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_PROVIDER"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_DATABASE_PROVIDER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_TYPE"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_DATABASE_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.ConfigurationConstants.KEY_EMBEDDING"><code class="docutils literal notranslate"><span class="pre">ConfigurationConstants.KEY_EMBEDDING</span></code></a></li>
@@ -227,14 +240,31 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.constants.DataConstants"><code class="docutils literal notranslate"><span class="pre">DataConstants</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DataConstants.KEY_DOC"><code class="docutils literal notranslate"><span class="pre">DataConstants.KEY_DOC</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DataConstants.KEY_PAGE"><code class="docutils literal notranslate"><span class="pre">DataConstants.KEY_PAGE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DataConstants.KEY_TITLE"><code class="docutils literal notranslate"><span class="pre">DataConstants.KEY_TITLE</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_DOCUMENTS"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_CHROMA_DOCUMENTS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_METADATAS"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_CHROMA_METADATAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_DOC"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_DOC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_DOCUMENTS"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_DOCUMENTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_HEADERS_ACCEPT"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_HEADERS_ACCEPT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_METADATA"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_METADATA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_METADATAS"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_METADATAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_ID"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_MATCHES"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_MATCHES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NAMESPACE"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_NAMESPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NEXT"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_NEXT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_PAGINATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PREFIX"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_VECTORS"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_PINECONE_VECTORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.KEY_TITLE"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.KEY_TITLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.PROVIDER_CHROMA"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.PROVIDER_CHROMA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.PROVIDER_PINECONE"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.PROVIDER_PINECONE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragcore.shared.constants.DatabaseConstants.VALUE_PINECONE_API_KEY"><code class="docutils literal notranslate"><span class="pre">DatabaseConstants.VALUE_PINECONE_API_KEY</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragcore.shared.constants.EmbeddingConstants"><code class="docutils literal notranslate"><span class="pre">EmbeddingConstants</span></code></a><ul>
@@ -344,7 +374,7 @@ For more information, refer to the <cite>Configuration</cite> section of the doc
 <dt>Attributes:</dt><dd><p>database_service: The service for handling database interactions.</p>
 <p>document_service: The service for handling document interactions.</p>
 <p>llm_service: The service for handling large language model interactions.</p>
-<p>configuration: A dict containing the configuration.</p>
+<p>configuration: An <code class="docutils literal notranslate"><span class="pre">AppConfig</span></code> containing the configuration.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -465,7 +495,7 @@ The field <cite>documents</cite> is a list with documents of type <cite>Document
 <span id="services"></span><h2>Services<a class="headerlink" href="#module-ragcore.services.database_service" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.database_service.</span></span><span class="sig-name descname"><span class="pre">DatabaseService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_search_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.database_service.</span></span><span class="sig-name descname"><span class="pre">DatabaseService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatabaseConfiguration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmbeddingConfiguration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Handles database interactions.</p>
 <p>The DatabaseService class provides methods for interacting with the database, allowing you to perform operations
@@ -520,7 +550,7 @@ Adding documents with the same title multiple times is not possible.</p>
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.initialize_local_database">
 <span class="sig-name descname"><span class="pre">initialize_local_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.initialize_local_database" title="Link to this definition"></a></dt>
 <dd><p>Initializes a local database.</p>
-<p>To initialize a local database, the DatabaseService must have the attributes <code class="docutils literal notranslate"><span class="pre">base_path</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> set.
+<p>To initialize a local database, the DatabaseService must have the attributes <code class="docutils literal notranslate"><span class="pre">base_path</span></code> and <code class="docutils literal notranslate"><span class="pre">provider</span></code> set.
 If the base path does not exist it is created.</p>
 </dd></dl>
 
@@ -528,6 +558,7 @@ If the base path does not exist it is created.</p>
 <dt class="sig sig-object py" id="ragcore.services.database_service.DatabaseService.initialize_remote_database">
 <span class="sig-name descname"><span class="pre">initialize_remote_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.services.database_service.DatabaseService.initialize_remote_database" title="Link to this definition"></a></dt>
 <dd><p>Initializes a remote database.</p>
+<p>A remote database often requires that a <code class="docutils literal notranslate"><span class="pre">base_url</span></code> is set.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -596,7 +627,7 @@ chunk_overlap: The overlap of the chunks.</p>
 
 <dl class="py class" id="module-ragcore.services.llm_service">
 <dt class="sig sig-object py" id="ragcore.services.llm_service.LLMService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.llm_service.</span></span><span class="sig-name descname"><span class="pre">LLMService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.llm_service.LLMService" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.services.llm_service.</span></span><span class="sig-name descname"><span class="pre">LLMService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LLMConfiguration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.services.llm_service.LLMService" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Initializes a Large Language Model and handles requests made to it.</p>
 <dl class="simple">
@@ -835,6 +866,93 @@ getting all documenst in the main collection.</p>
 <p>user: An optional string to identify a user.</p>
 </dd>
 <dt>Returns:</dt><dd><p>A list of results from the database, or None if no results could be retrieved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.models.database_model.</span></span><span class="sig-name descname"><span class="pre">PineconeDatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_search_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragcore.models.embedding_model.BaseEmbedding" title="ragcore.models.embedding_model.BaseEmbedding"><span class="pre">BaseEmbedding</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ragcore.models.database_model.BaseVectorDatabaseModel" title="ragcore.models.database_model.BaseVectorDatabaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVectorDatabaseModel</span></code></a></p>
+<p>Pinecone database.</p>
+<p>To use it, make sure you have your API key under the name <code class="docutils literal notranslate"><span class="pre">PINECONE_API_KEY</span></code> available
+as environment variable.</p>
+<p>This implementation uses the Pinecone SDK and the REST API. There is also a gRPC version of the Python client
+with potential for higher upsert speeds, which could be investigated: <a class="reference external" href="https://docs.pinecone.io/docs/upsert-data">https://docs.pinecone.io/docs/upsert-data</a>.</p>
+<p>For more information on Pinecone, see: <a class="reference external" href="https://www.pinecone.io">https://www.pinecone.io</a>.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>base_url: The url pointing to your Pinecone instance.</p>
+<p>num_search_results: The number of results to be returned for a query.</p>
+<p>embedding_function: Embedding of type <code class="docutils literal notranslate"><span class="pre">BaseEmbedding</span></code> to be used to create vector representations of inputs.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase.add_documents">
+<span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase.add_documents" title="Link to this definition"></a></dt>
+<dd><p>Adds documents to the database.</p>
+<p>Pinecone is heavily based on IDs while other features are currently missing. For example, it is not possible
+to search the database by metadata without a vector to find titles. That is why we create IDs in the
+format <code class="docutils literal notranslate"><span class="pre">&lt;title&gt;#&lt;UID&gt;</span></code>. It is possible to filter results by IDs and ID prefixes using the REST API.</p>
+<dl>
+<dt>Args:</dt><dd><p>documents: A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code> to be added to the database.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if documents have been added, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase.delete_documents">
+<span class="sig-name descname"><span class="pre">delete_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase.delete_documents" title="Link to this definition"></a></dt>
+<dd><p>Deletes all documents with title <cite>title</cite> from the database.</p>
+<dl>
+<dt>Args:</dt><dd><p>title: The title of the documents to be deleted.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if documents have been deleted, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase.get_number_of_documents">
+<span class="sig-name descname"><span class="pre">get_number_of_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase.get_number_of_documents" title="Link to this definition"></a></dt>
+<dd><p>Returns the total number of documents in the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>The number of documents owned by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase.get_titles">
+<span class="sig-name descname"><span class="pre">get_titles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase.get_titles" title="Link to this definition"></a></dt>
+<dd><p>Returns the titles owned by the user.</p>
+<p>Currently, this method does not exist in the SDK. Additionally, it is not possible to
+return the metadata along with the vectors from the API endpoint. That is why we
+extract the titles from the IDs.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of strings with the titles, or an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragcore.models.database_model.PineconeDatabase.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragcore.models.document_model.Document" title="ragcore.models.document_model.Document"><span class="pre">Document</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#ragcore.models.database_model.PineconeDatabase.query" title="Link to this definition"></a></dt>
+<dd><p>Queries the database with the query.</p>
+<dl>
+<dt>Args:</dt><dd><p>query: A query as a string.</p>
+<p>user: An optional string to identify a user.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of documents <code class="docutils literal notranslate"><span class="pre">Document</span></code>, or None if no documents could be retrieved.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1221,6 +1339,18 @@ concatenated string of context which should be used in the prompt.</p>
 <section id="module-ragcore.shared.constants">
 <span id="constants"></span><h2>Constants<a class="headerlink" href="#module-ragcore.shared.constants" title="Link to this heading"></a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="ragcore.shared.constants.APIConstants">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.shared.constants.</span></span><span class="sig-name descname"><span class="pre">APIConstants</span></span><a class="headerlink" href="#ragcore.shared.constants.APIConstants" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants for the API client.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.APIConstants.PINECONE_LIST_VECTORS">
+<span class="sig-name descname"><span class="pre">PINECONE_LIST_VECTORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/vectors/list'</span></em><a class="headerlink" href="#ragcore.shared.constants.APIConstants.PINECONE_LIST_VECTORS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="ragcore.shared.constants.AppConstants">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragcore.shared.constants.</span></span><span class="sig-name descname"><span class="pre">AppConstants</span></span><a class="headerlink" href="#ragcore.shared.constants.AppConstants" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1275,6 +1405,11 @@ concatenated string of context which should be used in the prompt.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_PATH">
 <span class="sig-name descname"><span class="pre">KEY_DATABASE_BASE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'base_dir'</span></em><a class="headerlink" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_URL">
+<span class="sig-name descname"><span class="pre">KEY_DATABASE_BASE_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'base_url'</span></em><a class="headerlink" href="#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_URL" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1355,6 +1490,11 @@ concatenated string of context which should be used in the prompt.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constants for the data model.</p>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DataConstants.KEY_DOC">
+<span class="sig-name descname"><span class="pre">KEY_DOC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'doc'</span></em><a class="headerlink" href="#ragcore.shared.constants.DataConstants.KEY_DOC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="ragcore.shared.constants.DataConstants.KEY_PAGE">
 <span class="sig-name descname"><span class="pre">KEY_PAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'page'</span></em><a class="headerlink" href="#ragcore.shared.constants.DataConstants.KEY_PAGE" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -1372,18 +1512,98 @@ concatenated string of context which should be used in the prompt.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constants for database models and service.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_DOCUMENTS">
-<span class="sig-name descname"><span class="pre">KEY_CHROMA_DOCUMENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'documents'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_DOCUMENTS" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_DOC">
+<span class="sig-name descname"><span class="pre">KEY_DOC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'doc'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_DOC" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_METADATAS">
-<span class="sig-name descname"><span class="pre">KEY_CHROMA_METADATAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'metadatas'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_METADATAS" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_DOCUMENTS">
+<span class="sig-name descname"><span class="pre">KEY_DOCUMENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'documents'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_DOCUMENTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_HEADERS_ACCEPT">
+<span class="sig-name descname"><span class="pre">KEY_HEADERS_ACCEPT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'accept'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_HEADERS_ACCEPT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_METADATA">
+<span class="sig-name descname"><span class="pre">KEY_METADATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'metadata'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_METADATA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_METADATAS">
+<span class="sig-name descname"><span class="pre">KEY_METADATAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'metadatas'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_METADATAS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_DEFAULT_INDEX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_HEADERS_API_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Api-Key'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_ID">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'id'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_ID" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_MATCHES">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_MATCHES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'matches'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_MATCHES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NAMESPACE">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_NAMESPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'namespace'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NAMESPACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NEXT">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_NEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'next'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NEXT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_PAGINATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pagination'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_PAGINATION_TOKEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'paginationToken'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PREFIX">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'prefix'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PREFIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_VECTORS">
+<span class="sig-name descname"><span class="pre">KEY_PINECONE_VECTORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vectors'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_VECTORS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.KEY_TITLE">
+<span class="sig-name descname"><span class="pre">KEY_TITLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'title'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.KEY_TITLE" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.PROVIDER_CHROMA">
 <span class="sig-name descname"><span class="pre">PROVIDER_CHROMA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'chroma'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.PROVIDER_CHROMA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.PROVIDER_PINECONE">
+<span class="sig-name descname"><span class="pre">PROVIDER_PINECONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pinecone'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.PROVIDER_PINECONE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragcore.shared.constants.DatabaseConstants.VALUE_PINECONE_API_KEY">
+<span class="sig-name descname"><span class="pre">VALUE_PINECONE_API_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PINECONE_API_KEY'</span></em><a class="headerlink" href="#ragcore.shared.constants.DatabaseConstants.VALUE_PINECONE_API_KEY" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; RAG Core 1.0.1 documentation</title>
+  <title>Index &mdash; RAG Core 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=292eb321"></script>
+        <script src="_static/documentation_options.js?v=1ed6394b"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             RAG Core
           </a>
               <div class="version">
-                1.0.1
+                1.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -109,6 +109,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -127,11 +128,15 @@
       <ul>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.add_documents">(ragcore.models.database_model.ChromaDatabase method)</a>
 </li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase.add_documents">(ragcore.models.database_model.PineconeDatabase method)</a>
+</li>
         <li><a href="contents/api_reference.html#ragcore.services.database_service.DatabaseService.add_documents">(ragcore.services.database_service.DatabaseService method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.APIConstants">APIConstants (class in ragcore.shared.constants)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.errors.AppBaseError">AppBaseError</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.AppConstants">AppConstants (class in ragcore.shared.constants)</a>
@@ -206,16 +211,18 @@
         <li><a href="contents/api_reference.html#ragcore.app.RAGCore.delete">(ragcore.app.RAGCore method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.delete_documents">delete_documents() (ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
 
       <ul>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.delete_documents">(ragcore.models.database_model.ChromaDatabase method)</a>
 </li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase.delete_documents">(ragcore.models.database_model.PineconeDatabase method)</a>
+</li>
         <li><a href="contents/api_reference.html#ragcore.services.database_service.DatabaseService.delete_documents">(ragcore.services.database_service.DatabaseService method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.document_model.Document">Document (class in ragcore.models.document_model)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.utils.document_to_str">document_to_str() (in module ragcore.shared.utils)</a>
@@ -259,6 +266,8 @@
       <ul>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.get_number_of_documents">(ragcore.models.database_model.ChromaDatabase method)</a>
 </li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase.get_number_of_documents">(ragcore.models.database_model.PineconeDatabase method)</a>
+</li>
       </ul></li>
       <li><a href="contents/api_reference.html#ragcore.models.prompt_model.PromptGenerator.get_prompt">get_prompt() (ragcore.models.prompt_model.PromptGenerator method)</a>
 </li>
@@ -272,6 +281,8 @@
         <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.get_titles">(ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
 </li>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.get_titles">(ragcore.models.database_model.ChromaDatabase method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase.get_titles">(ragcore.models.database_model.PineconeDatabase method)</a>
 </li>
         <li><a href="contents/api_reference.html#ragcore.services.database_service.DatabaseService.get_titles">(ragcore.services.database_service.DatabaseService method)</a>
 </li>
@@ -308,10 +319,6 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_AZURE_OPENAI_AZURE_ENDPOINT">KEY_AZURE_OPENAI_AZURE_ENDPOINT (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_DOCUMENTS">KEY_CHROMA_DOCUMENTS (ragcore.shared.constants.DatabaseConstants attribute)</a>
-</li>
-      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_CHROMA_METADATAS">KEY_CHROMA_METADATAS (ragcore.shared.constants.DatabaseConstants attribute)</a>
-</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_CHUNK_OVERLAP">KEY_CHUNK_OVERLAP (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_CHUNK_SIZE">KEY_CHUNK_SIZE (ragcore.shared.constants.ConfigurationConstants attribute)</a>
@@ -322,12 +329,20 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_PATH">KEY_DATABASE_BASE_PATH (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_BASE_URL">KEY_DATABASE_BASE_URL (ragcore.shared.constants.ConfigurationConstants attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_PROVIDER">KEY_DATABASE_PROVIDER (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_DATABASE_TYPE">KEY_DATABASE_TYPE (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_DOC">KEY_DOC (ragcore.shared.constants.DatabaseConstants attribute)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.shared.constants.DataConstants.KEY_DOC">(ragcore.shared.constants.DataConstants attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_DOCUMENTS">KEY_DOCUMENTS (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_EMBEDDING">KEY_EMBEDDING (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_EMBEDDING_AZURE_OPENAI_API_VERSION">KEY_EMBEDDING_AZURE_OPENAI_API_VERSION (ragcore.shared.constants.ConfigurationConstants attribute)</a>
@@ -338,6 +353,10 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_EMBEDDING_PROVIDER">KEY_EMBEDDING_PROVIDER (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_HEADERS_ACCEPT">KEY_HEADERS_ACCEPT (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_LLM">KEY_LLM (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_LLM_MODEL">KEY_LLM_MODEL (ragcore.shared.constants.ConfigurationConstants attribute)</a>
@@ -346,16 +365,44 @@
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.AppConstants.KEY_LOGGER_FLAG">KEY_LOGGER_FLAG (ragcore.shared.constants.AppConstants attribute)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_METADATA">KEY_METADATA (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_METADATAS">KEY_METADATAS (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_NUMBER_SEARCH_RESULTS">KEY_NUMBER_SEARCH_RESULTS (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.LLMProviderConstants.KEY_OPENAI_API_KEY">KEY_OPENAI_API_KEY (ragcore.shared.constants.LLMProviderConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.DataConstants.KEY_PAGE">KEY_PAGE (ragcore.shared.constants.DataConstants attribute)</a>
 </li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX">KEY_PINECONE_DEFAULT_INDEX (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_HEADERS_API_KEY">KEY_PINECONE_HEADERS_API_KEY (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_ID">KEY_PINECONE_ID (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_MATCHES">KEY_PINECONE_MATCHES (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NAMESPACE">KEY_PINECONE_NAMESPACE (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_NEXT">KEY_PINECONE_NEXT (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION">KEY_PINECONE_PAGINATION (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PAGINATION_TOKEN">KEY_PINECONE_PAGINATION_TOKEN (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_PREFIX">KEY_PINECONE_PREFIX (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_PINECONE_VECTORS">KEY_PINECONE_VECTORS (ragcore.shared.constants.DatabaseConstants attribute)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.ConfigurationConstants.KEY_SPLITTER">KEY_SPLITTER (ragcore.shared.constants.ConfigurationConstants attribute)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.shared.constants.DataConstants.KEY_TITLE">KEY_TITLE (ragcore.shared.constants.DataConstants attribute)</a>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.KEY_TITLE">KEY_TITLE (ragcore.shared.constants.DatabaseConstants attribute)</a>
+
+      <ul>
+        <li><a href="contents/api_reference.html#ragcore.shared.constants.DataConstants.KEY_TITLE">(ragcore.shared.constants.DataConstants attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -447,17 +494,23 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.models.document_loader_model.PDFLoader">PDFLoader (class in ragcore.models.document_loader_model)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.shared.errors.PromptError">PromptError</a>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.APIConstants.PINECONE_LIST_VECTORS">PINECONE_LIST_VECTORS (ragcore.shared.constants.APIConstants attribute)</a>
 </li>
-      <li><a href="contents/api_reference.html#ragcore.models.prompt_model.PromptGenerator">PromptGenerator (class in ragcore.models.prompt_model)</a>
+      <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase">PineconeDatabase (class in ragcore.models.database_model)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.errors.PromptError">PromptError</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.models.prompt_model.PromptGenerator">PromptGenerator (class in ragcore.models.prompt_model)</a>
+</li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.EmbeddingConstants.PROVIDER_AZURE_OPENAI">PROVIDER_AZURE_OPENAI (ragcore.shared.constants.EmbeddingConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.PROVIDER_CHROMA">PROVIDER_CHROMA (ragcore.shared.constants.DatabaseConstants attribute)</a>
 </li>
       <li><a href="contents/api_reference.html#ragcore.shared.constants.EmbeddingConstants.PROVIDER_OPENAI">PROVIDER_OPENAI (ragcore.shared.constants.EmbeddingConstants attribute)</a>
+</li>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.PROVIDER_PINECONE">PROVIDER_PINECONE (ragcore.shared.constants.DatabaseConstants attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -473,6 +526,8 @@
         <li><a href="contents/api_reference.html#ragcore.models.database_model.BaseVectorDatabaseModel.query">(ragcore.models.database_model.BaseVectorDatabaseModel method)</a>
 </li>
         <li><a href="contents/api_reference.html#ragcore.models.database_model.ChromaDatabase.query">(ragcore.models.database_model.ChromaDatabase method)</a>
+</li>
+        <li><a href="contents/api_reference.html#ragcore.models.database_model.PineconeDatabase.query">(ragcore.models.database_model.PineconeDatabase method)</a>
 </li>
         <li><a href="contents/api_reference.html#ragcore.services.database_service.DatabaseService.query">(ragcore.services.database_service.DatabaseService method)</a>
 </li>
@@ -648,6 +703,14 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="contents/api_reference.html#ragcore.shared.errors.UserConfigurationError">UserConfigurationError</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="contents/api_reference.html#ragcore.shared.constants.DatabaseConstants.VALUE_PINECONE_API_KEY">VALUE_PINECONE_API_KEY (ragcore.shared.constants.DatabaseConstants attribute)</a>
 </li>
   </ul></td>
 </tr></table>
