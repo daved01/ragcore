@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.3] - 2024-03-02
+
 ### Added
 
 - Pinecone uploads are now chunked to handle larger file sizes. The Pinecone recommendation is 100 records per batch [https://docs.pinecone.io/docs/upsert-data].
