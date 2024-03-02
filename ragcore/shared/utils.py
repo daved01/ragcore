@@ -1,5 +1,5 @@
 import re
-from typing import Any, Optional
+from typing import Any, Optional, Generator
 
 from ragcore.models.document_model import Document
 
@@ -22,6 +22,12 @@ def slice_list(input_list: list[Any], slice_size: int) -> list[list[Any]]:
     return [
         input_list[i * slice_size : (i + 1) * slice_size] for i in range(num_slices)
     ]
+
+
+def chunk_list(nums: list, chunk_size: int) -> Generator:
+    """Returns a chunked list."""
+    for i in range(0, len(nums), chunk_size):
+        yield nums[i : i + chunk_size]
 
 
 def document_to_str(docs: list[Document]) -> str:

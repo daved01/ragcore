@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Pinecone uploads are now chunked to handle larger file sizes. The Pinecone recommendation is 100 records per batch [https://docs.pinecone.io/docs/upsert-data].
+
+- Pinecone upload throughput was increased by using Pinecone's asynchronous upload option using `pool_threads`.
+
 #### Removed
 
 - Document titles have been removed from log outputs for increased privacy.
