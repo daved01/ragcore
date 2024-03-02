@@ -11,6 +11,7 @@ from ragcore.models.embedding_model import BaseEmbedding
 from ragcore.models.document_model import Document
 from ragcore.shared.constants import DataConstants, DatabaseConstants, APIConstants
 from ragcore.shared.errors import DatabaseError
+from ragcore.shared.utils import chunk_list
 
 
 # A default collection to be used when no user is given.
@@ -360,9 +361,11 @@ class PineconeDatabase(BaseVectorDatabaseModel):
     ):
         self.num_search_results: int = num_search_results
         self.embedding: BaseEmbedding = embedding_function
-        self.client: Pinecone = Pinecone()  # Requires key PINECONE_API_KEY
+        self.client: Pinecone = Pinecone(
+            pool_threads=32
+        )  # Requires key PINECONE_API_KEY
         self.index: Type[Pinecone.Index] = self.client.Index(
-            DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX
+            DatabaseConstants.KEY_PINECONE_DEFAULT_INDEX, pool_threads=32
         )
         self.api_client = PineconeAPIClient(
             base_url=base_url,
@@ -422,12 +425,15 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             )
 
         # Add to database
-        try:
-            self.index.upsert(
-                namespace=user if user else NAME_MAIN_COLLECTION, vectors=vectors
-            )
-        except HTTPError:
-            return False
+        chunk_size = 100
+        for vector_chunk in chunk_list(vectors, chunk_size):
+            try:
+                self.index.upsert(
+                    namespace=user if user else NAME_MAIN_COLLECTION,
+                    vectors=vector_chunk,
+                )
+            except HTTPError:
+                return False
         return True
 
     def delete_documents(self, title: str, user: Optional[str] = None) -> bool:

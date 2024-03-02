@@ -81,3 +81,24 @@ class TestUtils(RAGCoreTestSetup):
     )
     def test_custom_key_comparator(self, input, expected):
         assert utils.custom_key_comparator(input) == expected
+
+    def test_chunk_list(self):
+        nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        chunk_size = 3
+        expected_chunks = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
+        result = list(utils.chunk_list(nums, chunk_size))
+        assert result == expected_chunks
+
+    def test_chunk_list_empty_list(self):
+        nums = []
+        chunk_size = 5
+        expected_chunks = []
+        result = list(utils.chunk_list(nums, chunk_size))
+        assert result == expected_chunks
+
+    def test_chunk_list_large_chunk_size(self):
+        nums = [1, 2, 3, 4, 5]
+        chunk_size = 10
+        expected_chunks = [[1, 2, 3, 4, 5]]
+        result = list(utils.chunk_list(nums, chunk_size))
+        assert result == expected_chunks
