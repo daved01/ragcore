@@ -89,6 +89,10 @@ class TestPineconeDatabaseModel:
     @pytest.fixture
     def mock_pinecone_database(self, mocker):
         mocker.patch("ragcore.models.database_model.Pinecone", autospec=True)
+        mocker.patch(
+            "ragcore.models.database_model.PineconeDatabase._get_api_key",
+            return_value="key",
+        )
         return PineconeDatabase(
             base_url="url", num_search_results=3, embedding_function=mocker.Mock()
         )
