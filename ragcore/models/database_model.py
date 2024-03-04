@@ -406,7 +406,10 @@ class PineconeDatabase(BaseVectorDatabaseModel):
         embeddings: Any = self.embedding.embed_texts(docs)
 
         # Create IDs with the title prefix
-        ids = [title + "#" + str(uuid.uuid1()) for _ in range(len(documents))]
+        ids = [
+            self._title_to_id(title) + "#" + str(uuid.uuid1())
+            for _ in range(len(documents))
+        ]
 
         # Construct vectors so they can be inserted. We don't have a field `doc` in Pinecone, so we
         # add this content to metadata as a new field. However, as we don't expect this in metadata
@@ -454,6 +457,10 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             ids_to_delete = self._get_ids_by_title(
                 user=user if user else NAME_MAIN_COLLECTION, title=title
             )
+
+            if not ids_to_delete:
+                return False
+
             self.index.delete(
                 namespace=user if user else NAME_MAIN_COLLECTION, ids=ids_to_delete
             )
@@ -539,11 +546,16 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             return []
 
         titles = set()
+
         for vector in vectors:
             curr_id = vector.get(DatabaseConstants.KEY_PINECONE_ID)
+
             if not curr_id:
                 continue
-            titles.add(curr_id.split("#")[0])
+
+            curr_id_prefix = curr_id.split("#")[0]
+            titles.add(self._id_to_title(curr_id_prefix))
+
         return list(titles)
 
     def get_number_of_documents(self, user: Optional[str] = None) -> int:
@@ -561,11 +573,15 @@ class PineconeDatabase(BaseVectorDatabaseModel):
     def _get_ids_by_title(self, user: str, title: str) -> list[Optional[str]]:
         """Returns a list of IDs given a title."""
 
+        id_prefix = self._title_to_id(
+            title
+        )  # Part before the hash symbol in the Pinecone ID.
+
         try:
             response = self.api_client.get_paginated(
                 endpoint=APIConstants.PINECONE_LIST_VECTORS,
-                namespace=user,
-                prefix=title,
+                namespace=user if user else NAME_MAIN_COLLECTION,
+                prefix=id_prefix,
             )
 
         except HTTPError:
@@ -575,14 +591,19 @@ class PineconeDatabase(BaseVectorDatabaseModel):
             return []
 
         vectors: Any = response.get(DatabaseConstants.KEY_PINECONE_VECTORS)
+
         if not vectors:
             return []
+
         ids = set()
 
         for vector in vectors:
             curr_id = vector.get(DatabaseConstants.KEY_PINECONE_ID)
-            if not curr_id:
+
+            # ID from title could be a substring of a retrieved ID.
+            if not curr_id or curr_id.split("#")[0] != id_prefix:
                 continue
+
             ids.add(curr_id)
 
         return list(ids)
@@ -594,3 +615,12 @@ class PineconeDatabase(BaseVectorDatabaseModel):
                 "Could not find API key `PINECONE_API_KEY` in the environment."
             )
         return key
+
+    @staticmethod
+    def _title_to_id(title: str) -> str:
+        # How long can an ID be? We should probably limit the lenght of an ID.
+        return title.replace(" ", "%")
+
+    @staticmethod
+    def _id_to_title(title_id: str) -> str:
+        return title_id.replace("%", " ")
