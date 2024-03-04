@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.4] - 2024-03-04
+
 ### Fixed
 
 - Handling of titles in Pinecone database has been updated. Pinecone does not offer a simple way to retrieve metadata to get a list of titles. To overcome this, titles are encoded in record prefixes by ragcore. Titles can be case-sensitive, and can contain spaces now.
