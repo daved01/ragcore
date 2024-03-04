@@ -1,5 +1,6 @@
 import pytest
-from ragcore.models.database_model import ChromaDatabase
+from requests.exceptions import HTTPError
+from ragcore.models.database_model import ChromaDatabase, PineconeDatabase
 
 from tests import BaseTest
 from tests.unit.services import RAGCoreTestSetup
@@ -82,3 +83,93 @@ class TestChromaDatabaseModel(BaseTest, RAGCoreTestSetup):
         collection = mocker.Mock()
         res = chromadb_client._get_number_of_documents_by_title(collection, None)
         assert res == 0
+
+
+class TestPineconeDatabaseModel:
+    @pytest.fixture
+    def mock_pinecone(self, mocker):
+        mocker.patch(
+            "ragcore.models.database_model.Pinecone", return_value=mocker.Mock()
+        )
+        mocker.patch(
+            "ragcore.models.database_model.PineconeAPIClient",
+            return_value=mocker.Mock(),
+        )
+
+    @pytest.fixture
+    def mock_pinecone_client(self, mocker):
+        return PineconeDatabase(
+            base_url="url", num_search_results=3, embedding_function=mocker.Mock()
+        )
+
+    def test_get_ids_by_title_pass(self, mocker, mock_pinecone_client):
+        mocker.patch(
+            "ragcore.models.database_model.Pinecone", return_value=mocker.Mock()
+        )
+
+        def mock_get_paginated(endpoint, namespace, prefix):
+            return {
+                "vectors": [
+                    {"id": "Existing%Title%A#0102-4312"},
+                    {"id": "Existing%Title#0101-4312"},
+                    {"id": "Existing%Title%A#1201-3412"},
+                    {"id": "Existing%Title#0121-1213"},
+                ]
+            }
+
+        mocker.patch(
+            "ragcore.models.database_model.PineconeAPIClient.get_paginated",
+            side_effect=mock_get_paginated,
+        )
+        # Should find title "Existing Title", but not "Existing Title A"
+        returned_ids = mock_pinecone_client._get_ids_by_title(
+            user="01", title="Existing Title"
+        )
+        expected = ["Existing%Title#0101-4312", "Existing%Title#0121-1213"]
+        assert len(returned_ids) == len(expected)
+        for returned_id in returned_ids:
+            assert returned_id in expected
+
+    def test_get_ids_by_title_error(self, mocker, mock_pinecone_client):
+        mocker.patch(
+            "ragcore.models.database_model.Pinecone", return_value=mocker.Mock()
+        )
+
+        def mock_get_paginated(endpoint, namespace, prefix):
+            raise HTTPError("Mocked HTTPError")
+
+        mocker.patch(
+            "ragcore.models.database_model.PineconeAPIClient.get_paginated",
+            side_effect=mock_get_paginated,
+        )
+
+        res = mock_pinecone_client._get_ids_by_title(user="01", title="Missing")
+        assert res == []
+
+    @pytest.mark.parametrize(
+        "titles, expected",
+        [
+            ("Title 1", "Title%1"),
+            ("Title with Spaces", "Title%with%Spaces"),
+            ("", ""),
+            (" ", "%"),
+            (" Leading spaceNotIgnored ", "%Leading%spaceNotIgnored%"),
+        ],
+    )
+    def test_title_to_id(self, mock_pinecone, mock_pinecone_client, titles, expected):
+        title_id = mock_pinecone_client._title_to_id(titles)
+        assert title_id == expected
+
+    @pytest.mark.parametrize(
+        "input_id, expected",
+        [
+            ("Title%1", "Title 1"),
+            ("Title%with%Spaces", "Title with Spaces"),
+            ("", ""),
+            ("%", " "),
+            ("%Leading%spaceNotIgnored%", " Leading spaceNotIgnored "),
+        ],
+    )
+    def test_id_to_title(self, mock_pinecone, mock_pinecone_client, input_id, expected):
+        title_id = mock_pinecone_client._id_to_title(input_id)
+        assert title_id == expected

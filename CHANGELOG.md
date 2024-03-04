@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Handling of titles in Pinecone database has been updated. Pinecone does not offer a simple way to retrieve metadata to get a list of titles. To overcome this, titles are encoded in record prefixes by ragcore. Titles can be case-sensitive, and can contain spaces now.
+
 ## [1.0.3] - 2024-03-02
 
 ### Added
@@ -12,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 - Pinecone upload throughput was increased by using Pinecone's asynchronous upload option using `pool_threads`.
 
-#### Removed
+### Removed
 
 - Document titles have been removed from log outputs for increased privacy.
 
@@ -22,7 +26,7 @@ All notable changes to this project will be documented in this file.
 
 - Pinecone database is now supported. To use it, select `pinecone` in the config file, add your Pinecone `base_url`, and done!
 
-#### Changed
+### Changed
 
 - Internally, a model is now used for the configuration of the app, replacing the dictionaries.
 
