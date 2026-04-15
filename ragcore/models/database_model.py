@@ -4,6 +4,7 @@ from typing import Optional, Any, Mapping, Sized, Type
 import uuid
 from requests.exceptions import HTTPError
 import chromadb
+from chromadb.api.types import IncludeEnum
 from pinecone import Pinecone
 
 from ragcore.api.client import PineconeAPIClient
@@ -255,7 +256,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         # Get all metadata items
         metadatas: Any = collection.get(
-            include=["metadatas"],
+            include=[IncludeEnum.metadatas],
         ).get(DatabaseConstants.KEY_METADATAS, [])
 
         titles = set()
@@ -325,7 +326,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         metadata = collection.get(
             where={DataConstants.KEY_TITLE: title},
-            include=["metadatas"],
+            include=[IncludeEnum.metadatas],
         ).get(DatabaseConstants.KEY_METADATAS, [])
 
         if not isinstance(metadata, Sized):
