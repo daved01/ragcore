@@ -5,6 +5,7 @@ import uuid
 from requests.exceptions import HTTPError
 import chromadb
 from chromadb.api.types import IncludeEnum
+from chromadb.errors import InvalidCollectionException
 from pinecone import Pinecone
 
 from ragcore.api.client import PineconeAPIClient
@@ -290,7 +291,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
 
         try:
             return self.client.get_collection(name)
-        except ValueError:
+        except (ValueError, InvalidCollectionException):
             return self.client.create_collection(name)
 
     def _get_collection(self, user: Optional[str] = None) -> chromadb.Collection:
@@ -309,7 +310,7 @@ class ChromaDatabase(BaseLocalVectorDatabaseModel):
             return self.collection
         try:
             return self.client.get_collection(user)
-        except ValueError:
+        except (ValueError, InvalidCollectionException):
             return self.client.create_collection(user)
 
     @staticmethod
