@@ -18,7 +18,7 @@ class TestLLMService(BaseTest, RAGCoreTestSetup):
         )
 
     def test_initialize_llm(self, mock_logger, mocker, mock_llm_config):
-        mocker.patch("langchain.chat_models.ChatOpenAI")
+        mocker.patch("ragcore.models.llm_model.OpenAI")
 
         llm_service = LLMService(mock_logger, mock_llm_config)
         assert llm_service.llm is None
