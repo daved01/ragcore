@@ -1,5 +1,5 @@
 import pytest
-from langchain.schema import Document as LangDocument
+from langchain_core.documents import Document as LangDocument
 
 from ragcore.models.document_model import Document
 from ragcore.models.config_model import (

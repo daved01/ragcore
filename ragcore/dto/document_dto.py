@@ -1,5 +1,5 @@
 from typing import Any, Mapping
-from langchain.schema import Document as LangDocument
+from langchain_core.documents import Document as LangDocument
 
 from ragcore.models.document_model import Document
 
